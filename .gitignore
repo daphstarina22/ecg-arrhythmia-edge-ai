@@ -1,0 +1,32 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# Large datasets and archives
+*.zip
+*.tar
+*.gz
+*.7z
+
+# Large datasets
+*.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: generated experiment outputs
+training/**/results/
+training/**/artifacts/
+
+# Optional Python build files
+build/
+dist/
+*.egg-info/
