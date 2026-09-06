@@ -149,9 +149,78 @@ The edge runtime routes incoming ECG windows through three specialized models:
 
 ---
 
-## 5. Live Sensor Integration (AD8232 + ADS1115 ADC)
+## 5. Live Sensor Integration
 
-Because the Raspberry Pi has digital GPIOs only, connect an analog ECG sensor (e.g. AD8232) using an I2C ADC (e.g. ADS1115):
+The Raspberry Pi does not possess onboard analog-to-digital converter (ADC) pins. Below are instructions for the two most common ECG acquisition hardware configurations.
+
+### Option A: Texas Instruments ADS1292R (Recommended 24-bit SPI Medical AFE)
+
+The **ADS1292R** is an integrated analog front-end with 24-bit delta-sigma ADCs, built-in Right Leg Drive (RLD), and lead-off detection. It is significantly higher fidelity than basic hobbyist sensors.
+
+#### 1. Pin Connections (SPI)
+| ADS1292R Pin | Raspberry Pi 40-Pin Header | Description |
+|---|---|---|
+| **VCC / 3.3V** | Pin 1 (3.3V Power) | Power supply |
+| **GND** | Pin 6 (Ground) | Power ground |
+| **SCLK** | Pin 23 (GPIO 11 / SPI_CLK) | SPI Clock |
+| **MOSI / DIN** | Pin 19 (GPIO 10 / SPI_MOSI) | SPI Data In |
+| **MISO / DOUT** | Pin 21 (GPIO 9 / SPI_MISO) | SPI Data Out |
+| **CS / SS** | Pin 24 (GPIO 8 / SPI_CE0) | Chip Select |
+| **DRDY** | Pin 22 (GPIO 25) | Data Ready (Active LOW) |
+| **START** | Pin 1 (3.3V) or GPIO | High to start conversion |
+| **PWDN / RESET**| Pin 1 (3.3V) | High via pull-up |
+
+*Note: Ensure SPI is enabled on your Raspberry Pi:*
+```bash
+sudo raspi-config
+# Navigate to: 3 Interface Options -> I4 SPI -> Enable -> Yes
+```
+
+#### 2. Sampling Rate & Resampling to 360 Hz
+The models in this repository are trained on **360 Hz** ECG (1,800 samples per 5-second window). The ADS1292R natively samples at **500 SPS** (or 250 SPS). Use `scipy.signal.resample_poly` to resample the 5-second window from 500 Hz (2,500 samples) to 360 Hz (1,800 samples):
+
+```python
+import collections
+import numpy as np
+from scipy.signal import resample_poly
+from deploy.edge_runtime import HierarchicalEdgeClassifier
+
+# Initialize the 3-model edge classifier
+clf = HierarchicalEdgeClassifier()
+
+# 5-second raw buffer at 500 SPS = 2,500 samples
+raw_buffer = collections.deque(maxlen=2500)
+
+def parse_24bit_to_mv(b0, b1, b2, vref=2.42, gain=6.0):
+    """Converts 3-byte 2's complement SPI reading to millivolts."""
+    val = (b0 << 16) | (b1 << 8) | b2
+    if val & 0x800000:
+        val -= 0x1000000
+    # Scale to millivolts (mV)
+    return (val / 8388607.0) * (vref / gain) * 1000.0
+
+def on_ads1292r_sample(mv_reading: float):
+    raw_buffer.append(mv_reading)
+    if len(raw_buffer) == 2500:
+        raw_500hz = np.array(raw_buffer, dtype=np.float32)
+        
+        # Polyphase rational resample: 500 Hz * (18 / 25) = 360 Hz (exactly 1,800 samples)
+        window_360hz = resample_poly(raw_500hz, up=18, down=25).astype(np.float32)
+        
+        # Run 3-model hierarchical classification
+        decision = clf.predict_window(window_360hz)
+        
+        if decision.defibrillator_advised:
+            print(f"CRITICAL ALERT: {decision.primary_rhythm} - IMMEDIATE SHOCK ADVISED!")
+        else:
+            print(f"Triage: {decision.primary_rhythm} | Confidence: {decision.confidence:.2f}")
+```
+
+---
+
+### Option B: AD8232 (Analog) + ADS1115 (16-bit I2C ADC)
+
+If using an analog sensor module such as the AD8232:
 
 ```text
 AD8232 (ECG)         ADS1115 (16-bit ADC)        Raspberry Pi
@@ -163,24 +232,7 @@ GND       ───────►   GND                  ───►   GND  (P
                      SCL                  ───►   GPIO 3 / SCL (Pin 5)
 ```
 
-### Circular Ring Buffer Example
-Read samples at 360 Hz into an 1,800-sample ring buffer. Every 1–5 seconds, pass the latest buffer to `HierarchicalEdgeClassifier.predict_window()`:
-```python
-import collections
-import numpy as np
-from deploy.edge_runtime import HierarchicalEdgeClassifier
-
-clf = HierarchicalEdgeClassifier()
-buffer = collections.deque(maxlen=1800)  # 5-second buffer at 360 Hz
-
-def on_sample(val_mv: float):
-    buffer.append(val_mv)
-    if len(buffer) == 1800:
-        window = np.array(buffer, dtype=np.float32)
-        decision = clf.predict_window(window)
-        if decision.defibrillator_advised:
-            print(f"CRITICAL ALERT: {decision.primary_rhythm} - IMMEDIATE SHOCK ADVISED!")
-```
+Read samples at 360 Hz into an 1,800-sample ring buffer. Every 1–5 seconds, pass the buffer to `clf.predict_window(window_360hz)`.
 
 ---
 
