@@ -1,0 +1,6 @@
+# Minimal Edge AI Inference Dependencies for Raspberry Pi
+# Zero heavy training frameworks; prebuilt wheels available for ARM Linux / Raspberry Pi OS.
+
+numpy>=1.24.0
+scipy>=1.10.0
+onnxruntime>=1.16.0

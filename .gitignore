@@ -1,32 +1,74 @@
-# Virtual environment
+# ==============================================================================
+# ECG Arrhythmia Edge AI - Git Ignore Configuration
+# ==============================================================================
+
+# --- Python Virtual Environments ---
 .venv/
 venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 
-# Python cache
+# --- Bytecode & Caches ---
 __pycache__/
 *.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# VS Code
+# --- IDE & Editor Settings ---
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Large datasets and archives
+# --- Operating System Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# --- Downloaded Archives & Raw Waveform Datasets ---
 *.zip
 *.tar
+*.tar.gz
+*.tgz
 *.gz
 *.7z
+*.rar
+*.dat
+*.hea
+*.atr
+*.mat
 
-# Large datasets
+# Large dataset CSV files
 *.csv
+# But preserve curated benchmark comparison summary tables:
+!training/final_models/results/*_comparison_table.csv
+!training/final_models/results/*_confusion_matrix.json
 
-# OS files
-.DS_Store
-Thumbs.db
+# --- Temporary & Log Files ---
+tmp/
+temp/
+logs/
+*.log
 
-# Optional: generated experiment outputs
-training/**/results/
-training/**/artifacts/
-
-# Optional Python build files
+# --- Python Build & Packaging ---
 build/
 dist/
 *.egg-info/
+*.egg
+
+# --- EXPLICIT WHITELIST: Ensure Trained ONNX Deployment Models Remain Tracked ---
+!deploy/models/*.onnx
+!models/*.onnx
+!training/final_models/export_candidates/*.onnx
