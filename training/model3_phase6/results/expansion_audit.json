@@ -1,0 +1,89 @@
+{
+  "point1_windows": {
+    "before": 14618,
+    "after": 14704,
+    "added": 86,
+    "pass": true
+  },
+  "point2_records": {
+    "before": 117,
+    "after": 120,
+    "added": 3,
+    "added_records": [
+      "mitdb_205",
+      "mitdb_207",
+      "mitdb_223"
+    ],
+    "pass": true
+  },
+  "point3_vt_records": {
+    "before": 106,
+    "after": 108,
+    "added": 2,
+    "added_vt_records": [
+      "mitdb_205",
+      "mitdb_223"
+    ],
+    "pass": true
+  },
+  "point4_vf_records": {
+    "before": 16,
+    "after": 17,
+    "added": 1,
+    "added_vf_records": [
+      "mitdb_207"
+    ],
+    "pass": true
+  },
+  "point5_windows_per_mit_record": {
+    "mitdb_205": 2,
+    "mitdb_207": 49,
+    "mitdb_223": 35
+  },
+  "point6_label_distribution": {
+    "before": {
+      "VT": 12650,
+      "VF": 1968
+    },
+    "after": {
+      "VT": 12687,
+      "VF": 2017
+    }
+  },
+  "point7_source_distribution": {
+    "before": {
+      "c2015": 11420,
+      "vfdb": 3060,
+      "cudb": 138
+    },
+    "after": {
+      "c2015": 11420,
+      "vfdb": 3060,
+      "cudb": 138,
+      "mitdb": 86
+    }
+  },
+  "point8_missing_or_nonfinite": {
+    "nan_count": 0,
+    "inf_count": 0,
+    "pass": true
+  },
+  "point9_duplicate_windows": {
+    "duplicate_count": 0,
+    "pass": true
+  },
+  "point10_id_collisions": {
+    "collision_count": 0,
+    "collisions": [],
+    "pass": true
+  },
+  "point11_schema_consistency": {
+    "columns_count": 28,
+    "schema_match": true,
+    "pass": true
+  },
+  "point12_existing_data_unmodified": {
+    "mismatches": 0,
+    "pass": true
+  }
+}

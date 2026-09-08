@@ -1,0 +1,42 @@
+{
+  "D1_vfdb_cudb_to_c2015_baseline_logistic_reduced": [
+    [
+      10364,
+      300
+    ],
+    [
+      567,
+      189
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_record_balanced_logistic_reduced": [
+    [
+      10493,
+      171
+    ],
+    [
+      590,
+      166
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_baseline_logistic_reduced": [
+    [
+      540,
+      1440
+    ],
+    [
+      82,
+      998
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_record_balanced_logistic_reduced": [
+    [
+      553,
+      1427
+    ],
+    [
+      88,
+      992
+    ]
+  ]
+}

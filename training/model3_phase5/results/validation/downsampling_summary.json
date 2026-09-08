@@ -1,0 +1,14 @@
+{
+  "lz_pearson_r": 0.9888460336630955,
+  "lz_spearman_rho": 0.953238135257559,
+  "lz_orig_cohens_d": -0.3325664337491136,
+  "lz_opt_cohens_d": -0.3227361049537702,
+  "lz_orig_auc": 0.4551197910909694,
+  "lz_opt_auc": 0.4622423178954349,
+  "sampen_pearson_r": 0.9734834262623017,
+  "sampen_spearman_rho": 0.9707930054519072,
+  "sampen_ref_cohens_d": 0.5487317112872142,
+  "sampen_opt_cohens_d": 0.5953633045832273,
+  "sampen_ref_auc": 0.608896595556538,
+  "sampen_opt_auc": 0.6415386315905826
+}

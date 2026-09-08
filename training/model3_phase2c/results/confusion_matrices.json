@@ -1,0 +1,172 @@
+{
+  "A_raw_baseline": [
+    [
+      2503,
+      835
+    ],
+    [
+      164,
+      191
+    ]
+  ],
+  "B_reduced_baseline": [
+    [
+      2217,
+      1121
+    ],
+    [
+      122,
+      233
+    ]
+  ],
+  "B_reduced_class_weight": [
+    [
+      2226,
+      1112
+    ],
+    [
+      124,
+      231
+    ]
+  ],
+  "D_raw_record_balanced": [
+    [
+      2806,
+      532
+    ],
+    [
+      279,
+      76
+    ]
+  ],
+  "D_reduced_record_balanced": [
+    [
+      3064,
+      274
+    ],
+    [
+      280,
+      75
+    ]
+  ],
+  "C_standardized_logistic": [
+    [
+      2310,
+      1028
+    ],
+    [
+      118,
+      237
+    ]
+  ],
+  "C_robust_scaled_logistic": [
+    [
+      2310,
+      1028
+    ],
+    [
+      118,
+      237
+    ]
+  ],
+  "E_vfdb_cudb_to_c2015_raw": [
+    [
+      10628,
+      36
+    ],
+    [
+      745,
+      11
+    ]
+  ],
+  "E_vfdb_cudb_to_c2015_reduced": [
+    [
+      9089,
+      1575
+    ],
+    [
+      555,
+      201
+    ]
+  ],
+  "E_vfdb_cudb_to_c2015_reduced_record_balanced": [
+    [
+      9519,
+      1145
+    ],
+    [
+      599,
+      157
+    ]
+  ],
+  "E_vfdb_cudb_to_c2015_standardized_logistic": [
+    [
+      10650,
+      14
+    ],
+    [
+      745,
+      11
+    ]
+  ],
+  "E_vfdb_cudb_to_c2015_robust_scaled_logistic": [
+    [
+      10651,
+      13
+    ],
+    [
+      745,
+      11
+    ]
+  ],
+  "E_c2015_cudb_to_vfdb_raw": [
+    [
+      20,
+      1960
+    ],
+    [
+      10,
+      1070
+    ]
+  ],
+  "E_c2015_cudb_to_vfdb_reduced": [
+    [
+      703,
+      1277
+    ],
+    [
+      220,
+      860
+    ]
+  ],
+  "E_c2015_cudb_to_vfdb_reduced_record_balanced": [
+    [
+      1339,
+      641
+    ],
+    [
+      588,
+      492
+    ]
+  ],
+  "E_c2015_cudb_to_vfdb_standardized_logistic": [
+    [
+      457,
+      1523
+    ],
+    [
+      51,
+      1029
+    ]
+  ],
+  "E_c2015_cudb_to_vfdb_robust_scaled_logistic": [
+    [
+      457,
+      1523
+    ],
+    [
+      51,
+      1029
+    ]
+  ]
+}

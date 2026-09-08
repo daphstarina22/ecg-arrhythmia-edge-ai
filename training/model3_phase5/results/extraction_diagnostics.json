@@ -1,0 +1,23 @@
+{
+  "total_windows": 14618,
+  "total_unique_records": 117,
+  "record_counts_by_source": {
+    "c2015": 92,
+    "cudb": 3,
+    "vfdb": 22
+  },
+  "window_counts_by_source_and_label": {
+    "c2015_VF": 756,
+    "c2015_VT": 10664,
+    "cudb_VF": 132,
+    "cudb_VT": 6,
+    "vfdb_VF": 1080,
+    "vfdb_VT": 1980
+  },
+  "total_vt_windows": 12650,
+  "total_vf_windows": 1968,
+  "sampling_rate_hz": 360,
+  "window_duration_seconds": 5.0,
+  "step_duration_seconds": 2.5,
+  "non_finite_feature_count": 0
+}

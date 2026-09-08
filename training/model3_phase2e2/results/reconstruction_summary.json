@@ -1,0 +1,43 @@
+{
+  "sources": [
+    "c2015",
+    "vfdb",
+    "cudb"
+  ],
+  "original_rows": 14618,
+  "calibrated_rows": 14618,
+  "original_records": 117,
+  "calibrated_records": 117,
+  "labels": {
+    "VT": 12650,
+    "VF": 1968
+  },
+  "afib_rows": 0,
+  "record_overlap": [],
+  "original_source_diagnostic": {
+    "accuracy": 0.9368456602499156,
+    "macro_f1": 0.6398018536945415,
+    "train_records": 93,
+    "test_records": 24,
+    "record_overlap": [],
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ]
+  },
+  "calibrated_source_diagnostic": {
+    "accuracy": 0.839918946301925,
+    "macro_f1": 0.5694687942860935,
+    "train_records": 93,
+    "test_records": 24,
+    "record_overlap": [],
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ]
+  },
+  "production_changed": false,
+  "onnx_changed": false
+}

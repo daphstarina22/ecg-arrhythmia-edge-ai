@@ -1,0 +1,242 @@
+{
+  "D1_vfdb_cudb_to_c2015__set1_full_physio__logistic_regression": [
+    [
+      9756,
+      908
+    ],
+    [
+      427,
+      329
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full_physio__random_forest": [
+    [
+      9136,
+      1528
+    ],
+    [
+      461,
+      295
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full_physio__svm_rbf": [
+    [
+      10445,
+      219
+    ],
+    [
+      564,
+      192
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_domain_reduced__logistic_regression": [
+    [
+      10566,
+      98
+    ],
+    [
+      515,
+      241
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_domain_reduced__random_forest": [
+    [
+      10474,
+      190
+    ],
+    [
+      511,
+      245
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_domain_reduced__svm_rbf": [
+    [
+      10596,
+      68
+    ],
+    [
+      616,
+      140
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_best_low_conf__logistic_regression": [
+    [
+      10325,
+      339
+    ],
+    [
+      584,
+      172
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_best_low_conf__random_forest": [
+    [
+      5548,
+      5116
+    ],
+    [
+      317,
+      439
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_best_low_conf__svm_rbf": [
+    [
+      10607,
+      57
+    ],
+    [
+      689,
+      67
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set0_baseline_old7__logistic_regression": [
+    [
+      10476,
+      188
+    ],
+    [
+      590,
+      166
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set0_baseline_old7__random_forest": [
+    [
+      10255,
+      409
+    ],
+    [
+      544,
+      212
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set0_baseline_old7__svm_rbf": [
+    [
+      10566,
+      98
+    ],
+    [
+      616,
+      140
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full_physio__logistic_regression": [
+    [
+      393,
+      1587
+    ],
+    [
+      7,
+      1073
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full_physio__random_forest": [
+    [
+      770,
+      1210
+    ],
+    [
+      305,
+      775
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full_physio__svm_rbf": [
+    [
+      1537,
+      443
+    ],
+    [
+      644,
+      436
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_domain_reduced__logistic_regression": [
+    [
+      509,
+      1471
+    ],
+    [
+      30,
+      1050
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_domain_reduced__random_forest": [
+    [
+      604,
+      1376
+    ],
+    [
+      31,
+      1049
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_domain_reduced__svm_rbf": [
+    [
+      1348,
+      632
+    ],
+    [
+      606,
+      474
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_best_low_conf__logistic_regression": [
+    [
+      411,
+      1569
+    ],
+    [
+      60,
+      1020
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_best_low_conf__random_forest": [
+    [
+      712,
+      1268
+    ],
+    [
+      220,
+      860
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_best_low_conf__svm_rbf": [
+    [
+      1899,
+      81
+    ],
+    [
+      1023,
+      57
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set0_baseline_old7__logistic_regression": [
+    [
+      553,
+      1427
+    ],
+    [
+      89,
+      991
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set0_baseline_old7__random_forest": [
+    [
+      391,
+      1589
+    ],
+    [
+      25,
+      1055
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set0_baseline_old7__svm_rbf": [
+    [
+      1237,
+      743
+    ],
+    [
+      475,
+      605
+    ]
+  ]
+}

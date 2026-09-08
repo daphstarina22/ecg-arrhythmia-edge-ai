@@ -1,0 +1,177 @@
+{
+  "set1_full_physio_21": {
+    "features_count": 21,
+    "features": [
+      "dominant_freq",
+      "dominant_peak_power",
+      "dominant_peak_prominence",
+      "spectral_peak_power_ratio",
+      "spectral_entropy",
+      "spectral_flatness",
+      "spectral_centroid",
+      "spectral_bandwidth",
+      "spectral_concentration",
+      "spectral_peak_purity",
+      "ac_max_peak_ratio",
+      "ac_first_secondary_peak",
+      "ac_decay_time",
+      "ac_periodicity_strength",
+      "ac_zero_crossing_lag",
+      "hjorth_activity",
+      "hjorth_mobility",
+      "hjorth_complexity",
+      "lz_complexity",
+      "permutation_entropy",
+      "sample_entropy"
+    ],
+    "accuracy": 0.9105212751402381,
+    "balanced_accuracy": 0.6093854112285455,
+    "macro_f1": 0.6033219773553155,
+    "confusion_matrix": [
+      [
+        10945,
+        177,
+        298
+      ],
+      [
+        0,
+        14,
+        124
+      ],
+      [
+        312,
+        397,
+        2351
+      ]
+    ],
+    "top_source_predictive_features": [
+      {
+        "feature": "spectral_bandwidth",
+        "mean_abs_coef": 3.8592843755218253
+      },
+      {
+        "feature": "spectral_entropy",
+        "mean_abs_coef": 3.490438487687513
+      },
+      {
+        "feature": "hjorth_complexity",
+        "mean_abs_coef": 2.7122997781525413
+      },
+      {
+        "feature": "spectral_flatness",
+        "mean_abs_coef": 2.4225031896112785
+      },
+      {
+        "feature": "hjorth_mobility",
+        "mean_abs_coef": 2.4017300611072763
+      }
+    ]
+  },
+  "set2_domain_reduced_6": {
+    "features_count": 6,
+    "features": [
+      "lz_complexity",
+      "ac_decay_time",
+      "ac_zero_crossing_lag",
+      "ac_max_peak_ratio",
+      "sample_entropy",
+      "hjorth_mobility"
+    ],
+    "accuracy": 0.8620878369133944,
+    "balanced_accuracy": 0.821875990681559,
+    "macro_f1": 0.6077061288041129,
+    "confusion_matrix": [
+      [
+        10437,
+        366,
+        617
+      ],
+      [
+        0,
+        122,
+        16
+      ],
+      [
+        132,
+        885,
+        2043
+      ]
+    ],
+    "top_source_predictive_features": [
+      {
+        "feature": "hjorth_mobility",
+        "mean_abs_coef": 2.38289013939712
+      },
+      {
+        "feature": "sample_entropy",
+        "mean_abs_coef": 1.3042786031602012
+      },
+      {
+        "feature": "ac_max_peak_ratio",
+        "mean_abs_coef": 0.7694012071670859
+      },
+      {
+        "feature": "ac_decay_time",
+        "mean_abs_coef": 0.49984048363025774
+      },
+      {
+        "feature": "ac_zero_crossing_lag",
+        "mean_abs_coef": 0.24544901999102908
+      }
+    ]
+  },
+  "set0_baseline_old7": {
+    "features_count": 7,
+    "features": [
+      "zero_crossings",
+      "peak_count",
+      "mean_rr",
+      "rr_cv",
+      "qrs_width",
+      "dominant_freq",
+      "vf_band_power_ratio"
+    ],
+    "accuracy": 0.8377343001778629,
+    "balanced_accuracy": 0.7885367599157737,
+    "macro_f1": 0.5904214222288086,
+    "confusion_matrix": [
+      [
+        10282,
+        143,
+        995
+      ],
+      [
+        1,
+        119,
+        18
+      ],
+      [
+        551,
+        664,
+        1845
+      ]
+    ],
+    "top_source_predictive_features": [
+      {
+        "feature": "vf_band_power_ratio",
+        "mean_abs_coef": 1.0329897002084243
+      },
+      {
+        "feature": "qrs_width",
+        "mean_abs_coef": 0.7319475686557148
+      },
+      {
+        "feature": "rr_cv",
+        "mean_abs_coef": 0.47009299799510407
+      },
+      {
+        "feature": "peak_count",
+        "mean_abs_coef": 0.25272281119287415
+      },
+      {
+        "feature": "mean_rr",
+        "mean_abs_coef": 0.18798673137070857
+      }
+    ]
+  }
+}

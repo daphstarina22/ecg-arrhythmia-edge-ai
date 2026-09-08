@@ -1,0 +1,33 @@
+{
+  "seed": 42,
+  "test_size": 0.25,
+  "labels": {
+    "VT": 0,
+    "VF": 1
+  },
+  "features": [
+    "mean",
+    "std",
+    "ptp",
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "reduced_features": [
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "record_balancing": "training-only inverse record-frequency sample weights, normalized to mean 1",
+  "normalization": "feature-space only; raw ECG windows are unavailable",
+  "robustness_formula": "0.4*mean(source-held-out macro F1) + 0.4*mean(source-held-out VF F1) + 0.2*min(source-held-out macro F1)",
+  "production_changes": false
+}

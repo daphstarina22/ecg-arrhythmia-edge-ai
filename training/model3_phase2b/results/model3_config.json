@@ -1,0 +1,28 @@
+{
+  "seed": 42,
+  "features": [
+    "mean",
+    "std",
+    "ptp",
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "reduced_features": [
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "labels": [
+    "VT",
+    "VF"
+  ]
+}

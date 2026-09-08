@@ -1,0 +1,182 @@
+{
+  "A_xgb_full": [
+    [
+      2626,
+      712
+    ],
+    [
+      225,
+      130
+    ]
+  ],
+  "B_xgb_reduced": [
+    [
+      2220,
+      1118
+    ],
+    [
+      124,
+      231
+    ]
+  ],
+  "C_xgb_reduced_class_weight": [
+    [
+      2225,
+      1113
+    ],
+    [
+      106,
+      249
+    ]
+  ],
+  "D_logistic_reduced": [
+    [
+      2203,
+      1135
+    ],
+    [
+      147,
+      208
+    ]
+  ],
+  "E_random_forest_reduced": [
+    [
+      2497,
+      841
+    ],
+    [
+      194,
+      161
+    ]
+  ],
+  "F_extra_trees_reduced": [
+    [
+      2788,
+      550
+    ],
+    [
+      244,
+      111
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_A_xgb_full": [
+    [
+      7391,
+      3273
+    ],
+    [
+      581,
+      175
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_B_xgb_reduced": [
+    [
+      9089,
+      1575
+    ],
+    [
+      556,
+      200
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_C_xgb_reduced_class_weight": [
+    [
+      9034,
+      1630
+    ],
+    [
+      554,
+      202
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_D_logistic_reduced": [
+    [
+      10364,
+      300
+    ],
+    [
+      567,
+      189
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_E_random_forest_reduced": [
+    [
+      9913,
+      751
+    ],
+    [
+      562,
+      194
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015_F_extra_trees_reduced": [
+    [
+      9767,
+      897
+    ],
+    [
+      598,
+      158
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_A_xgb_full": [
+    [
+      1068,
+      912
+    ],
+    [
+      535,
+      545
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_B_xgb_reduced": [
+    [
+      722,
+      1258
+    ],
+    [
+      225,
+      855
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_C_xgb_reduced_class_weight": [
+    [
+      710,
+      1270
+    ],
+    [
+      228,
+      852
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_D_logistic_reduced": [
+    [
+      540,
+      1440
+    ],
+    [
+      82,
+      998
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_E_random_forest_reduced": [
+    [
+      1130,
+      850
+    ],
+    [
+      443,
+      637
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb_F_extra_trees_reduced": [
+    [
+      1286,
+      694
+    ],
+    [
+      524,
+      556
+    ]
+  ]
+}

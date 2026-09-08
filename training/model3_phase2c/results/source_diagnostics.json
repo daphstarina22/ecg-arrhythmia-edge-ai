@@ -1,0 +1,57 @@
+{
+  "phase2a_reference": 0.955,
+  "full_10": {
+    "features": "mean,std,ptp,zero_crossings,peak_count,mean_rr,rr_cv,qrs_width,dominant_freq,vf_band_power_ratio",
+    "accuracy": 0.9290549688600054,
+    "macro_f1": 0.6308411102569392,
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ],
+    "confusion_matrix": [
+      [
+        2815,
+        5,
+        144
+      ],
+      [
+        0,
+        6,
+        10
+      ],
+      [
+        0,
+        103,
+        610
+      ]
+    ]
+  },
+  "reduced_7": {
+    "features": "zero_crossings,peak_count,mean_rr,rr_cv,qrs_width,dominant_freq,vf_band_power_ratio",
+    "accuracy": 0.7985377741673436,
+    "macro_f1": 0.5245962870873574,
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ],
+    "confusion_matrix": [
+      [
+        2334,
+        11,
+        619
+      ],
+      [
+        1,
+        4,
+        11
+      ],
+      [
+        20,
+        82,
+        611
+      ]
+    ]
+  }
+}

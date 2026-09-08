@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-06T13:56:18Z",
+  "dataset_path": "C:\\Users\\LENOVO\\Downloads\\ecg-arrhythmia-edge-ai\\training\\model3_phase6\\artifacts\\expanded_physiological_feature_table.csv",
+  "total_rows": 14704,
+  "unique_record_id_count": 120,
+  "records_per_class": {
+    "VT": 103,
+    "VF": 17
+  },
+  "records_per_source": {
+    "c2015": 92,
+    "vfdb": 22,
+    "cudb": 3,
+    "mitdb": 3
+  },
+  "windows_per_class": {
+    "VT": 12687,
+    "VF": 2017
+  },
+  "windows_per_source": {
+    "c2015": 11420,
+    "vfdb": 3060,
+    "cudb": 138,
+    "mitdb": 86
+  },
+  "nan_count": 0,
+  "inf_count": 0,
+  "duplicate_windows_count": 0,
+  "source_record_overlaps": {},
+  "fold_record_leakages": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "status": "PASS"
+}

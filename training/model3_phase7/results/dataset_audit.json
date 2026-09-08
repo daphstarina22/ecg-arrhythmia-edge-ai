@@ -1,0 +1,50 @@
+{
+  "total_rows": 14704,
+  "unique_record_count": 120,
+  "records_per_class": {
+    "VT": 103,
+    "VF": 17
+  },
+  "windows_per_class": {
+    "VT": 12687,
+    "VF": 2017
+  },
+  "records_per_source": {
+    "c2015": 92,
+    "vfdb": 22,
+    "cudb": 3,
+    "mitdb": 3
+  },
+  "class_distribution_by_source_records": {
+    "VF": {
+      "c2015": 6,
+      "cudb": 2,
+      "mitdb": 1,
+      "vfdb": 8
+    },
+    "VT": {
+      "c2015": 86,
+      "cudb": 1,
+      "mitdb": 2,
+      "vfdb": 14
+    }
+  },
+  "class_distribution_by_source_windows": {
+    "VF": {
+      "c2015": 756,
+      "cudb": 132,
+      "mitdb": 49,
+      "vfdb": 1080
+    },
+    "VT": {
+      "c2015": 10664,
+      "cudb": 6,
+      "mitdb": 37,
+      "vfdb": 1980
+    }
+  },
+  "missing_values": 0,
+  "non_finite_values": 0,
+  "duplicate_record_window_keys": 0,
+  "schema_verified": true
+}

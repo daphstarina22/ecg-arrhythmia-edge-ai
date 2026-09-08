@@ -1,0 +1,26 @@
+{
+  "random_seed_42": {
+    "definition": "GroupShuffleSplit(record_id, test_size=0.25, random_state=42)",
+    "train_windows": 10925,
+    "test_windows": 3693,
+    "train_records": 87,
+    "test_records": 30,
+    "overlap": []
+  },
+  "D1_vfdb_cudb_to_c2015": {
+    "definition": "train=['cudb', 'vfdb'], test=c2015",
+    "train_windows": 3198,
+    "test_windows": 11420,
+    "train_records": 25,
+    "test_records": 92,
+    "overlap": []
+  },
+  "D2_c2015_cudb_to_vfdb": {
+    "definition": "train=['c2015', 'cudb'], test=vfdb",
+    "train_windows": 11558,
+    "test_windows": 3060,
+    "train_records": 95,
+    "test_records": 22,
+    "overlap": []
+  }
+}

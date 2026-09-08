@@ -1,0 +1,18 @@
+{
+  "input": "training\\model3_phase2e2\\results\\calibrated_model3_feature_table.csv",
+  "artifact": "training\\model3_phase3\\artifacts\\calibrated_vfvt_feature_table.csv",
+  "rows": 14618,
+  "records": 117,
+  "labels": {
+    "VT": 12650,
+    "VF": 1968
+  },
+  "sources": {
+    "c2015": 11420,
+    "vfdb": 3060,
+    "cudb": 138
+  },
+  "afib_rows": 0,
+  "calibration_provenance": "Phase 2E.2 WFDB/Challenge2015 calibrated reconstruction",
+  "production_changed": false
+}

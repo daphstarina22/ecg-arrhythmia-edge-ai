@@ -1,0 +1,482 @@
+{
+  "D1_vfdb_cudb_to_c2015__set1_full7__logistic_regression__T_0.50": [
+    [
+      10364,
+      300
+    ],
+    [
+      567,
+      189
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__logistic_regression__T_youden": [
+    [
+      9890,
+      774
+    ],
+    [
+      490,
+      266
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__logistic_regression__T_balanced": [
+    [
+      9890,
+      774
+    ],
+    [
+      490,
+      266
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__logistic_regression__T_prior": [
+    [
+      9671,
+      993
+    ],
+    [
+      473,
+      283
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__random_forest__T_0.50": [
+    [
+      9991,
+      673
+    ],
+    [
+      531,
+      225
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__random_forest__T_youden": [
+    [
+      6699,
+      3965
+    ],
+    [
+      104,
+      652
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__random_forest__T_balanced": [
+    [
+      6699,
+      3965
+    ],
+    [
+      104,
+      652
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set1_full7__random_forest__T_prior": [
+    [
+      7870,
+      2794
+    ],
+    [
+      245,
+      511
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__logistic_regression__T_0.50": [
+    [
+      9620,
+      1044
+    ],
+    [
+      549,
+      207
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__logistic_regression__T_youden": [
+    [
+      9620,
+      1044
+    ],
+    [
+      549,
+      207
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__logistic_regression__T_balanced": [
+    [
+      9620,
+      1044
+    ],
+    [
+      549,
+      207
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__logistic_regression__T_prior": [
+    [
+      6292,
+      4372
+    ],
+    [
+      406,
+      350
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__random_forest__T_0.50": [
+    [
+      8886,
+      1778
+    ],
+    [
+      493,
+      263
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__random_forest__T_youden": [
+    [
+      6398,
+      4266
+    ],
+    [
+      220,
+      536
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__random_forest__T_balanced": [
+    [
+      6398,
+      4266
+    ],
+    [
+      220,
+      536
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set2_ablation5__random_forest__T_prior": [
+    [
+      5564,
+      5100
+    ],
+    [
+      158,
+      598
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__logistic_regression__T_0.50": [
+    [
+      10583,
+      81
+    ],
+    [
+      579,
+      177
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__logistic_regression__T_youden": [
+    [
+      10116,
+      548
+    ],
+    [
+      506,
+      250
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__logistic_regression__T_balanced": [
+    [
+      10116,
+      548
+    ],
+    [
+      506,
+      250
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__logistic_regression__T_prior": [
+    [
+      9155,
+      1509
+    ],
+    [
+      427,
+      329
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__random_forest__T_0.50": [
+    [
+      8633,
+      2031
+    ],
+    [
+      303,
+      453
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__random_forest__T_youden": [
+    [
+      5409,
+      5255
+    ],
+    [
+      131,
+      625
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__random_forest__T_balanced": [
+    [
+      5409,
+      5255
+    ],
+    [
+      131,
+      625
+    ]
+  ],
+  "D1_vfdb_cudb_to_c2015__set3_objective__random_forest__T_prior": [
+    [
+      4736,
+      5928
+    ],
+    [
+      110,
+      646
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__logistic_regression__T_0.50": [
+    [
+      540,
+      1440
+    ],
+    [
+      82,
+      998
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__logistic_regression__T_youden": [
+    [
+      461,
+      1519
+    ],
+    [
+      63,
+      1017
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__logistic_regression__T_balanced": [
+    [
+      461,
+      1519
+    ],
+    [
+      63,
+      1017
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__logistic_regression__T_prior": [
+    [
+      24,
+      1956
+    ],
+    [
+      1,
+      1079
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__random_forest__T_0.50": [
+    [
+      395,
+      1585
+    ],
+    [
+      24,
+      1056
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__random_forest__T_youden": [
+    [
+      40,
+      1940
+    ],
+    [
+      1,
+      1079
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__random_forest__T_balanced": [
+    [
+      40,
+      1940
+    ],
+    [
+      1,
+      1079
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set1_full7__random_forest__T_prior": [
+    [
+      0,
+      1980
+    ],
+    [
+      0,
+      1080
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__logistic_regression__T_0.50": [
+    [
+      464,
+      1516
+    ],
+    [
+      114,
+      966
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__logistic_regression__T_youden": [
+    [
+      356,
+      1624
+    ],
+    [
+      93,
+      987
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__logistic_regression__T_balanced": [
+    [
+      356,
+      1624
+    ],
+    [
+      93,
+      987
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__logistic_regression__T_prior": [
+    [
+      66,
+      1914
+    ],
+    [
+      3,
+      1077
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__random_forest__T_0.50": [
+    [
+      446,
+      1534
+    ],
+    [
+      54,
+      1026
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__random_forest__T_youden": [
+    [
+      75,
+      1905
+    ],
+    [
+      18,
+      1062
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__random_forest__T_balanced": [
+    [
+      75,
+      1905
+    ],
+    [
+      18,
+      1062
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set2_ablation5__random_forest__T_prior": [
+    [
+      31,
+      1949
+    ],
+    [
+      0,
+      1080
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__logistic_regression__T_0.50": [
+    [
+      516,
+      1464
+    ],
+    [
+      101,
+      979
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__logistic_regression__T_youden": [
+    [
+      359,
+      1621
+    ],
+    [
+      74,
+      1006
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__logistic_regression__T_balanced": [
+    [
+      359,
+      1621
+    ],
+    [
+      74,
+      1006
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__logistic_regression__T_prior": [
+    [
+      48,
+      1932
+    ],
+    [
+      4,
+      1076
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__random_forest__T_0.50": [
+    [
+      418,
+      1562
+    ],
+    [
+      26,
+      1054
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__random_forest__T_youden": [
+    [
+      72,
+      1908
+    ],
+    [
+      5,
+      1075
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__random_forest__T_balanced": [
+    [
+      72,
+      1908
+    ],
+    [
+      5,
+      1075
+    ]
+  ],
+  "D2_c2015_cudb_to_vfdb__set3_objective__random_forest__T_prior": [
+    [
+      0,
+      1980
+    ],
+    [
+      0,
+      1080
+    ]
+  ]
+}

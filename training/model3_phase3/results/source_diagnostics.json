@@ -1,0 +1,22 @@
+{
+  "calibrated": {
+    "accuracy": 0.8410506363390198,
+    "balanced_accuracy": 0.666290680625035,
+    "macro_f1": 0.5549577693650901,
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ]
+  },
+  "original": {
+    "accuracy": 0.9290549688600054,
+    "balanced_accuracy": 0.7267566888054819,
+    "macro_f1": 0.6308411102569392,
+    "classes": [
+      "c2015",
+      "cudb",
+      "vfdb"
+    ]
+  }
+}

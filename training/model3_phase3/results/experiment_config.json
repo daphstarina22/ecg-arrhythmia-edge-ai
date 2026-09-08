@@ -1,0 +1,38 @@
+{
+  "seed": 42,
+  "repeatability_seeds": [
+    42,
+    123,
+    456,
+    789,
+    2025
+  ],
+  "test_size": 0.25,
+  "features": [
+    "mean",
+    "std",
+    "ptp",
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "reduced_features": [
+    "zero_crossings",
+    "peak_count",
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "dominant_freq",
+    "vf_band_power_ratio"
+  ],
+  "labels": {
+    "VT": 0,
+    "VF": 1
+  },
+  "robustness_formula": "0.4*mean(heldout macro F1)+0.4*mean(heldout VF F1)+0.2*worst heldout macro F1",
+  "onnx_exported": false
+}

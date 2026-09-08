@@ -1,0 +1,43 @@
+{
+  "conversion": "(digital - adc_zero) / gain + baseline",
+  "source": "c2015",
+  "sampling_rate_input_hz": 250,
+  "sampling_rate_output_hz": 360,
+  "selected_channel": "II only",
+  "old_gain_200_used": false,
+  "reconstructed_rows": 11420,
+  "reconstructed_records": 92,
+  "excluded_records": [
+    "v290s",
+    "v328s",
+    "v629l"
+  ],
+  "afib_rows": 0,
+  "source_diagnostics": {
+    "old": {
+      "accuracy": 0.9368456602499156,
+      "macro_f1": 0.6398018536945415,
+      "train_records": 93,
+      "test_records": 24,
+      "record_overlap": [],
+      "classes": [
+        "c2015",
+        "cudb",
+        "vfdb"
+      ]
+    },
+    "header_calibrated": {
+      "accuracy": 0.839918946301925,
+      "macro_f1": 0.5694687942860935,
+      "train_records": 93,
+      "test_records": 24,
+      "record_overlap": [],
+      "classes": [
+        "c2015",
+        "cudb",
+        "vfdb"
+      ]
+    }
+  },
+  "limitation": "Challenge2015 reconstruction only; VFDB and CUDB raw data are not in this archive."
+}

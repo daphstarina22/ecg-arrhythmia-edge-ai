@@ -4,3 +4,8 @@
 numpy>=1.24.0
 scipy>=1.10.0
 onnxruntime>=1.16.0
+flask>=2.2.0
+
+# Hardware interface libraries (for physical Raspberry Pi)
+spidev>=3.5; platform_system == "Linux"
+RPi.GPIO>=0.7.0; platform_system == "Linux"

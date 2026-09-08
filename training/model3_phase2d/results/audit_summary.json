@@ -1,0 +1,19 @@
+{
+  "feature_table": "vfvt_feature_table.csv",
+  "rows": 14618,
+  "labels": {
+    "VT": 12650,
+    "VF": 1968
+  },
+  "afib_rows": 0,
+  "records": 117,
+  "sources": {
+    "c2015": 11420,
+    "vfdb": 3060,
+    "cudb": 138
+  },
+  "raw_signal_files_found": 0,
+  "raw_signal_files": [],
+  "signal_level_normalization_available": false,
+  "normalization_note": "Only feature-space evidence is available; true signal-level normalization was not performed."
+}
