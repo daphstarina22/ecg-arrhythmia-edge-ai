@@ -431,20 +431,20 @@ system_state = {
 }
 
 
-def acquisition_and_inference_worker(mock: bool = False):
+def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 10.0):
     global chart_new_samples, system_state
 
-    print("[SYSTEM] Starting acquisition & inference thread...")
+    print(f"[SYSTEM] Starting acquisition & inference thread (Interval: {interval_sec:.1f}s)...")
     adc = create_adc(mock=mock, fs=FS)
     cascade = HierarchicalEdgeCascade()
 
     infer_buffer = np.zeros(WINDOW_SAMPLES, dtype=np.float32)
     filled_samples = 0
-    samples_since_infer = 0
 
     t_start = time.perf_counter()
     sample_count = 0
     last_rate_calc = t_start
+    last_infer_time = t_start
 
     try:
         while True:
@@ -470,7 +470,6 @@ def acquisition_and_inference_worker(mock: bool = False):
             infer_buffer = np.roll(infer_buffer, -1)
             infer_buffer[-1] = ch1_mv
             filled_samples = min(filled_samples + 1, WINDOW_SAMPLES)
-            samples_since_infer += 1
 
             # Measure actual hardware sampling rate every 2 seconds
             if t_now - last_rate_calc >= 2.0:
@@ -481,9 +480,9 @@ def acquisition_and_inference_worker(mock: bool = False):
                     system_state["hardware_sps"] = round(current_sps, 1)
                     system_state["total_samples"] = sample_count
 
-            # Trigger inference step every 2.5 seconds (900 samples)
-            if filled_samples == WINDOW_SAMPLES and samples_since_infer >= STEP_SAMPLES:
-                samples_since_infer = 0
+            # Trigger inference step every interval_sec (default 10.0 seconds)
+            if filled_samples == WINDOW_SAMPLES and (t_now - last_infer_time >= interval_sec):
+                last_infer_time = t_now
                 window_raw = infer_buffer.copy()
 
                 # 1. Evaluate Signal Quality
@@ -796,10 +795,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Unified ECG Arrhythmia Edge AI Monitor")
     parser.add_argument("--mock", action="store_true", help="Run in offline simulation mode without physical SPI")
     parser.add_argument("--port", type=int, default=5000, help="Web dashboard port (default: 5000)")
+    parser.add_argument("--interval", type=float, default=10.0, help="Inference interval in seconds (default: 10.0)")
     args = parser.parse_args()
 
     # Launch background acquisition thread
-    worker_t = threading.Thread(target=acquisition_and_inference_worker, kwargs={"mock": args.mock}, daemon=True)
+    worker_t = threading.Thread(
+        target=acquisition_and_inference_worker,
+        kwargs={"mock": args.mock, "interval_sec": args.interval},
+        daemon=True
+    )
     worker_t.start()
 
     time.sleep(1.0)
@@ -808,4 +812,14 @@ if __name__ == "__main__":
     print(f"  Open in browser: http://0.0.0.0:{args.port}")
     print(f"  (Or from your laptop: http://<raspberry-pi-ip>:{args.port})")
     print(f"===========================================================================\n")
-    app.run(host="0.0.0.0", port=args.port, debug=False)
+    try:
+        app.run(host="0.0.0.0", port=args.port, debug=False)
+    except OSError as err:
+        if "Address already in use" in str(err) or getattr(err, "errno", None) in (98, 10048):
+            print(f"\n[PORT ERROR] Port {args.port} is already in use by a background process!")
+            print(f"  To stop the existing process holding port {args.port}, run on the Pi:")
+            print(f"      sudo fuser -k {args.port}/tcp")
+            print(f"  Or start the dashboard on a different port, e.g.:")
+            print(f"      python3 combined_ecg_app.py --port {args.port + 1}\n")
+        else:
+            raise

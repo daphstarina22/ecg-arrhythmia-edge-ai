@@ -94,25 +94,55 @@ class ADS1292R:
         time.sleep(0.001)
 
     def _init_chip(self):
-        # Hardware reset via PWDN
+        # 1. Hardware reset pulse via PWDN/RESET pin
         self.GPIO.output(PWDN_PIN, self.GPIO.LOW)
-        time.sleep(0.01)
+        time.sleep(0.02)
         self.GPIO.output(PWDN_PIN, self.GPIO.HIGH)
-        time.sleep(0.15)
+        time.sleep(0.20)  # Allow internal oscillator to stabilize
 
-        self._cmd(CMD_RESET)
-        time.sleep(0.1)
+        # 2. Stop continuous conversion mode (RDATAC) first
         self._cmd(CMD_SDATAC)
-        time.sleep(0.01)
+        time.sleep(0.02)
 
-        # Chip-ID validation (fails loudly on wiring/SPI failure)
-        chip_id = self._read_reg(REG_ID)
-        if (chip_id & 0x1F) != 0x13 and chip_id != 0x73:
-            raise RuntimeError(
-                f"ADS1292R ID mismatch (got 0x{chip_id:02X}, expected 0x13 or 0x73) -- check wiring/SPI!"
-            )
-        print(f"[ADS1292R] Hardware Chip ID validated: 0x{chip_id:02X}")
+        # 3. Soft reset
+        self._cmd(CMD_RESET)
+        time.sleep(0.10)
 
+        # 4. Stop RDATAC mode again (chip resets back into RDATAC)
+        self._cmd(CMD_SDATAC)
+        time.sleep(0.02)
+
+        # 5. Read Chip ID with retry loop (allows oscillator settling)
+        chip_id = 0x00
+        for _ in range(5):
+            chip_id = self._read_reg(REG_ID)
+            if (chip_id & 0x1F) in (0x12, 0x13) or chip_id in (0x53, 0x73, 0x93, 0x52, 0x72):
+                break
+            time.sleep(0.05)
+
+        # Validate accepted IDs: ADS1292R (0x13, 0x53, 0x73, 0x93) or ADS1292 (0x12, 0x52, 0x72)
+        valid_ids = (chip_id & 0x1F) in (0x12, 0x13) or chip_id in (0x53, 0x73, 0x93, 0x52, 0x72)
+        if not valid_ids:
+            err_msg = f"ADS1292R ID mismatch: read 0x{chip_id:02X} (expected 0x13, 0x53, or 0x73)."
+            if chip_id == 0x00:
+                err_msg += (
+                    "\n  [DIAGNOSIS: 0x00 indicates the chip is not responding. Check:\n"
+                    "   1. 3.3V power (Pin 1) and GND (Pin 6) are securely connected.\n"
+                    "   2. MOSI (Pin 19), MISO (Pin 21), SCLK (Pin 23), CS (Pin 24) are correct.\n"
+                    "   3. PWDN / RESET: If not connected to Pin 15 (GPIO 22), connect it to 3.3V.\n"
+                    "   4. Run 'python3 deploy/inspect_ads1292r.py' to probe SPI directly.]"
+                )
+            elif chip_id == 0xFF:
+                err_msg += (
+                    "\n  [DIAGNOSIS: 0xFF indicates MISO is floating high. Check MISO on Pin 21.\n"
+                    "   Run 'python3 deploy/inspect_ads1292r.py' to probe SPI directly.]"
+                )
+            raise RuntimeError(err_msg)
+
+        chip_type = "ADS1292R" if ((chip_id & 0x1F) == 0x13 or chip_id in (0x53, 0x73)) else "ADS1292"
+        print(f"[ADS1292R] Hardware Chip validated: {chip_type} (ID: 0x{chip_id:02X})")
+
+        # 6. Configure registers
         self._write_reg(REG_CONFIG1, 0x02)    # 500 SPS, continuous conversion
         self._write_reg(REG_CONFIG2, 0xA0)    # Internal 2.42V reference ON
         self._write_reg(REG_CH1SET, 0x00)     # Gain=6, normal electrode input
@@ -120,6 +150,7 @@ class ADS1292R:
         self._write_reg(REG_RLDSENS, 0x2C)    # RLD sensed from CH1P/CH1N/CH2P
         time.sleep(0.01)
 
+        # 7. Start conversion streaming
         self._cmd(CMD_START)
         time.sleep(0.01)
         self._cmd(CMD_RDATAC)
@@ -214,16 +245,22 @@ class MockADS1292R:
 
 
 def create_adc(mock: bool = False, fs: int = FS):
-    """Factory helper: returns physical ADS1292R if available, else MockADS1292R."""
+    """
+    Factory helper: returns physical ADS1292R by default.
+    MockADS1292R is ONLY returned if mock=True is explicitly requested,
+    or if hardware libraries (spidev/RPi.GPIO) are absent on non-Linux dev machines.
+    """
     if mock:
         return MockADS1292R(fs=fs)
     try:
         import spidev
         import RPi.GPIO
-        return ADS1292R(fs=fs)
-    except (ImportError, RuntimeError) as err:
-        print(f"[NOTE] Physical ADS1292R not accessible ({err}). Falling back to MockADS1292R.")
+    except ImportError as e:
+        print(f"[WARN] Hardware libraries (spidev/RPi.GPIO) not found: {e}. Falling back to MockADS1292R.")
         return MockADS1292R(fs=fs)
+
+    # On Raspberry Pi: Run physical ADS1292R. Do NOT swallow RuntimeError!
+    return ADS1292R(fs=fs)
 
 
 # ======================================================================
