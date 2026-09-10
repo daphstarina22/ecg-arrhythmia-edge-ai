@@ -131,36 +131,56 @@ def evaluate_signal_quality(window: np.ndarray) -> SignalQualityReport:
     std_val = float(np.std(window))
     ptp_val = float(np.ptp(window))
 
-    # Flatline detection: variance near zero or minimal movement
-    if std_val < 0.015 or ptp_val < 0.050:
-        return SignalQualityReport(
-            status="BAD_SIGNAL_FLAT",
-            is_valid_for_ml=False,
-            n_samples=n_samples,
-            mean_mv=mean_val, std_mv=std_val, ptp_mv=ptp_val, min_mv=min_val, max_mv=max_val,
-            pct_nonfinite=0.0, pct_saturated=0.0,
-            detail="Signal is flatline or disconnected"
-        )
-
-    # Extreme saturation detection (|V| > 10.0 mV indicates rail or detached electrode)
-    n_sat = int(np.sum(np.abs(window) > 10.0))
-    pct_sat = (n_sat / n_samples) * 100.0
-    if pct_sat > 5.0:
+    # 1. Hardware ADC rail clipping (ADS1292R full scale with Gain=6, VREF=2.42V is +/-403.3 mV)
+    # When lead is off or pinned to VDD/GND, raw ADC clips near +/-400 mV
+    adc_rail_mv = 380.0
+    n_rail = int(np.sum(np.abs(window) >= adc_rail_mv))
+    pct_rail = (n_rail / n_samples) * 100.0
+    if pct_rail > 5.0:
         return SignalQualityReport(
             status="BAD_SIGNAL_SATURATED",
             is_valid_for_ml=False,
             n_samples=n_samples,
             mean_mv=mean_val, std_mv=std_val, ptp_mv=ptp_val, min_mv=min_val, max_mv=max_val,
-            pct_nonfinite=0.0, pct_saturated=pct_sat,
-            detail=f"Voltage saturated (|V| > 10mV) on {pct_sat:.1f}% of window"
+            pct_nonfinite=0.0, pct_saturated=pct_rail,
+            detail=f"Hardware ADC rail saturated (|V| >= {adc_rail_mv:.0f}mV) on {pct_rail:.1f}% of window"
+        )
+
+    # 2. Physiological AC dynamic range & flatline analysis (de-mean to remove electrode DC bias)
+    ac_signal = window - np.median(window)
+    ac_std = float(np.std(ac_signal))
+    ac_ptp = float(np.ptp(ac_signal))
+
+    # Flatline detection: AC variance near zero or minimal movement
+    if ac_std < 0.015 or ac_ptp < 0.050:
+        return SignalQualityReport(
+            status="BAD_SIGNAL_FLAT",
+            is_valid_for_ml=False,
+            n_samples=n_samples,
+            mean_mv=mean_val, std_mv=std_val, ptp_mv=ac_ptp, min_mv=min_val, max_mv=max_val,
+            pct_nonfinite=0.0, pct_saturated=0.0,
+            detail="Signal is flatline or disconnected"
+        )
+
+    # Excessive AC saturation (motion artifact, defib pulse, or non-cardiac square wave > 15 mV)
+    n_ac_sat = int(np.sum(np.abs(ac_signal) > 15.0))
+    pct_ac_sat = (n_ac_sat / n_samples) * 100.0
+    if pct_ac_sat > 10.0 or ac_ptp > 35.0:
+        return SignalQualityReport(
+            status="BAD_SIGNAL_SATURATED",
+            is_valid_for_ml=False,
+            n_samples=n_samples,
+            mean_mv=mean_val, std_mv=std_val, ptp_mv=ac_ptp, min_mv=min_val, max_mv=max_val,
+            pct_nonfinite=0.0, pct_saturated=pct_ac_sat,
+            detail=f"AC signal saturated (|V_ac| > 15mV) on {pct_ac_sat:.1f}% of window"
         )
 
     return SignalQualityReport(
         status="SIGNAL_OK",
         is_valid_for_ml=True,
         n_samples=n_samples,
-        mean_mv=mean_val, std_mv=std_val, ptp_mv=ptp_val, min_mv=min_val, max_mv=max_val,
-        pct_nonfinite=0.0, pct_saturated=pct_sat,
+        mean_mv=mean_val, std_mv=std_val, ptp_mv=ac_ptp, min_mv=min_val, max_mv=max_val,
+        pct_nonfinite=0.0, pct_saturated=pct_ac_sat,
         detail="Signal quality is acceptable for ML triage"
     )
 
