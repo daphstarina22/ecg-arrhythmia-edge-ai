@@ -22,7 +22,7 @@ import math
 import sys
 import threading
 import time
-from collections import deque
+from collections import deque, Counter
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -336,7 +336,22 @@ class HierarchicalEdgeCascade:
         self.in_m3 = self.sess_m3.get_inputs()[0].name
         print("[ML] All 3 candidate models successfully initialized.\n")
 
-    def predict(self, feature_map: Dict[str, float]) -> Dict[str, Any]:
+    def predict_m2_features(self, feature_map: Dict[str, float]) -> Tuple[str, float, Dict[str, float]]:
+        """Runs isolated Model 2 inference for temporal consensus sub-windows."""
+        v2 = np.array([[feature_map[k] for k in M2_FEATURES]], dtype=np.float32)
+        out2 = self.sess_m2.run(None, {self.in_m2: v2})
+        probs2 = out2[1][0] if isinstance(out2[1], (list, np.ndarray)) else out2[0][0]
+        if isinstance(probs2, dict):
+            p2_list = [float(probs2.get(i, 0.0)) for i in range(len(M2_CLASSES))]
+        else:
+            p2_list = [float(p) for p in probs2]
+        pred_idx2 = int(np.argmax(p2_list))
+        m2_class = M2_CLASSES[pred_idx2]
+        m2_conf = float(p2_list[pred_idx2])
+        prob_dict = {M2_CLASSES[i]: float(p2_list[i]) for i in range(len(M2_CLASSES))}
+        return m2_class, m2_conf, prob_dict
+
+    def predict(self, feature_map: Dict[str, float], consensus_m2: Optional[str] = None) -> Dict[str, Any]:
         t0 = time.perf_counter()
 
         # Tier 1: Shockable Screener
@@ -356,25 +371,19 @@ class HierarchicalEdgeCascade:
             "confidence": max(p_shock, p_nonshock),
         }
 
-        # Tier 2: 4-Class Rhythm Classifier
-        v2 = np.array([[feature_map[k] for k in M2_FEATURES]], dtype=np.float32)
-        out2 = self.sess_m2.run(None, {self.in_m2: v2})
-        probs2 = out2[1][0] if isinstance(out2[1], (list, np.ndarray)) else out2[0][0]
-        if isinstance(probs2, dict):
-            p2_list = [float(probs2.get(i, 0.0)) for i in range(len(M2_CLASSES))]
-        else:
-            p2_list = [float(p) for p in probs2]
-        pred_idx2 = int(np.argmax(p2_list))
-        m2_class = M2_CLASSES[pred_idx2]
+        # Tier 2: 4-Class Rhythm Classifier (with Method C Consensus)
+        raw_m2_class, m2_conf, prob_dict = self.predict_m2_features(feature_map)
+        effective_m2_class = consensus_m2 if consensus_m2 is not None else raw_m2_class
         m2_result = {
-            "predicted_class": m2_class,
-            "confidence": float(p2_list[pred_idx2]),
-            "probabilities": {M2_CLASSES[i]: float(p2_list[i]) for i in range(len(M2_CLASSES))},
+            "predicted_class": effective_m2_class,
+            "raw_class": raw_m2_class,
+            "confidence": m2_conf,
+            "probabilities": prob_dict,
         }
 
         # Tier 3: Ventricular Specialist (Triggered if Shockable OR Class == "VENTRICULAR")
         m3_result = None
-        if is_shockable or m2_class == "VENTRICULAR":
+        if is_shockable or effective_m2_class == "VENTRICULAR":
             v3 = np.array([[feature_map[k] for k in M3_FEATURES]], dtype=np.float32)
             out3 = self.sess_m3.run(None, {self.in_m3: v3})
             probs3 = out3[1][0] if isinstance(out3[1], (list, np.ndarray)) else out3[0][0]
@@ -396,13 +405,13 @@ class HierarchicalEdgeCascade:
             final_class = f"SHOCKABLE ({sub})"
             triage_level = "EMERGENCY_SHOCK_ADVISED"
             confidence = m1_result["confidence"]
-        elif m2_class == "VENTRICULAR":
+        elif effective_m2_class == "VENTRICULAR":
             sub = m3_result["subtype"] if m3_result else "VT"
             final_class = f"VENTRICULAR ({sub})"
             triage_level = "URGENT_VENTRICULAR"
             confidence = m2_result["confidence"]
-        elif m2_class in ("TACHY", "BRADY_ASY"):
-            final_class = m2_class
+        elif effective_m2_class in ("TACHY", "BRADY_ASY"):
+            final_class = effective_m2_class
             triage_level = "MONITORING_REQUIRED"
             confidence = m2_result["confidence"]
         else:
@@ -451,14 +460,16 @@ system_state = {
 }
 
 
-def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 10.0):
+def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 10.0, headless: bool = False):
     global chart_new_samples, system_state
 
-    print(f"[SYSTEM] Starting acquisition & inference thread (Interval: {interval_sec:.1f}s)...")
+    mode_str = "Headless CLI Mode (No Web UI Overhead)" if headless else "Full Web Dashboard Mode"
+    print(f"[SYSTEM] Starting acquisition & inference thread ({mode_str}, Interval: {interval_sec:.1f}s)...")
     adc = create_adc(mock=mock, fs=FS)
     cascade = HierarchicalEdgeCascade()
 
-    infer_buffer = np.zeros(WINDOW_SAMPLES, dtype=np.float32)
+    BUFFER_10S_SAMPLES = int(FS * 10.0)  # 3600 samples for Method C (10-second temporal consensus)
+    infer_buffer = np.zeros(BUFFER_10S_SAMPLES, dtype=np.float32)
     filled_samples = 0
 
     t_start = time.perf_counter()
@@ -472,24 +483,25 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
             ch1_mv, _ = adc.read_sample()
             sample_count += 1
 
-            # Update rolling display buffer
-            with state_lock:
-                display_raw.append(ch1_mv)
-                chart_new_samples += 1
-                if chart_new_samples >= CHART_REFILTER_EVERY_N:
-                    chart_new_samples = 0
-                    arr = np.array(display_raw)
-                    try:
-                        filt = research_grade_filter(arr, fs=FS)
-                        display_filtered.clear()
-                        display_filtered.extend(filt.tolist())
-                    except Exception:
-                        pass
+            # Update rolling display buffer (skipped in headless mode to conserve Pi CPU)
+            if not headless:
+                with state_lock:
+                    display_raw.append(ch1_mv)
+                    chart_new_samples += 1
+                    if chart_new_samples >= CHART_REFILTER_EVERY_N:
+                        chart_new_samples = 0
+                        arr = np.array(display_raw)
+                        try:
+                            filt = research_grade_filter(arr, fs=FS)
+                            display_filtered.clear()
+                            display_filtered.extend(filt.tolist())
+                        except Exception:
+                            pass
 
-            # Update rolling inference buffer
+            # Update rolling inference buffer (10-second history)
             infer_buffer = np.roll(infer_buffer, -1)
             infer_buffer[-1] = ch1_mv
-            filled_samples = min(filled_samples + 1, WINDOW_SAMPLES)
+            filled_samples = min(filled_samples + 1, BUFFER_10S_SAMPLES)
 
             # Measure actual hardware sampling rate every 2 seconds
             if t_now - last_rate_calc >= 2.0:
@@ -500,12 +512,13 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                     system_state["hardware_sps"] = round(current_sps, 1)
                     system_state["total_samples"] = sample_count
 
-            # Trigger inference step every interval_sec (default 10.0 seconds)
-            if filled_samples == WINDOW_SAMPLES and (t_now - last_infer_time >= interval_sec):
+            # Trigger inference step every interval_sec (default 10.0 seconds) once at least 5s is buffered
+            if filled_samples >= WINDOW_SAMPLES and (t_now - last_infer_time >= interval_sec):
                 last_infer_time = t_now
-                window_raw = infer_buffer.copy()
+                # Primary current 5-second window is always the newest 1800 samples (t-5s to t)
+                window_raw = infer_buffer[-WINDOW_SAMPLES:].copy()
 
-                # 1. Evaluate Signal Quality
+                # 1. Evaluate Signal Quality on current primary window
                 quality = evaluate_signal_quality(window_raw)
 
                 timestamp_str = time.strftime("%H:%M:%S")
@@ -523,14 +536,52 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                     print(f"[{timestamp_str}] [SIGNAL DIAGNOSTIC] {quality.status}: {quality.detail} -> ML NOT RUN")
                     continue
 
-                # 2. Filter window and extract features
+                # 2. Filter primary window and extract features
                 diag_window = research_grade_filter(window_raw, fs=FS)
                 feats = extract_features(diag_window, window_raw, fs=FS)
+                current_m2_class, current_m2_conf, _ = cascade.predict_m2_features(feats)
 
-                # 3. Execute 3-Model Cascade
-                prediction = cascade.predict(feats)
+                # 3. Method C: 10-Second Temporal Consensus across overlapping windows
+                # Window 1: t-10s to t-5s    (samples 0:1800)
+                # Window 2: t-7.5s to t-2.5s  (samples 900:2700)
+                # Window 3: t-5s to t        (samples 1800:3600 == window_raw)
+                if filled_samples < BUFFER_10S_SAMPLES:
+                    # At startup before full 10 seconds of history has accumulated
+                    temporal_history = [current_m2_class]
+                    consensus_class = current_m2_class
+                else:
+                    w1_raw = infer_buffer[0:1800].copy()
+                    diag_w1 = research_grade_filter(w1_raw, fs=FS)
+                    feats_w1 = extract_features(diag_w1, w1_raw, fs=FS)
+                    pred_w1, _, _ = cascade.predict_m2_features(feats_w1)
 
-                # 4. Update shared state
+                    w2_raw = infer_buffer[900:2700].copy()
+                    diag_w2 = research_grade_filter(w2_raw, fs=FS)
+                    feats_w2 = extract_features(diag_w2, w2_raw, fs=FS)
+                    pred_w2, _, _ = cascade.predict_m2_features(feats_w2)
+
+                    temporal_history = [pred_w1, pred_w2, current_m2_class]
+                    counts = Counter(temporal_history)
+                    top_class, top_count = counts.most_common(1)[0]
+                    if top_count >= 2:
+                        consensus_class = top_class
+                    else:
+                        consensus_class = current_m2_class  # tie-breaker: newest prediction
+
+                is_changed = (consensus_class != current_m2_class)
+                status_str = f"CHANGED ({current_m2_class} -> {consensus_class})" if is_changed else "STABLE (No Change)"
+
+                # Requirement 10: Clear consensus logging
+                print(f"[{timestamp_str}] [METHOD C CONSENSUS] "
+                      f"Current M2: {current_m2_class} ({current_m2_conf * 100:.1f}%) | "
+                      f"History: {temporal_history} | "
+                      f"Final Consensus: {consensus_class} | "
+                      f"Status: {status_str}")
+
+                # 4. Execute 3-Model Cascade with consensus
+                prediction = cascade.predict(feats, consensus_m2=consensus_class)
+
+                # 5. Update shared state
                 with state_lock:
                     system_state["signal_quality"] = "GOOD"
                     system_state["signal_details"] = f"OK (PTP={quality.ptp_mv:.2f}mV, Std={quality.std_mv:.2f}mV)"
@@ -548,8 +599,11 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
 
                     # Model 2
                     system_state["model2"] = {
-                        "rhythm": prediction["model2"]["predicted_class"],
+                        "rhythm": consensus_class,
                         "confidence": round(prediction["model2"]["confidence"] * 100, 1),
+                        "raw_m2": current_m2_class,
+                        "history": temporal_history,
+                        "consensus_changed": is_changed,
                     }
 
                     # Model 3
