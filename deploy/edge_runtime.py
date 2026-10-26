@@ -1,14 +1,20 @@
-"""Standalone Raspberry Pi Edge AI Runtime for 3-Model ECG Arrhythmia Classification.
+"""Standalone Raspberry Pi Edge AI Runtime for Unified ECG Arrhythmia Classification.
 
-Optimized for ARM Linux / Raspberry Pi OS.
-Requires only: numpy, scipy, onnxruntime (No pandas, No scikit-learn).
+Optimized for ARM Linux / Raspberry Pi OS (Raspberry Pi 4B+).
+Integrates:
+  - Tier 0: Signal Quality Guard (Flatline, Saturation, Non-finite)
+  - Tier 1: Shockable Screener (Candidate ONNX)
+  - Tier 2: 4-Class General Rhythm (Candidate ONNX: NSR, TACHY, BRADY_ASY, VENTRICULAR)
+  - Tier 3: VT vs VF Ventricular Subtype Specialist (Candidate ONNX)
+  - Patient-Adaptive AFib Branch: Research Config C (Causal Baseline Tracker + Persistence)
+  - Unified Arbitration Layer: Exactly 9 deterministic output labels.
 """
 
 import argparse
 import math
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -21,6 +27,16 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 MODELS_DIR = SCRIPT_DIR / "models"
 if not MODELS_DIR.exists():
     MODELS_DIR = PROJECT_ROOT / "training" / "final_models" / "export_candidates"
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from deploy.afib_bridge import CausalAdaptiveAFibBridge
+from deploy.unified_decision_layer import (
+    UnifiedRhythmLabel,
+    UnifiedDecision,
+    arbitrate_decision,
+)
 
 TARGET_FS = 360
 WINDOW_SEC = 5.0
@@ -45,6 +61,65 @@ MODEL3_FEATURES = [
 
 MODEL2_CLASSES = ["NSR", "TACHY", "BRADY_ASY", "VENTRICULAR"]
 MODEL3_CLASSES = ["VT", "VF_VFL"]
+
+
+def evaluate_signal_quality(window: np.ndarray) -> Dict[str, Any]:
+    """Tier 0 Signal Quality diagnostic check."""
+    n_samples = len(window)
+    if n_samples < 100:
+        return {
+            "status": "BAD_SIGNAL_EMPTY",
+            "is_valid_for_ml": False,
+            "detail": f"Insufficient samples ({n_samples})",
+            "ptp_mv": 0.0,
+            "std_mv": 0.0,
+        }
+
+    n_nonfinite = int(np.sum(~np.isfinite(window)))
+    if n_nonfinite > 0:
+        return {
+            "status": "BAD_SIGNAL_NONFINITE",
+            "is_valid_for_ml": False,
+            "detail": f"NaN or Inf detected ({n_nonfinite} samples)",
+            "ptp_mv": 0.0,
+            "std_mv": 0.0,
+        }
+
+    ptp_val = float(np.ptp(window))
+    std_val = float(np.std(window))
+
+    # Hardware rail saturation (|V| >= 380 mV)
+    adc_rail_mv = 380.0
+    pct_rail = (np.sum(np.abs(window) >= adc_rail_mv) / n_samples) * 100.0
+    if pct_rail > 5.0:
+        return {
+            "status": "BAD_SIGNAL_SATURATED",
+            "is_valid_for_ml": False,
+            "detail": f"ADC rail saturated on {pct_rail:.1f}% of window",
+            "ptp_mv": ptp_val,
+            "std_mv": std_val,
+        }
+
+    # Flatline detection
+    ac_signal = window - np.median(window)
+    ac_std = float(np.std(ac_signal))
+    ac_ptp = float(np.ptp(ac_signal))
+    if ac_std < 0.015 or ac_ptp < 0.050:
+        return {
+            "status": "BAD_SIGNAL_FLAT",
+            "is_valid_for_ml": False,
+            "detail": "Signal is flatline or disconnected",
+            "ptp_mv": ac_ptp,
+            "std_mv": ac_std,
+        }
+
+    return {
+        "status": "SIGNAL_OK",
+        "is_valid_for_ml": True,
+        "detail": "Signal quality acceptable for ML triage",
+        "ptp_mv": ac_ptp,
+        "std_mv": ac_std,
+    }
 
 
 def butter_bandpass(sig: np.ndarray, lowcut: float = 0.5, highcut: float = 40.0, fs: int = TARGET_FS) -> np.ndarray:
@@ -201,10 +276,13 @@ class TriageDecision:
     tier3_result: Optional[Dict[str, Any]]
     latencies_ms: Dict[str, float]
     safety_flags: List[str]
+    afib_result: Optional[Dict[str, Any]] = None
+    unified_label: Optional[str] = None
+    unified_decision: Optional[UnifiedDecision] = None
 
 
 class HierarchicalEdgeClassifier:
-    """3-tier edge inference cascade with domain-shift guardrails."""
+    """Unified edge inference cascade integrating 3 ONNX tiers with patient-adaptive AFib."""
 
     def __init__(self, models_dir: Path = MODELS_DIR):
         self.models_dir = Path(models_dir)
@@ -224,11 +302,67 @@ class HierarchicalEdgeClassifier:
         self.sess_m2 = ort.InferenceSession(str(m2_path), sess_options=opts, providers=["CPUExecutionProvider"])
         self.sess_m3 = ort.InferenceSession(str(m3_path), sess_options=opts, providers=["CPUExecutionProvider"])
 
-    def predict_window(self, sig: np.ndarray, fs: int = TARGET_FS) -> TriageDecision:
+        # Patient-adaptive AFib bridge
+        self.afib_bridge = CausalAdaptiveAFibBridge(fs_target=TARGET_FS)
+        self.window_count = 0
+
+    def reset(self, record_id: Optional[str] = None):
+        """Reset internal trackers at record/patient boundaries."""
+        self.afib_bridge.reset(new_record_id=record_id)
+        self.window_count = 0
+
+    def predict_window(
+        self,
+        sig: np.ndarray,
+        fs: int = TARGET_FS,
+        current_time_sec: Optional[float] = None,
+        record_id: Optional[str] = None,
+    ) -> TriageDecision:
         latencies = {}
         t_start = time.perf_counter()
+        self.window_count += 1
+        t_sec = current_time_sec if current_time_sec is not None else float(self.window_count * 5.0)
 
-        # Step 1: Feature Extraction
+        # Tier 0: Signal Quality Guard
+        t0 = time.perf_counter()
+        quality = evaluate_signal_quality(sig)
+        latencies["tier0_quality"] = (time.perf_counter() - t0) * 1000.0
+
+        if not quality["is_valid_for_ml"]:
+            # Signal quality failed: bypass ML and return POOR_SIGNAL_OR_LEAD_OFF
+            t1_diag = {"label": "NOT_RUN", "prob_shockable": 0.0, "is_shockable": False}
+            t2_diag = {"predicted_class": "NOT_RUN", "class_probabilities": {}, "confidence": 0.0}
+            t3_diag = None
+            afib_diag = {"afib_alert": False, "raw_probability": 0.0, "status": "SIGNAL_INVALID"}
+            latencies["total_cycle"] = (time.perf_counter() - t_start) * 1000.0
+
+            unified = arbitrate_decision(
+                quality_report=quality,
+                tier1_result=t1_diag,
+                tier2_result=t2_diag,
+                tier3_result=t3_diag,
+                afib_result=afib_diag,
+                latencies_ms=latencies,
+            )
+
+            return TriageDecision(
+                triage_level=unified.triage_level,
+                primary_rhythm=unified.final_label,
+                is_shockable=False,
+                confidence=0.0,
+                defibrillator_advised=False,
+                recommended_action=unified.recommended_action,
+                tier1_result=t1_diag,
+                tier2_result=t2_diag,
+                tier3_result=t3_diag,
+                latencies_ms=latencies,
+                safety_flags=unified.safety_flags,
+                afib_result=afib_diag,
+                unified_label=unified.final_label,
+                unified_decision=unified,
+            )
+
+        # Step 1: Cascade Feature Extraction (Tiers 1, 2, 3)
         t0 = time.perf_counter()
         feats = extract_cascade_features(sig, fs=fs)
         latencies["feature_extraction"] = (time.perf_counter() - t0) * 1000.0
@@ -251,6 +385,7 @@ class HierarchicalEdgeClassifier:
             "label": "SHOCKABLE" if is_shockable else "NON_SHOCKABLE",
             "prob_shockable": p_shockable,
             "prob_non_shockable": 1.0 - p_shockable,
+            "is_shockable": is_shockable,
         }
 
         # Tier 2: Multi-Arrhythmia 4-Class Classifier
@@ -271,7 +406,6 @@ class HierarchicalEdgeClassifier:
 
         # Tier 3: VT vs. VF Subtype Specialist (Triggered if Shockable or Ventricular)
         t3_diag = None
-        safety_flags = []
         is_ventricular = (is_shockable or pred_class_m2 == "VENTRICULAR")
 
         if is_ventricular:
@@ -285,12 +419,6 @@ class HierarchicalEdgeClassifier:
             p_vf = float(prob_dict_m3.get(1, 0.0))
             p_vt = float(prob_dict_m3.get(0, 0.0))
 
-            if 0.40 <= p_vf <= 0.60:
-                safety_flags.append("EQUIVOCAL_VENTRICULAR_SUBTYPE: Borderline morphological complexity between rapid VT and fine VF.")
-            
-            if feats["lz_complexity"] > 0.85 and feats["zero_crossings"] > 75:
-                safety_flags.append("HIGH_COMPLEXITY_WARNING: Elevated high-frequency crossings detected; check lead impedance.")
-
             t3_diag = {
                 "subtype": pred_class_m3,
                 "prob_vt": p_vt,
@@ -302,54 +430,44 @@ class HierarchicalEdgeClassifier:
         else:
             latencies["tier3_subtype"] = 0.0
 
+        # Tier AFib: Patient-Adaptive AFib Branch
+        t0 = time.perf_counter()
+        afib_diag = self.afib_bridge.predict_window(
+            sig_window=sig,
+            fs=fs,
+            current_time_sec=t_sec,
+            is_valid_signal=quality["is_valid_for_ml"],
+            record_id=record_id,
+        )
+        latencies["afib_branch"] = (time.perf_counter() - t0) * 1000.0
+
         latencies["total_cycle"] = (time.perf_counter() - t_start) * 1000.0
 
-        # Clinical Triage Synthesis
-        if is_ventricular and t3_diag is not None:
-            if t3_diag["subtype"] == "VF_VFL":
-                triage_level = "CRITICAL_EMERGENCY"
-                primary_rhythm = "Ventricular Fibrillation / Flutter (VF/VFL)"
-                defib_advised = True
-                action = "CRITICAL: Immediate Shock Recommended! Initiate CPR and charge defibrillator."
-                conf = t3_diag["prob_vf_vfl"]
-            else:
-                triage_level = "CRITICAL_EMERGENCY" if is_shockable else "URGENT_MONITORING"
-                primary_rhythm = "Ventricular Tachycardia (VT)"
-                defib_advised = is_shockable
-                action = "CRITICAL: Sustained Ventricular Tachycardia! Prepare synchronized cardioversion / evaluate hemodynamics." if is_shockable else "URGENT: Ventricular rhythm detected. Notify cardiology."
-                conf = t3_diag["prob_vt"]
-        elif pred_class_m2 == "TACHY":
-            triage_level = "URGENT_MONITORING"
-            primary_rhythm = "Supraventricular Tachycardia (SVTA / Rapid Rhythm)"
-            defib_advised = False
-            action = "URGENT: Rapid narrow-complex rhythm detected. Assess heart rate and patient symptoms."
-            conf = probs_m2["TACHY"]
-        elif pred_class_m2 == "BRADY_ASY":
-            is_asy = (feats["calibrated_std"] < 0.05)
-            triage_level = "CRITICAL_EMERGENCY" if is_asy else "URGENT_MONITORING"
-            primary_rhythm = "Asystole / Severe Bradycardia" if is_asy else "Bradycardia / Conduction Pause"
-            defib_advised = False
-            action = "CRITICAL: Possible Asystole / No pulse! Check responsiveness and start CPR if pulseless." if is_asy else "URGENT: Marked bradycardia detected. Check vitals."
-            conf = probs_m2["BRADY_ASY"]
-        else:
-            triage_level = "ROUTINE_NORMAL"
-            primary_rhythm = "Normal Sinus Rhythm (NSR)"
-            defib_advised = False
-            action = "STABLE: Rhythm within normal physiological parameters. Continue routine monitoring."
-            conf = probs_m2["NSR"]
+        # Unified Arbitration
+        unified = arbitrate_decision(
+            quality_report=quality,
+            tier1_result=t1_diag,
+            tier2_result=t2_diag,
+            tier3_result=t3_diag,
+            afib_result=afib_diag,
+            latencies_ms=latencies,
+        )
 
         return TriageDecision(
-            triage_level=triage_level,
-            primary_rhythm=primary_rhythm,
-            is_shockable=defib_advised,
-            confidence=conf,
-            defibrillator_advised=defib_advised,
-            recommended_action=action,
+            triage_level=unified.triage_level,
+            primary_rhythm=unified.final_label,
+            is_shockable=unified.is_shockable,
+            confidence=unified.confidence,
+            defibrillator_advised=unified.defibrillator_advised,
+            recommended_action=unified.recommended_action,
             tier1_result=t1_diag,
             tier2_result=t2_diag,
             tier3_result=t3_diag,
             latencies_ms=latencies,
-            safety_flags=safety_flags,
+            safety_flags=unified.safety_flags,
+            afib_result=afib_diag,
+            unified_label=unified.final_label,
+            unified_decision=unified,
         )
 
 
@@ -358,78 +476,96 @@ def render_dashboard(record_id: str, dec: TriageDecision):
         "CRITICAL_EMERGENCY": "\033[91m",
         "URGENT_MONITORING":  "\033[93m",
         "ROUTINE_NORMAL":    "\033[92m",
+        "SIGNAL_INVALID":    "\033[90m",
+        "UNCERTAIN":         "\033[95m",
     }
     reset = "\033[0m"
     bold = "\033[1m"
     c = color_map.get(dec.triage_level, "")
 
-    print(f"\n{'='*82}")
-    print(f"{bold}INPUT RECORD: {record_id:<30} | TRIAGE: {c}{dec.triage_level}{reset}")
-    print(f"{'='*82}")
-    print(f"  Primary Diagnosis   : {bold}{dec.primary_rhythm}{reset} (Certainty: {dec.confidence:.1%})")
-    print(f"  Shock Advised (AED) : {bold}{'YES (SHOCKABLE)' if dec.defibrillator_advised else 'NO (NON-SHOCKABLE)'}{reset}")
-    print(f"  Action Required     : {c}{dec.recommended_action}{reset}")
-    
+    print(f"\n{'='*84}")
+    print(f"{bold}INPUT: {record_id:<28} | UNIFIED TRIAGE: {c}{dec.triage_level}{reset}")
+    print(f"{'='*84}")
+    print(f"  Unified Output Label : {bold}{c}{dec.primary_rhythm}{reset} (Certainty: {dec.confidence:.1%})")
+    print(f"  Shock Advised (AED)  : {bold}{'YES (SHOCKABLE)' if dec.defibrillator_advised else 'NO (NON-SHOCKABLE)'}{reset}")
+    print(f"  Action Guidance      : {dec.recommended_action}")
+
     t1 = dec.tier1_result
     t2 = dec.tier2_result
-    print(f"  Tier 1 Screener     : {t1['label']} (P(Shock): {t1['prob_shockable']:.1%})")
-    p_str = ', '.join([f'{k}: {v:.1%}' for k, v in t2['class_probabilities'].items()])
-    print(f"  Tier 2 4-Class      : {t2['predicted_class']} [{p_str}]")
+    print(f"  Tier 1 Screener      : {t1['label']} (P(Shock): {t1.get('prob_shockable', 0.0):.1%})")
+    p_str = ', '.join([f'{k}: {v:.1%}' for k, v in t2.get('class_probabilities', {}).items()]) if t2.get('class_probabilities') else '--'
+    print(f"  Tier 2 4-Class       : {t2['predicted_class']} [{p_str}]")
+
     if dec.tier3_result:
         t3 = dec.tier3_result
-        print(f"  Tier 3 Subtype      : {t3['subtype']} (P(VF): {t3['prob_vf_vfl']:.1%}, LZ: {t3['lz_complexity']:.3f}, SampEn: {t3['sample_entropy']:.3f})")
+        print(f"  Tier 3 Subtype       : {t3['subtype']} (P(VF): {t3['prob_vf_vfl']:.1%}, P(VT): {t3['prob_vt']:.1%})")
     else:
-        print("  Tier 3 Subtype      : Bypassed (Non-ventricular rhythm)")
+        print("  Tier 3 Subtype       : Bypassed (Non-ventricular rhythm)")
+
+    if dec.afib_result:
+        af = dec.afib_result
+        alert_str = "POSITIVE (AFIB ALERT)" if af.get("afib_alert") else "NEGATIVE (NO AFIB)"
+        print(f"  AFib Branch (Exp.)   : {alert_str} (P(AFib): {af.get('raw_probability', 0.0):.1%}, Warmup: {af.get('tracker_warmup_fraction', 0.0):.0%})")
 
     if dec.safety_flags:
         for flag in dec.safety_flags:
             print(f"  ! {flag}")
 
     l = dec.latencies_ms
-    print(f"  Latency Profile     : Features={l['feature_extraction']:.1f}ms | T1={l['tier1_shockable']:.2f}ms | T2={l['tier2_multiclass']:.2f}ms | T3={l['tier3_subtype']:.2f}ms | Total={l['total_cycle']:.1f}ms")
-    print(f"{'='*82}")
+    print(f"  Latency Profile      : Feats={l.get('feature_extraction', 0.0):.1f}ms | T1={l.get('tier1_shockable', 0.0):.2f}ms | T2={l.get('tier2_multiclass', 0.0):.2f}ms | T3={l.get('tier3_subtype', 0.0):.2f}ms | AFib={l.get('afib_branch', 0.0):.2f}ms | Total={l.get('total_cycle', 0.0):.1f}ms")
+    print(f"  Notice: [RESEARCH ONLY] AFib branch is experimental and not clinically validated.")
+    print(f"{'='*84}")
 
 
-def run_benchmark(n_iterations: int = 100):
-    print(f"\nRunning edge latency & throughput benchmark ({n_iterations} iterations)...")
+def run_benchmark(n_iterations: int = 50):
+    print(f"\nRunning unified edge latency & throughput benchmark ({n_iterations} iterations)...")
     clf = HierarchicalEdgeClassifier()
     dummy = np.random.randn(WINDOW_SAMPLES).astype(np.float32)
 
     times = []
-    for _ in range(n_iterations):
+    for i in range(n_iterations):
         t0 = time.perf_counter()
-        _ = clf.predict_window(dummy)
+        _ = clf.predict_window(dummy, current_time_sec=i * 5.0)
         times.append((time.perf_counter() - t0) * 1000.0)
 
     times = np.array(times)
-    print("Edge Benchmark Results (Raspberry Pi CPU):")
-    print(f"  Mean Latency       : {np.mean(times):.2f} ms")
-    print(f"  Median Latency     : {np.median(times):.2f} ms")
-    print(f"  95th Percentile    : {np.percentile(times, 95):.2f} ms")
-    print(f"  Throughput         : {1000.0 / np.mean(times):.1f} windows/sec ({1000.0 / np.mean(times) * 5.0:.1f}x real-time speedup)")
+    print("\nUnified Edge Benchmark Results (Raspberry Pi 4B+ CPU Target):")
+    print(f"  Mean Latency        : {np.mean(times):.2f} ms")
+    print(f"  Median Latency      : {np.median(times):.2f} ms")
+    print(f"  95th Percentile     : {np.percentile(times, 95):.2f} ms")
+    print(f"  Throughput          : {1000.0 / np.mean(times):.1f} windows/sec ({1000.0 / np.mean(times) * 5.0:.1f}x real-time speedup)")
 
 
 def run_synthetic_demo():
-    print("\n" + "="*82)
-    print("  RUNNING EDGE AI CASSETTE SYNTHETIC DEMONSTRATION")
-    print("="*82)
+    print("\n" + "="*84)
+    print("  RUNNING UNIFIED EDGE AI MULTI-ARRHYTHMIA SYNTHETIC DEMONSTRATION")
+    print("="*84)
     clf = HierarchicalEdgeClassifier()
     t = np.linspace(0, 5, WINDOW_SAMPLES)
 
-    # 1. Synthetic NSR
-    sig_nsr = 0.8 * np.sin(2 * np.pi * 1.2 * t) + 0.05 * np.random.randn(WINDOW_SAMPLES)
-    # 2. Synthetic Rapid Tachycardia
-    sig_tachy = 0.9 * np.sin(2 * np.pi * 3.5 * t) + 0.05 * np.random.randn(WINDOW_SAMPLES)
-    # 3. Synthetic Chaotic VF
-    sig_vf = 0.5 * np.sin(2 * np.pi * 5.0 * t) * np.sin(2 * np.pi * 1.8 * t) + 0.3 * np.random.randn(WINDOW_SAMPLES)
+    # 1. Normal Sinus Rhythm (1.2 Hz ~ 72 bpm)
+    sig_nsr = 0.8 * np.sin(2 * np.pi * 1.2 * t) + 0.02 * np.random.randn(WINDOW_SAMPLES)
+    # 2. Rapid Tachycardia (3.0 Hz ~ 180 bpm)
+    sig_tachy = 0.9 * np.sin(2 * np.pi * 3.0 * t) + 0.02 * np.random.randn(WINDOW_SAMPLES)
+    # 3. Chaotic Ventricular Fibrillation
+    sig_vf = 0.6 * np.sin(2 * np.pi * 5.2 * t) * np.sin(2 * np.pi * 2.1 * t) + 0.25 * np.random.randn(WINDOW_SAMPLES)
+    # 4. Flatline / Disconnected Lead
+    sig_flat = 0.001 * np.random.randn(WINDOW_SAMPLES)
 
-    for name, sig in [("Synthetic Normal Sinus Rhythm", sig_nsr), ("Synthetic Tachycardia (180+ bpm)", sig_tachy), ("Synthetic Fibrillatory Rhythm (Chaotic)", sig_vf)]:
+    test_signals = [
+        ("Synthetic Normal Sinus Rhythm", sig_nsr),
+        ("Synthetic Tachycardia (180 bpm)", sig_tachy),
+        ("Synthetic Ventricular Fibrillation (Chaotic)", sig_vf),
+        ("Disconnected Lead / Flatline", sig_flat),
+    ]
+
+    for name, sig in test_signals:
         dec = clf.predict_window(sig.astype(np.float32))
         render_dashboard(name, dec)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Raspberry Pi Edge ECG Arrhythmia Runtime")
+    parser = argparse.ArgumentParser(description="Raspberry Pi Unified ECG Arrhythmia Runtime")
     parser.add_argument("--benchmark", action="store_true", help="Run edge throughput/latency benchmark")
     parser.add_argument("--demo", action="store_true", default=True, help="Run synthetic demonstration")
     parser.add_argument("--file", type=Path, default=None, help="Path to .npy or .csv ECG window (1800 samples)")

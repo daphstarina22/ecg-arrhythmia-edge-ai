@@ -1,11 +1,12 @@
 """Lightweight deployment verification and self-test script for Raspberry Pi.
 
 Verifies:
-  1. Python runtime and dependencies (numpy, scipy, onnxruntime)
+  1. Python runtime and dependencies (numpy, scipy, onnxruntime, joblib)
   2. Existence of all three ONNX candidate models
   3. Model loading and graph inspection (input/output metadata)
-  4. Safe synthetic inference through all three models
-  5. Full 3-tier hierarchical cascade execution on a 1,800-sample synthetic window
+  4. Safe synthetic inference through all three ONNX models
+  5. Patient-Adaptive AFib Bridge (Config C 26-features, tracker, persistence, 250->360Hz resampling)
+  6. Unified 9-label Decision Layer execution on 1,800-sample window
 """
 
 import sys
@@ -18,6 +19,9 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 MODELS_DIR = SCRIPT_DIR / "models"
 if not MODELS_DIR.exists():
     MODELS_DIR = PROJECT_ROOT / "training" / "final_models" / "export_candidates"
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 EXPECTED_MODELS = {
     "Model 1 (Shockable Screener)": {
@@ -40,16 +44,16 @@ EXPECTED_MODELS = {
 
 def run_checks() -> bool:
     all_passed = True
-    print("=" * 75)
-    print("  RASPBERRY PI DEPLOYMENT VERIFICATION & SELF-TEST")
-    print("=" * 75)
+    print("=" * 78)
+    print("  RASPBERRY PI DEPLOYMENT VERIFICATION & UNIFIED SELF-TEST")
+    print("=" * 78)
     print(f"Python Version : {sys.version.split()[0]} ({sys.executable})")
     print(f"Models Dir     : {MODELS_DIR}")
-    print("-" * 75)
+    print("-" * 78)
 
     # 1. Dependency checks
-    print("[CHECK 1/4] Verifying core edge dependencies...")
-    for pkg in ["numpy", "scipy", "onnxruntime"]:
+    print("[CHECK 1/6] Verifying core edge dependencies...")
+    for pkg in ["numpy", "scipy", "onnxruntime", "joblib"]:
         try:
             mod = __import__(pkg)
             ver = getattr(mod, "__version__", "installed")
@@ -66,7 +70,7 @@ def run_checks() -> bool:
     import onnxruntime as ort
 
     # 2. File existence checks
-    print("\n[CHECK 2/4] Verifying ONNX model candidate files...")
+    print("\n[CHECK 2/6] Verifying ONNX model candidate files...")
     sessions = {}
     for name, spec in EXPECTED_MODELS.items():
         path = MODELS_DIR / spec["filename"]
@@ -81,7 +85,7 @@ def run_checks() -> bool:
         return False
 
     # 3. Model loading and metadata inspection
-    print("\n[CHECK 3/4] Loading ONNX runtime sessions & inspecting graphs...")
+    print("\n[CHECK 3/6] Loading ONNX runtime sessions & inspecting graphs...")
     opts = ort.SessionOptions()
     opts.intra_op_num_threads = 1
     opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
@@ -103,8 +107,8 @@ def run_checks() -> bool:
     if not all_passed:
         return False
 
-    # 4. Synthetic inference check
-    print("\n[CHECK 4/4] Executing safe synthetic inference tests...")
+    # 4. Synthetic inference check (3 ONNX models)
+    print("\n[CHECK 4/6] Executing safe synthetic inference tests on ONNX models...")
     for name, spec in EXPECTED_MODELS.items():
         sess = sessions[name]
         n_feat = spec["expected_n_features"]
@@ -121,15 +125,68 @@ def run_checks() -> bool:
             print(f"  [FAIL] {name}: Inference failed ({e})")
             all_passed = False
 
-    print("=" * 75)
+    # 5. AFib bridge verification
+    print("\n[CHECK 5/6] Verifying Patient-Adaptive AFib Bridge & Resampling...")
+    try:
+        from deploy.afib_bridge import CausalAdaptiveAFibBridge
+        af_bridge = CausalAdaptiveAFibBridge(fs_target=360)
+        print(f"  [PASS] Loaded AFib model package: {af_bridge.model_path.name}")
+        print(f"         Feature schema: {len(af_bridge.feature_cols)} features ({af_bridge.feature_cols[:4]} ... {af_bridge.feature_cols[-2:]})")
+
+        # Test native 360 Hz window (1800 samples)
+        dummy_360 = np.random.randn(1800).astype(np.float32)
+        t0 = time.perf_counter()
+        out_360 = af_bridge.predict_window(dummy_360, fs=360, current_time_sec=5.0)
+        dt_360 = (time.perf_counter() - t0) * 1000.0
+        print(f"  [PASS] 360 Hz Window: Latency={dt_360:.2f} ms | P(AFib)={out_360['raw_probability']:.4f} | Alert={out_360['afib_alert']}")
+
+        # Test 250 Hz window (1250 samples) -> polyphase resampled to 360 Hz
+        dummy_250 = np.random.randn(1250).astype(np.float32)
+        t0 = time.perf_counter()
+        out_250 = af_bridge.predict_window(dummy_250, fs=250, current_time_sec=10.0)
+        dt_250 = (time.perf_counter() - t0) * 1000.0
+        print(f"  [PASS] 250 Hz Resampling: Latency={dt_250:.2f} ms | P(AFib)={out_250['raw_probability']:.4f} | Alert={out_250['afib_alert']}")
+
+    except Exception as e:
+        print(f"  [FAIL] AFib Bridge verification failed: {e}")
+        all_passed = False
+
+    # 6. Unified decision layer verification
+    print("\n[CHECK 6/6] Verifying Unified Decision Layer and Complete Runtime Cascade...")
+    try:
+        from deploy.edge_runtime import HierarchicalEdgeClassifier
+        from deploy.unified_decision_layer import UnifiedRhythmLabel
+
+        clf = HierarchicalEdgeClassifier()
+        dummy_win = np.random.randn(1800).astype(np.float32)
+        t0 = time.perf_counter()
+        decision = clf.predict_window(dummy_win)
+        dt_ms = (time.perf_counter() - t0) * 1000.0
+
+        valid_labels = [label.value for label in UnifiedRhythmLabel]
+        if decision.primary_rhythm in valid_labels:
+            print(f"  [PASS] Full Unified Cascade executed successfully:")
+            print(f"         Total Latency : {dt_ms:.2f} ms (Cycle: {decision.latencies_ms.get('total_cycle', 0.0):.2f} ms)")
+            print(f"         Output Label  : {decision.primary_rhythm}")
+            print(f"         Triage Level  : {decision.triage_level}")
+            print(f"         AED Shock     : {'YES' if decision.defibrillator_advised else 'NO'}")
+        else:
+            print(f"  [FAIL] Output label '{decision.primary_rhythm}' is not in the 9 unified labels: {valid_labels}")
+            all_passed = False
+
+    except Exception as e:
+        print(f"  [FAIL] Unified cascade verification failed: {e}")
+        all_passed = False
+
+    print("=" * 78)
     if all_passed:
         print("  STATUS: ALL DEPLOYMENT CHECKS PASSED [OK]")
         print("  The Raspberry Pi edge runtime environment is verified and ready.")
-        print("=" * 75)
+        print("=" * 78)
         return True
     else:
         print("  STATUS: DEPLOYMENT CHECKS FAILED [ERROR]")
-        print("=" * 75)
+        print("=" * 78)
         return False
 
 

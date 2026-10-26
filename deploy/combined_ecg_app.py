@@ -12,8 +12,10 @@ CRITICAL DESIGN:
   - Conservative Signal Quality Diagnostic Layer (Flatline, Non-finite, Saturation).
   - 3-Model Hierarchical ML Cascade:
       Model 1: Shockable Screener (Candidate ONNX)
-      Model 2: 4-Class Rhythm Classifier (Candidate ONNX)
+      Model 2: 4-Class Rhythm Classifier (Candidate ONNX: NSR, TACHY, BRADY_ASY, VENTRICULAR)
       Model 3: VT vs VF Ventricular Subtype Specialist (Candidate ONNX)
+  - Patient-Adaptive AFib Research Branch (Causal Baseline Tracker + Persistence Filter)
+  - Unified Arbitration Layer: Exactly 9 deterministic output labels.
   - Interactive Web Dashboard at http://<pi-ip>:5000.
 """
 
@@ -43,6 +45,12 @@ from deploy.ads1292r_driver import (
     create_adc,
     research_grade_filter,
     detect_r_peaks,
+)
+from deploy.afib_bridge import CausalAdaptiveAFibBridge
+from deploy.unified_decision_layer import (
+    UnifiedRhythmLabel,
+    UnifiedDecision,
+    arbitrate_decision,
 )
 
 # Model paths
@@ -131,8 +139,7 @@ def evaluate_signal_quality(window: np.ndarray) -> SignalQualityReport:
     std_val = float(np.std(window))
     ptp_val = float(np.ptp(window))
 
-    # 1. Hardware ADC rail clipping (ADS1292R full scale with Gain=6, VREF=2.42V is +/-403.3 mV)
-    # When lead is off or pinned to VDD/GND, raw ADC clips near +/-400 mV
+    # Hardware ADC rail clipping (ADS1292R full scale with Gain=6, VREF=2.42V is +/-403.3 mV)
     adc_rail_mv = 380.0
     n_rail = int(np.sum(np.abs(window) >= adc_rail_mv))
     pct_rail = (n_rail / n_samples) * 100.0
@@ -146,12 +153,12 @@ def evaluate_signal_quality(window: np.ndarray) -> SignalQualityReport:
             detail=f"Hardware ADC rail saturated (|V| >= {adc_rail_mv:.0f}mV) on {pct_rail:.1f}% of window"
         )
 
-    # 2. Physiological AC dynamic range & flatline analysis (de-mean to remove electrode DC bias)
+    # De-mean to remove electrode DC bias
     ac_signal = window - np.median(window)
     ac_std = float(np.std(ac_signal))
     ac_ptp = float(np.ptp(ac_signal))
 
-    # Flatline detection: AC variance near zero or minimal movement
+    # Flatline detection
     if ac_std < 0.015 or ac_ptp < 0.050:
         return SignalQualityReport(
             status="BAD_SIGNAL_FLAT",
@@ -162,7 +169,7 @@ def evaluate_signal_quality(window: np.ndarray) -> SignalQualityReport:
             detail="Signal is flatline or disconnected"
         )
 
-    # Excessive AC saturation (motion artifact, defib pulse, or non-cardiac square wave > 15 mV)
+    # Excessive AC saturation
     n_ac_sat = int(np.sum(np.abs(ac_signal) > 15.0))
     pct_ac_sat = (n_ac_sat / n_samples) * 100.0
     if pct_ac_sat > 10.0 or ac_ptp > 35.0:
@@ -314,7 +321,7 @@ def extract_features(diag_window: np.ndarray, raw_window: np.ndarray, fs: int = 
 
 
 # ======================================================================
-# 3-MODEL HIERARCHICAL CLASSIFIER CASCADE
+# UNIFIED MULTI-MODEL EDGE CASCADE
 # ======================================================================
 
 class HierarchicalEdgeCascade:
@@ -334,7 +341,10 @@ class HierarchicalEdgeCascade:
         print("[ML] Loading Tier 3: VT vs VF Subtype Specialist...")
         self.sess_m3 = ort.InferenceSession(str(M3_PATH), opts, providers=["CPUExecutionProvider"])
         self.in_m3 = self.sess_m3.get_inputs()[0].name
-        print("[ML] All 3 candidate models successfully initialized.\n")
+
+        print("[ML] Loading Patient-Adaptive AFib Bridge...")
+        self.afib_bridge = CausalAdaptiveAFibBridge(fs_target=FS)
+        print("[ML] All models and modules successfully initialized.\n")
 
     def predict_m2_features(self, feature_map: Dict[str, float]) -> Tuple[str, float, Dict[str, float]]:
         """Runs isolated Model 2 inference for temporal consensus sub-windows."""
@@ -351,10 +361,19 @@ class HierarchicalEdgeCascade:
         prob_dict = {M2_CLASSES[i]: float(p2_list[i]) for i in range(len(M2_CLASSES))}
         return m2_class, m2_conf, prob_dict
 
-    def predict(self, feature_map: Dict[str, float], consensus_m2: Optional[str] = None) -> Dict[str, Any]:
+    def predict(
+        self,
+        feature_map: Dict[str, float],
+        consensus_m2: Optional[str] = None,
+        sig_window: Optional[np.ndarray] = None,
+        current_time_sec: Optional[float] = None,
+        quality_report: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         t0 = time.perf_counter()
+        latencies: Dict[str, float] = {}
 
         # Tier 1: Shockable Screener
+        t_sub = time.perf_counter()
         v1 = np.array([[feature_map[k] for k in M1_FEATURES]], dtype=np.float32)
         out1 = self.sess_m1.run(None, {self.in_m1: v1})
         probs1 = out1[1][0] if isinstance(out1[1], (list, np.ndarray)) else out1[0][0]
@@ -366,24 +385,28 @@ class HierarchicalEdgeCascade:
         m1_result = {
             "is_shockable": is_shockable,
             "label": "SHOCKABLE" if is_shockable else "NON_SHOCKABLE",
-            "p_shockable": p_shock,
-            "p_non_shockable": p_nonshock,
+            "prob_shockable": p_shock,
+            "prob_non_shockable": p_nonshock,
             "confidence": max(p_shock, p_nonshock),
         }
+        latencies["tier1_shockable"] = (time.perf_counter() - t_sub) * 1000.0
 
         # Tier 2: 4-Class Rhythm Classifier (with Method C Consensus)
+        t_sub = time.perf_counter()
         raw_m2_class, m2_conf, prob_dict = self.predict_m2_features(feature_map)
         effective_m2_class = consensus_m2 if consensus_m2 is not None else raw_m2_class
         m2_result = {
             "predicted_class": effective_m2_class,
             "raw_class": raw_m2_class,
             "confidence": m2_conf,
-            "probabilities": prob_dict,
+            "class_probabilities": prob_dict,
         }
+        latencies["tier2_multiclass"] = (time.perf_counter() - t_sub) * 1000.0
 
         # Tier 3: Ventricular Specialist (Triggered if Shockable OR Class == "VENTRICULAR")
         m3_result = None
         if is_shockable or effective_m2_class == "VENTRICULAR":
+            t_sub = time.perf_counter()
             v3 = np.array([[feature_map[k] for k in M3_FEATURES]], dtype=np.float32)
             out3 = self.sess_m3.run(None, {self.in_m3: v3})
             probs3 = out3[1][0] if isinstance(out3[1], (list, np.ndarray)) else out3[0][0]
@@ -395,40 +418,51 @@ class HierarchicalEdgeCascade:
             m3_result = {
                 "subtype": subtype,
                 "confidence": max(p_vt, p_vf),
-                "p_vt": p_vt,
-                "p_vf": p_vf,
+                "prob_vt": p_vt,
+                "prob_vf_vfl": p_vf,
             }
-
-        # Synthesize Final Research Classification
-        if is_shockable:
-            sub = m3_result["subtype"] if m3_result else "UNKNOWN"
-            final_class = f"SHOCKABLE ({sub})"
-            triage_level = "EMERGENCY_SHOCK_ADVISED"
-            confidence = m1_result["confidence"]
-        elif effective_m2_class == "VENTRICULAR":
-            sub = m3_result["subtype"] if m3_result else "VT"
-            final_class = f"VENTRICULAR ({sub})"
-            triage_level = "URGENT_VENTRICULAR"
-            confidence = m2_result["confidence"]
-        elif effective_m2_class in ("TACHY", "BRADY_ASY"):
-            final_class = effective_m2_class
-            triage_level = "MONITORING_REQUIRED"
-            confidence = m2_result["confidence"]
+            latencies["tier3_subtype"] = (time.perf_counter() - t_sub) * 1000.0
         else:
-            final_class = "NORMAL_SINUS_RHYTHM"
-            triage_level = "ROUTINE"
-            confidence = m2_result["confidence"]
+            latencies["tier3_subtype"] = 0.0
 
-        latency_ms = (time.perf_counter() - t0) * 1000.0
+        # AFib Branch (Patient-Adaptive)
+        t_sub = time.perf_counter()
+        if sig_window is not None:
+            afib_result = self.afib_bridge.predict_window(
+                sig_window=sig_window,
+                fs=FS,
+                current_time_sec=current_time_sec,
+                is_valid_signal=True,
+            )
+        else:
+            afib_result = {"afib_alert": False, "raw_probability": 0.0, "status": "NOT_RUN"}
+        latencies["afib_branch"] = (time.perf_counter() - t_sub) * 1000.0
+
+        # Unified Arbitration Layer
+        q_rep = quality_report or {"status": "SIGNAL_OK", "is_valid_for_ml": True}
+        unified_dec = arbitrate_decision(
+            quality_report=q_rep,
+            tier1_result=m1_result,
+            tier2_result=m2_result,
+            tier3_result=m3_result,
+            afib_result=afib_result,
+            latencies_ms=latencies,
+        )
+
+        total_latency_ms = (time.perf_counter() - t0) * 1000.0
+        latencies["total_cycle"] = total_latency_ms
 
         return {
-            "final_classification": final_class,
-            "triage_level": triage_level,
-            "confidence": confidence,
-            "latency_ms": latency_ms,
+            "final_classification": unified_dec.final_label,
+            "triage_level": unified_dec.triage_level,
+            "confidence": unified_dec.confidence,
+            "recommended_action": unified_dec.recommended_action,
+            "latency_ms": total_latency_ms,
             "model1": m1_result,
             "model2": m2_result,
             "model3": m3_result,
+            "afib": afib_result,
+            "unified": unified_dec,
         }
 
 
@@ -445,7 +479,7 @@ display_filtered = deque([0.0] * DISPLAY_BUFFER_LEN, maxlen=DISPLAY_BUFFER_LEN)
 chart_new_samples = 0
 
 # Diagnostics & Triage state
-system_state = {
+system_state: Dict[str, Any] = {
     "signal_quality": "WARMING_UP",
     "signal_details": "System initializing...",
     "hardware_sps": 0.0,
@@ -453,8 +487,11 @@ system_state = {
     "model1": {"label": "--", "confidence": 0.0, "is_shockable": False},
     "model2": {"rhythm": "--", "confidence": 0.0},
     "model3": {"subtype": "--", "confidence": 0.0, "active": False},
+    "afib": {"alert": False, "probability": 0.0, "warmup_fraction": 0.0, "status": "WARMING_UP", "active": False},
+    "conflict": {"detected": False, "detail": None},
     "final_decision": "-- WARMING UP --",
     "triage_level": "WARMING_UP",
+    "recommended_action": "Acquiring baseline buffer...",
     "latency_ms": 0.0,
     "timestamp": "",
 }
@@ -520,18 +557,20 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
 
                 # 1. Evaluate Signal Quality on current primary window
                 quality = evaluate_signal_quality(window_raw)
-
                 timestamp_str = time.strftime("%H:%M:%S")
 
                 if not quality.is_valid_for_ml:
                     with state_lock:
                         system_state["signal_quality"] = quality.status
                         system_state["signal_details"] = quality.detail
-                        system_state["final_decision"] = f"BAD SIGNAL ({quality.status})"
-                        system_state["triage_level"] = "BAD_SIGNAL"
+                        system_state["final_decision"] = UnifiedRhythmLabel.POOR_SIGNAL_OR_LEAD_OFF.value
+                        system_state["triage_level"] = "SIGNAL_INVALID"
+                        system_state["recommended_action"] = f"INVALID SIGNAL: Check electrode contact ({quality.status})."
                         system_state["model1"] = {"label": "NOT RUN", "confidence": 0.0, "is_shockable": False}
                         system_state["model2"] = {"rhythm": "NOT RUN", "confidence": 0.0}
                         system_state["model3"] = {"subtype": "NOT RUN", "confidence": 0.0, "active": False}
+                        system_state["afib"] = {"alert": False, "probability": 0.0, "warmup_fraction": 0.0, "status": "SIGNAL_INVALID", "active": False}
+                        system_state["conflict"] = {"detected": False, "detail": None}
                         system_state["timestamp"] = timestamp_str
                     print(f"[{timestamp_str}] [SIGNAL DIAGNOSTIC] {quality.status}: {quality.detail} -> ML NOT RUN")
                     continue
@@ -542,11 +581,7 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                 current_m2_class, current_m2_conf, _ = cascade.predict_m2_features(feats)
 
                 # 3. Method C: 10-Second Temporal Consensus across overlapping windows
-                # Window 1: t-10s to t-5s    (samples 0:1800)
-                # Window 2: t-7.5s to t-2.5s  (samples 900:2700)
-                # Window 3: t-5s to t        (samples 1800:3600 == window_raw)
                 if filled_samples < BUFFER_10S_SAMPLES:
-                    # At startup before full 10 seconds of history has accumulated
                     temporal_history = [current_m2_class]
                     consensus_class = current_m2_class
                 else:
@@ -566,20 +601,26 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                     if top_count >= 2:
                         consensus_class = top_class
                     else:
-                        consensus_class = current_m2_class  # tie-breaker: newest prediction
+                        consensus_class = current_m2_class
 
                 is_changed = (consensus_class != current_m2_class)
                 status_str = f"CHANGED ({current_m2_class} -> {consensus_class})" if is_changed else "STABLE (No Change)"
 
-                # Requirement 10: Clear consensus logging
                 print(f"[{timestamp_str}] [METHOD C CONSENSUS] "
                       f"Current M2: {current_m2_class} ({current_m2_conf * 100:.1f}%) | "
                       f"History: {temporal_history} | "
                       f"Final Consensus: {consensus_class} | "
                       f"Status: {status_str}")
 
-                # 4. Execute 3-Model Cascade with consensus
-                prediction = cascade.predict(feats, consensus_m2=consensus_class)
+                # 4. Execute Unified Cascade with AFib branch and arbitration
+                q_dict = asdict(quality)
+                prediction = cascade.predict(
+                    feature_map=feats,
+                    consensus_m2=consensus_class,
+                    sig_window=window_raw,
+                    current_time_sec=t_now - t_start,
+                    quality_report=q_dict,
+                )
 
                 # 5. Update shared state
                 with state_lock:
@@ -587,6 +628,7 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                     system_state["signal_details"] = f"OK (PTP={quality.ptp_mv:.2f}mV, Std={quality.std_mv:.2f}mV)"
                     system_state["final_decision"] = prediction["final_classification"]
                     system_state["triage_level"] = prediction["triage_level"]
+                    system_state["recommended_action"] = prediction["recommended_action"]
                     system_state["latency_ms"] = round(prediction["latency_ms"], 2)
                     system_state["timestamp"] = timestamp_str
 
@@ -620,11 +662,29 @@ def acquisition_and_inference_worker(mock: bool = False, interval_sec: float = 1
                             "active": False,
                         }
 
-                print(f"[{timestamp_str}] {prediction['final_classification']:<22} | "
-                      f"Triage: {prediction['triage_level']:<22} | "
-                      f"M1: {system_state['model1']['label']:<18} ({system_state['model1']['confidence']}%) | "
-                      f"M2: {system_state['model2']['rhythm']:<12} ({system_state['model2']['confidence']}%) | "
-                      f"M3: {system_state['model3']['subtype']:<4} | Latency: {prediction['latency_ms']:.2f}ms")
+                    # AFib Branch (Adaptive)
+                    af = prediction["afib"]
+                    system_state["afib"] = {
+                        "alert": bool(af.get("afib_alert", False)),
+                        "probability": round(float(af.get("raw_probability", 0.0)) * 100, 1),
+                        "warmup_fraction": round(float(af.get("tracker_warmup_fraction", 0.0)) * 100, 1),
+                        "status": str(af.get("status", "OK")),
+                        "active": True,
+                    }
+
+                    # Conflict tracking
+                    u_dec = prediction["unified"]
+                    system_state["conflict"] = {
+                        "detected": bool(u_dec.conflict_detected),
+                        "detail": u_dec.conflict_detail,
+                    }
+
+                print(f"[{timestamp_str}] UNIFIED: {prediction['final_classification']:<35} | "
+                      f"Triage: {prediction['triage_level']:<18} | "
+                      f"M1: {system_state['model1']['label']:<16} | "
+                      f"M2: {system_state['model2']['rhythm']:<12} | "
+                      f"AFib: {'ALERT' if system_state['afib']['alert'] else 'NEG'} ({system_state['afib']['probability']}%) | "
+                      f"Latency: {prediction['latency_ms']:.2f}ms")
 
     except Exception as e:
         print(f"[FATAL] Acquisition loop crashed: {e}")
@@ -646,7 +706,7 @@ def dashboard():
     html = """<!DOCTYPE html>
 <html>
 <head>
-  <title>ECG Arrhythmia Edge AI — Live Dashboard</title>
+  <title>ECG Arrhythmia Edge AI — Unified Monitor</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -662,30 +722,31 @@ def dashboard():
     }
     h1 { margin: 0; font-size: 20px; color: #58a6ff; }
     .badge {
-      display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;
+      display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;
     }
     .badge-info { background: #1f6feb; color: #fff; }
     .badge-good { background: #238636; color: #fff; }
     .badge-bad { background: #da3633; color: #fff; }
     .badge-warn { background: #9e6a03; color: #fff; }
+    .badge-purple { background: #6e40c9; color: #fff; }
 
     /* Canvas Chart */
     .chart-container {
       background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; margin-bottom: 16px;
     }
-    .legend { font-size: 13px; margin-bottom: 8px; display: flex; gap: 16px; }
+    .legend { font-size: 13px; margin-bottom: 8px; display: flex; gap: 16px; align-items: center; }
     .legend-raw { color: #58a6ff; font-weight: bold; }
     .legend-filt { color: #3fb950; font-weight: bold; }
     canvas { background: #010409; border: 1px solid #21262d; border-radius: 4px; display: block; width: 100%; height: auto; }
 
     /* Grid Layout */
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
     .card {
       background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px;
       display: flex; flex-direction: column; justify-content: space-between;
     }
-    .card h3 { margin: 0 0 8px 0; font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
-    .value { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+    .card h3 { margin: 0 0 8px 0; font-size: 13px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
+    .value { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
     .subtext { font-size: 12px; color: #8b949e; }
 
     /* Triage Banner */
@@ -693,16 +754,16 @@ def dashboard():
       padding: 16px; border-radius: 8px; text-align: center; font-size: 22px; font-weight: bold;
       margin-bottom: 16px; border: 1px solid transparent; transition: all 0.3s;
     }
-    .triage-EMERGENCY_SHOCK_ADVISED { background: #490202; color: #ff7b72; border-color: #f85149; }
-    .triage-URGENT_VENTRICULAR { background: #3d1a00; color: #f0883e; border-color: #d29922; }
-    .triage-MONITORING_REQUIRED { background: #2e2600; color: #e3b341; border-color: #bb8009; }
-    .triage-ROUTINE { background: #0e2a18; color: #56d364; border-color: #2ea043; }
-    .triage-BAD_SIGNAL { background: #21262d; color: #8b949e; border-color: #30363d; }
+    .triage-CRITICAL_EMERGENCY { background: #490202; color: #ff7b72; border-color: #f85149; }
+    .triage-URGENT_MONITORING { background: #3d1a00; color: #f0883e; border-color: #d29922; }
+    .triage-ROUTINE_NORMAL { background: #0e2a18; color: #56d364; border-color: #2ea043; }
+    .triage-SIGNAL_INVALID { background: #21262d; color: #8b949e; border-color: #30363d; }
+    .triage-UNCERTAIN { background: #2f1d44; color: #d2a8ff; border-color: #a371f7; }
     .triage-WARMING_UP { background: #161b22; color: #8b949e; border-color: #30363d; }
 
     /* Disclaimer */
     .disclaimer {
-      background: #161b22; border: 1px solid #8b949e; border-left: 4px solid #f85149;
+      background: #161b22; border: 1px solid #30363d; border-left: 4px solid #d29922;
       padding: 12px 16px; border-radius: 6px; font-size: 12px; color: #8b949e; line-height: 1.5;
     }
   </style>
@@ -711,9 +772,9 @@ def dashboard():
   <div class="container">
     <header>
       <div>
-        <h1>ECG Arrhythmia Edge AI — Real-Time Monitor</h1>
+        <h1>ECG Arrhythmia Edge AI — Unified Monitor</h1>
         <div style="font-size: 12px; color: #8b949e; margin-top: 4px;">
-          Hardware: <b>ADS1292R (24-bit SPI)</b> | Channel: <b>CH1 (MLII)</b> | Sampling: <b>360 Hz</b>
+          Platform: <b>Raspberry Pi 4B+ (ARM64)</b> | AFE: <b>ADS1292R (24-bit SPI, 360 Hz)</b> | Lead: <b>MLII</b>
         </div>
       </div>
       <div>
@@ -722,7 +783,7 @@ def dashboard():
       </div>
     </header>
 
-    <!-- Final Triage Banner -->
+    <!-- Final Unified Decision Banner -->
     <div id="triage-banner" class="triage-banner triage-WARMING_UP">
       <div id="triage-title">-- WARMING UP --</div>
       <div id="triage-sub" style="font-size: 13px; font-weight: normal; margin-top: 4px;">Acquiring 5-second baseline buffer...</div>
@@ -735,14 +796,14 @@ def dashboard():
         <span class="legend-filt">― Research-Grade Filtered (mV)</span>
         <span style="color: #8b949e; margin-left: auto;" id="latency-info">Inference Latency: -- ms</span>
       </div>
-      <canvas id="chart" width="1160" height="420"></canvas>
+      <canvas id="chart" width="1160" height="400"></canvas>
     </div>
 
-    <!-- 3-Model Cascade Cards -->
+    <!-- Multi-Tier Grid Cards -->
     <div class="grid">
       <!-- Model 1 -->
       <div class="card">
-        <h3>Model 1: Shockable Screener</h3>
+        <h3>Tier 1: Shockable Screener</h3>
         <div id="m1-val" class="value">--</div>
         <div id="m1-conf" class="subtext">Confidence: --%</div>
         <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">10 QRS-independent chaos & spectral features</div>
@@ -750,7 +811,7 @@ def dashboard():
 
       <!-- Model 2 -->
       <div class="card">
-        <h3>Model 2: 4-Class Rhythm</h3>
+        <h3>Tier 2: 4-Class General</h3>
         <div id="m2-val" class="value">--</div>
         <div id="m2-conf" class="subtext">Confidence: --%</div>
         <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">NSR, Tachy, Brady/Asystole, Ventricular</div>
@@ -758,24 +819,35 @@ def dashboard():
 
       <!-- Model 3 -->
       <div class="card">
-        <h3>Model 3: VT vs VF Subtype</h3>
+        <h3>Tier 3: Ventricular Subtype</h3>
         <div id="m3-val" class="value">--</div>
         <div id="m3-conf" class="subtext">Status: Standby</div>
-        <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">6 Domain-Stable Complexity Features</div>
+        <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">6 Complexity Features (VT vs VF Specialist)</div>
+      </div>
+
+      <!-- AFib Adaptive Branch -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h3 style="margin: 0;">AFib Adaptive Branch</h3>
+          <span class="badge badge-warn" style="font-size: 10px;">RESEARCH ONLY</span>
+        </div>
+        <div id="afib-val" class="value">--</div>
+        <div id="afib-conf" class="subtext">P(AFib): --% | Warmup: --%</div>
+        <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">26 Causal Adaptive Features + 2-Win Persistence</div>
       </div>
 
       <!-- Signal Quality Metrics -->
       <div class="card">
-        <h3>Signal Quality Diagnostic</h3>
-        <div id="sq-val" class="value" style="font-size: 18px;">WARMING UP</div>
+        <h3>Tier 0: Signal Diagnostic</h3>
+        <div id="sq-val" class="value" style="font-size: 16px;">WARMING UP</div>
         <div id="sq-detail" class="subtext">Buffering...</div>
-        <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">Continuous flatline & rail protection</div>
+        <div style="font-size: 11px; color: #8b949e; margin-top: 8px;">Continuous rail, flatline & non-finite protection</div>
       </div>
     </div>
 
-    <!-- Safety Disclaimer -->
+    <!-- Safety & Research Disclaimer -->
     <div class="disclaimer">
-      <b>RESEARCH AND EDUCATIONAL PROTOTYPE ONLY:</b> This system is not a certified medical device and is not approved for clinical diagnostic use, autonomous defibrillation decisions, or automated therapy delivery. All classifications are software outputs for algorithmic research and edge computing demonstration.
+      <b>RESEARCH AND EDUCATIONAL PROTOTYPE ONLY:</b> This system is not a certified medical device and is not approved for clinical diagnostic use, autonomous defibrillation decisions, or automated therapy delivery. Atrial Fibrillation detection is an experimental research module and is not clinically validated.
     </div>
   </div>
 
@@ -808,7 +880,7 @@ def dashboard():
         // Redraw canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawTrace(d.raw, '#58a6ff', 120, 50);
-        drawTrace(d.filtered, '#3fb950', 300, 50);
+        drawTrace(d.filtered, '#3fb950', 290, 50);
 
         // Hardware rate
         document.getElementById('rate-badge').textContent = `${st.hardware_sps} SPS`;
@@ -822,7 +894,7 @@ def dashboard():
         const tb = document.getElementById('triage-banner');
         tb.className = `triage-banner triage-${st.triage_level}`;
         document.getElementById('triage-title').textContent = st.final_decision;
-        document.getElementById('triage-sub').textContent = `Triage Level: ${st.triage_level} | Updated: ${st.timestamp || '--'}`;
+        document.getElementById('triage-sub').textContent = `${st.recommended_action || ''} | Updated: ${st.timestamp || '--'}`;
 
         // Model 1
         const m1 = st.model1;
@@ -847,6 +919,20 @@ def dashboard():
           document.getElementById('m3-conf').textContent = 'Standby (Non-Ventricular)';
         }
 
+        // AFib Branch
+        if (st.afib) {
+          const af = st.afib;
+          const afElem = document.getElementById('afib-val');
+          if (af.alert) {
+            afElem.textContent = 'DETECTED (ALERT)';
+            afElem.style.color = '#e3b341';
+          } else {
+            afElem.textContent = 'NEGATIVE';
+            afElem.style.color = '#3fb950';
+          }
+          document.getElementById('afib-conf').textContent = `P(AFib): ${af.probability}% | Warmup: ${af.warmup_fraction}%`;
+        }
+
         // Diagnostic box
         document.getElementById('sq-val').textContent = st.signal_quality;
         document.getElementById('sq-detail').textContent = st.signal_details;
@@ -855,7 +941,7 @@ def dashboard():
       } catch (err) {
         console.error(err);
       }
-      setTimeout(poll, 120);
+      setTimeout(poll, 150);
     }
     poll();
   </script>
