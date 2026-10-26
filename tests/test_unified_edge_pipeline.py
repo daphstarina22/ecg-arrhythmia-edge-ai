@@ -241,6 +241,61 @@ class TestUnifiedArbitrationLayer(unittest.TestCase):
         self.assertTrue(dec.conflict_detected)
         self.assertIn("BRADYCARDIA", dec.conflict_detail)
 
+    def test_afib_unavailable_never_silently_confirms_nsr(self):
+        """Requirement 4: When AFib inference is unavailable, NSR must NOT be confirmed; routes to UNCERTAIN."""
+        afib_unavailable = {"afib_alert": False, "raw_probability": 0.0, "status": "UNAVAILABLE", "is_available": False}
+        dec = arbitrate_decision(
+            quality_report=self.valid_quality,
+            tier1_result=self.t1_nonshock,
+            tier2_result=self.t2_nsr,
+            tier3_result=None,
+            afib_result=afib_unavailable,
+        )
+        self.assertEqual(dec.final_label, UnifiedRhythmLabel.UNCERTAIN_OR_CONFLICTING_PREDICTIONS.value)
+        self.assertEqual(dec.triage_level, TRIAGE_UNCERTAIN)
+        flag_found = any("AFIB_UNAVAILABLE" in f for f in dec.safety_flags)
+        self.assertTrue(flag_found)
+
+    def test_afib_unavailable_preserves_shockable_and_ventricular_protection(self):
+        """Requirement 4: Shockable/ventricular protection must remain intact even if AFib is unavailable."""
+        afib_unavailable = {"afib_alert": False, "raw_probability": 0.0, "status": "UNAVAILABLE", "is_available": False}
+        dec_vf = arbitrate_decision(
+            quality_report=self.valid_quality,
+            tier1_result=self.t1_shockable,
+            tier2_result=self.t2_ventricular,
+            tier3_result=self.t3_vf,
+            afib_result=afib_unavailable,
+        )
+        self.assertEqual(dec_vf.final_label, UnifiedRhythmLabel.VENTRICULAR_FIBRILLATION.value)
+        self.assertTrue(dec_vf.is_shockable)
+        self.assertTrue(dec_vf.defibrillator_advised)
+
+        dec_vt = arbitrate_decision(
+            quality_report=self.valid_quality,
+            tier1_result=self.t1_shockable,
+            tier2_result=self.t2_ventricular,
+            tier3_result=self.t3_vt,
+            afib_result=afib_unavailable,
+        )
+        self.assertEqual(dec_vt.final_label, UnifiedRhythmLabel.VENTRICULAR_TACHYCARDIA.value)
+        self.assertTrue(dec_vt.is_shockable)
+        self.assertTrue(dec_vt.defibrillator_advised)
+
+    def test_clean_deployment_imports_without_research_dir(self):
+        """Verify deployment runtime imports succeed independently without training/research on sys.path."""
+        # Ensure no research directory is on sys.path
+        research_paths = [p for p in sys.path if "training" in p or "research" in p]
+        for p in research_paths:
+            sys.path.remove(p)
+
+        from deploy.afib_runtime.feature_extraction import extract_5s_features
+        from deploy.afib_runtime.baseline_tracker import CausalBaselineTracker
+        from deploy.afib_runtime.persistence_filter import CausalTemporalPersistenceFilter
+
+        self.assertIsNotNone(extract_5s_features)
+        self.assertIsNotNone(CausalBaselineTracker)
+        self.assertIsNotNone(CausalTemporalPersistenceFilter)
+
     def test_all_nine_labels_represented(self):
         """Verify that every single label in UnifiedRhythmLabel is tested and supported."""
         all_labels = {label.value for label in UnifiedRhythmLabel}

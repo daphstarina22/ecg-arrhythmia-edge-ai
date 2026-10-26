@@ -124,8 +124,17 @@ def arbitrate_decision(
     tier2_pred = str(tier2_result.get("predicted_class", "NSR")).upper()
     is_ventricular = is_shockable or (tier2_pred == "VENTRICULAR")
 
-    afib_active = bool(afib_result.get("afib_alert", False))
-    afib_prob = float(afib_result.get("raw_probability", 0.0))
+    afib_res = afib_result or {}
+    afib_active = bool(afib_res.get("afib_alert", False))
+    afib_prob = float(afib_res.get("raw_probability", 0.0))
+    afib_status = str(afib_res.get("status", "OK")).upper()
+    afib_available = bool(afib_res.get("is_available", True)) and afib_status not in ("UNAVAILABLE", "ERROR")
+
+    if not afib_available and is_valid_signal:
+        safety_flags.append(
+            f"AFIB_UNAVAILABLE: AFib inference branch is unavailable ({afib_status}); "
+            "absence of atrial fibrillation cannot be verified."
+        )
 
     if is_ventricular:
         # Note if AFib was triggered as a confounder during ventricular arrhythmia
@@ -212,7 +221,25 @@ def arbitrate_decision(
     tier2_conf = float(tier2_result.get("confidence", 0.50))
 
     if tier2_pred == "NSR":
-        if afib_active:
+        if not afib_available:
+            return UnifiedDecision(
+                final_label=UnifiedRhythmLabel.UNCERTAIN_OR_CONFLICTING_PREDICTIONS.value,
+                triage_level=TRIAGE_UNCERTAIN,
+                is_shockable=False,
+                defibrillator_advised=False,
+                confidence=tier2_conf,
+                recommended_action="UNCERTAIN: Normal sinus rhythm unconfirmed because AFib detection is unavailable. Clinical rhythm review advised.",
+                conflict_detected=True,
+                conflict_detail=f"AFib branch is unavailable ({afib_status}); cannot confirm absence of AFib.",
+                tier0_quality=quality_report,
+                tier1_shockable=tier1_result,
+                tier2_multiclass=tier2_result,
+                tier3_subtype=tier3_result,
+                afib_branch=afib_result,
+                latencies_ms=latencies,
+                safety_flags=safety_flags,
+            )
+        elif afib_active:
             # Tier 2 detects normal background rate/morphology, but AFib branch confirms persistent irregular rhythm
             return UnifiedDecision(
                 final_label=UnifiedRhythmLabel.ATRIAL_FIBRILLATION.value,

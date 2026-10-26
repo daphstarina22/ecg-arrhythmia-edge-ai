@@ -28,37 +28,31 @@ except ImportError:
 import numpy as np
 import scipy.signal as signal
 
-# Ensure repository paths are accessible
+# Ensure repository root and deploy directory are accessible
 REPO_ROOT = Path(__file__).resolve().parent.parent
-AFIB_RESEARCH_DIR = REPO_ROOT / "training" / "research" / "afib_5s_classifier"
-ADAPTIVE_STUDY_DIR = AFIB_RESEARCH_DIR / "patient_adaptive_baseline_study"
-PERSISTENCE_STUDY_DIR = ADAPTIVE_STUDY_DIR / "temporal_persistence_study"
+DEPLOY_DIR = Path(__file__).resolve().parent
 
-for p in [REPO_ROOT, AFIB_RESEARCH_DIR, ADAPTIVE_STUDY_DIR, PERSISTENCE_STUDY_DIR]:
+for p in [REPO_ROOT, DEPLOY_DIR]:
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
 try:
-    from extract_afdb_5s_features import extract_5s_features
+    from deploy.afib_runtime.feature_extraction import extract_5s_features
+    from deploy.afib_runtime.baseline_tracker import CausalBaselineTracker
+    from deploy.afib_runtime.persistence_filter import CausalTemporalPersistenceFilter
 except ImportError:
-    from training.research.afib_5s_classifier.extract_afdb_5s_features import extract_5s_features
-
-try:
-    from baseline_tracker import CausalBaselineTracker
-except ImportError:
-    from training.research.afib_5s_classifier.patient_adaptive_baseline_study.baseline_tracker import CausalBaselineTracker
-
-try:
-    from persistence_filter import CausalTemporalPersistenceFilter
-except ImportError:
-    from training.research.afib_5s_classifier.patient_adaptive_baseline_study.temporal_persistence_study.persistence_filter import CausalTemporalPersistenceFilter
+    try:
+        from afib_runtime.feature_extraction import extract_5s_features
+        from afib_runtime.baseline_tracker import CausalBaselineTracker
+        from afib_runtime.persistence_filter import CausalTemporalPersistenceFilter
+    except ImportError:
+        extract_5s_features = None
+        CausalBaselineTracker = None
+        CausalTemporalPersistenceFilter = None
 
 
 # Model artifact paths
 NPZ_WEIGHTS_PATH = REPO_ROOT / "deploy" / "models" / "afib_lr_config_c_weights.npz"
-DEFAULT_FROZEN_PACKAGE_PATH = (
-    ADAPTIVE_STUDY_DIR / "held_out_evaluation" / "frozen_models_package.joblib"
-)
 DEPLOY_PACKAGE_PATH = REPO_ROOT / "deploy" / "models" / "afib_frozen_models_package.joblib"
 
 
@@ -75,36 +69,54 @@ class CausalAdaptiveAFibBridge:
         probability_threshold: float = 0.500,
         persistence_rule: str = "consecutive_2",
         fs_target: int = 360,
+        strict: bool = False,
     ):
         self.fs_target = int(fs_target)
         self.threshold = float(probability_threshold)
         self.persistence_rule = str(persistence_rule)
+        self.is_available = False
+        self.unavailable_reason: Optional[str] = None
+        self.model_path: Optional[Path] = None
 
-        # 1. First priority: pure NumPy weights (zero sklearn requirement on Pi)
-        if package_path is not None and str(package_path).endswith(".npz") and Path(package_path).exists():
-            self.model_path = Path(package_path)
-            self._load_from_npz(self.model_path)
-        elif NPZ_WEIGHTS_PATH.exists():
-            self.model_path = NPZ_WEIGHTS_PATH
-            self._load_from_npz(self.model_path)
-        # 2. Second priority: joblib package
-        elif package_path is not None and Path(package_path).exists():
-            self.model_path = Path(package_path)
-            self._load_from_joblib(self.model_path)
-        elif DEPLOY_PACKAGE_PATH.exists():
-            self.model_path = DEPLOY_PACKAGE_PATH
-            self._load_from_joblib(self.model_path)
-        elif DEFAULT_FROZEN_PACKAGE_PATH.exists():
-            self.model_path = DEFAULT_FROZEN_PACKAGE_PATH
-            self._load_from_joblib(self.model_path)
-        else:
-            raise FileNotFoundError(
-                f"Frozen AFib model weights not found. Checked:\n"
-                f"  - {NPZ_WEIGHTS_PATH}\n"
-                f"  - {package_path}\n"
-                f"  - {DEPLOY_PACKAGE_PATH}\n"
-                f"  - {DEFAULT_FROZEN_PACKAGE_PATH}"
-            )
+        if extract_5s_features is None or CausalBaselineTracker is None or CausalTemporalPersistenceFilter is None:
+            self.is_available = False
+            self.unavailable_reason = "AFib runtime modules (feature_extraction, baseline_tracker, persistence_filter) unavailable."
+            if strict:
+                raise ImportError(self.unavailable_reason)
+            return
+
+        try:
+            # 1. First priority: pure NumPy weights (zero sklearn requirement on Pi)
+            if package_path is not None and str(package_path).endswith(".npz") and Path(package_path).exists():
+                self.model_path = Path(package_path)
+                self._load_from_npz(self.model_path)
+            elif NPZ_WEIGHTS_PATH.exists():
+                self.model_path = NPZ_WEIGHTS_PATH
+                self._load_from_npz(self.model_path)
+            # 2. Second priority: joblib package
+            elif package_path is not None and Path(package_path).exists():
+                self.model_path = Path(package_path)
+                self._load_from_joblib(self.model_path)
+            elif DEPLOY_PACKAGE_PATH.exists():
+                self.model_path = DEPLOY_PACKAGE_PATH
+                self._load_from_joblib(self.model_path)
+            else:
+                self.is_available = False
+                self.unavailable_reason = (
+                    f"Frozen AFib model weights not found. Checked:\n"
+                    f"  - {NPZ_WEIGHTS_PATH}\n"
+                    f"  - {package_path}\n"
+                    f"  - {DEPLOY_PACKAGE_PATH}"
+                )
+                if strict:
+                    raise FileNotFoundError(self.unavailable_reason)
+                return
+        except Exception as e:
+            self.is_available = False
+            self.unavailable_reason = f"Failed to load AFib model: {e}"
+            if strict:
+                raise
+            return
 
         # Initialize causal trackers
         self.tracker = CausalBaselineTracker(
@@ -123,6 +135,7 @@ class CausalAdaptiveAFibBridge:
 
         self.last_prediction_time: Optional[float] = None
         self.window_counter = 0
+        self.is_available = True
 
     def _load_from_npz(self, path: Path):
         """Loads weights into NumPy arrays for dependency-free edge execution."""
@@ -160,8 +173,10 @@ class CausalAdaptiveAFibBridge:
 
     def reset(self, new_record_id: Optional[str] = None):
         """Purges history at record/patient boundaries to prevent leakage."""
-        self.tracker.reset(new_record_id=new_record_id)
-        self.persistence_filter.reset(new_record_id=new_record_id)
+        if hasattr(self, "tracker") and self.tracker is not None:
+            self.tracker.reset(new_record_id=new_record_id)
+        if hasattr(self, "persistence_filter") and self.persistence_filter is not None:
+            self.persistence_filter.reset(new_record_id=new_record_id)
         self.last_prediction_time = None
         self.window_counter = 0
 
@@ -206,11 +221,28 @@ class CausalAdaptiveAFibBridge:
           - baseline_features: 5 causal adaptive baseline features
           - tracker_warmup_fraction: Fraction of warm-up completed
           - latency_ms: Execution time in milliseconds
-          - status: "OK", "WARMING_UP", or "ERROR"
+          - status: "OK", "WARMING_UP", "SIGNAL_INVALID", "UNAVAILABLE", or "ERROR"
+          - is_available: bool
         """
         t0 = time.perf_counter()
-        self.window_counter += 1
 
+        if not getattr(self, "is_available", False):
+            return {
+                "raw_probability": 0.0,
+                "instantaneous_pred": False,
+                "afib_alert": False,
+                "threshold": self.threshold,
+                "persistence_rule": self.persistence_rule,
+                "baseline_features": {},
+                "tracker_warmup_fraction": 0.0,
+                "is_available": False,
+                "status": "UNAVAILABLE",
+                "error_detail": getattr(self, "unavailable_reason", "AFib model unavailable"),
+                "latency_ms": 0.0,
+                "notice": "AFib branch is unavailable; AFib inference bypassed.",
+            }
+
+        self.window_counter += 1
         if current_time_sec is None:
             current_time_sec = float(self.window_counter * 5.0)
 
@@ -226,6 +258,7 @@ class CausalAdaptiveAFibBridge:
                     "persistence_rule": self.persistence_rule,
                     "baseline_features": {},
                     "tracker_warmup_fraction": 0.0,
+                    "is_available": True,
                     "status": "SIGNAL_INVALID",
                     "latency_ms": (time.perf_counter() - t0) * 1000.0,
                     "notice": "Signal quality check failed; AFib inference bypassed.",
@@ -286,6 +319,7 @@ class CausalAdaptiveAFibBridge:
                 "persistence_rule": self.persistence_rule,
                 "baseline_features": adapt_feats,
                 "tracker_warmup_fraction": warmup_frac,
+                "is_available": True,
                 "status": status,
                 "latency_ms": round(dt_ms, 2),
                 "features_summary": {
@@ -307,8 +341,9 @@ class CausalAdaptiveAFibBridge:
                 "persistence_rule": self.persistence_rule,
                 "baseline_features": {},
                 "tracker_warmup_fraction": 0.0,
+                "is_available": False,
                 "status": "ERROR",
                 "error_detail": str(e),
                 "latency_ms": round(dt_ms, 2),
-                "notice": "AFib processing error; default non-AFib fallback returned.",
+                "notice": f"AFib processing error; AFib branch unavailable ({e}).",
             }
