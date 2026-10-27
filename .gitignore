@@ -47,8 +47,15 @@ desktop.ini
 *.rar
 *.dat
 *.hea
+*.hea-
 *.atr
+*.atr-
 *.mat
+*.qrs
+*.qrsc
+*.qrs-
+*.xws
+
 
 # Large dataset CSV files
 *.csv
