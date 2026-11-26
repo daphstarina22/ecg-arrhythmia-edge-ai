@@ -79,3 +79,6 @@ dist/
 !deploy/models/*.onnx
 !models/*.onnx
 !training/final_models/export_candidates/*.onnx
+
+# runtime captures
+captures/

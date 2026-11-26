@@ -1,3 +1,8 @@
+# Runtime. On the Pi also: sudo apt install python3-tk espeak-ng pulseaudio-utils
 numpy
 scipy
-onnxruntime==1.20.1
+matplotlib
+onnxruntime>=1.18
+# Hardware-only packages: installed on Linux (the Pi), skipped on Windows/macOS dev machines
+spidev; platform_system == "Linux"
+RPi.GPIO; platform_system == "Linux"

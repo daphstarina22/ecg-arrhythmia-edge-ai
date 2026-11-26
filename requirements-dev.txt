@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest
+onnx
+neurokit2   # optional: only for exploratory synthetic-ECG experiments

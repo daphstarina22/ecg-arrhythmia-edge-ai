@@ -1,214 +1,189 @@
 # ECG Arrhythmia Edge AI
 
-> **Real-Time 3-Model Hierarchical Arrhythmia Classification & Emergency Triage on Embedded Edge Devices (Raspberry Pi)**
+**Press Start → exactly 5 s of ECG → filtered waveform + shockable / non-shockable classification → back to idle.**
+A Raspberry Pi 4 + ADS1292R system that runs a 3-model ONNX cascade on a single 5-second window, with a Tk touchscreen-style HMI.
 
-[![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi%20%7C%20Linux%20%7C%20macOS%20%7C%20Windows-blue)](https://github.com)
-[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-green)](https://www.python.org/)
-[![ONNX Runtime](https://img.shields.io/badge/Inference-ONNX%20Runtime%201.16+-orange)](https://onnxruntime.ai/)
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+![HMI screenshot (simulated signal)](docs/images/hmi_vf_simulated.png)
+<sub>HMI running on a **simulated** VF signal (`--mock VF`). The red banner is always shown when the signal is not from the real ADC.</sub>
 
----
-
-### Important Medical & Safety Disclaimer
-
-> [!CAUTION]
-> **This project is a research and educational prototype and is not a certified medical device. It must not be used for clinical diagnosis, patient monitoring in life-critical settings, or autonomous defibrillation decisions.**
-> 
-> All machine learning models, code, and thresholds provided herein are intended solely for academic research, algorithmic benchmarking, and edge computing education.
+> **Research prototype — not a medical device.** Not validated for clinical use or treatment decisions.
 
 ---
 
-## 1. Project Overview
+## Contents
+[Features](#features) · [How it works](#how-it-works) · [Classification logic](#classification-logic) · [Hardware](#hardware) · [Quick start](#quick-start) · [Tools](#tools) · [Testing](#testing) · [Project structure](#project-structure) · [Design notes](#design-notes) · [Status & limitations](#status--limitations) · [Troubleshooting](#troubleshooting) · [Roadmap](#roadmap)
 
-This repository provides an ultra-lightweight, real-time edge AI system for automated electrocardiogram (ECG) arrhythmia screening. Given raw **5-second ECG windows (1,800 samples at 360 Hz)**, the system performs zero-phase bandpass filtering, feature extraction, and hierarchical machine learning triage in **< 15 milliseconds** on a low-power single CPU core (Raspberry Pi).
+## Features
+- **One Start = one cycle.** Acquisition and inference run only after Start; nothing runs in the background. Another cycle starts only on the next Start.
+- **Exactly 5.000 s** captured (2500 samples @ 500 SPS), resampled to the 360 Hz / 1800-sample window the models were trained on.
+- **Training-matched preprocessing:** 0.5–40 Hz order-2 zero-phase band-pass (+ 50 Hz mains notch) and a 1:1 port of the training feature code (verified by tests against the original training functions).
+- **Three ONNX models, run once each** (M3 only when a ventricular rhythm is suspected).
+- **Explicit decision table** – five valid outputs; any model disagreement is shown as `CONFLICT`, never silently resolved.
+- **Fail-loud acquisition:** chip-ID check, DRDY timeout, lost-sample detection, signal-quality gate, ADC always stopped (even on errors/cancel).
+- **Simulator mode** (`--mock`) for development without hardware, clearly bannered.
+- **46 automated tests** (decision table, label maps, feature parity, driver vs fake SPI/GPIO, pipeline, HMI under Xvfb).
 
-The pipeline addresses real-world clinical constraints:
-- **Zero Patient Data Leakage:** Evaluated using strict record-level group cross-validation (`StratifiedGroupKFold`).
-- **Domain-Shift Aware:** Accounts for differences between bedside ICU false alarms (Computing in Cardiology Challenge 2015) and ambulatory Holters (MIT-BIH, VFDB).
-- **Physical Feature Selection:** Prunes inverted and source-confounded features to retain only domain-stable complexity and autocorrelation dynamics.
+## How it works
 
----
-
-## 2. 3-Model Hierarchical Cascade Architecture
-
-Rather than forcing a single model to solve both broad triage and fine subtype differentiation, the architecture uses a 3-tier cascade:
-
-```text
-               Input 5-Second Raw ECG (1,800 samples @ 360 Hz)
-                                     │
-                 Bandpass Filter (0.5 – 40 Hz Butterworth)
-                                     │
-               Extract 14 Unified Spectral & Temporal Features
-                                     │
-                     ┌───────────────┴───────────────┐
-                     ▼                               ▼
-      Tier 1: Shockable Screener         Tier 2: Multi-Arrhythmia 4-Class
-      (Model 1 - 10 features)            (Model 2 - 12 features)
-      P(Shockable) vs Non-Shockable      [NSR, TACHY, BRADY_ASY, VENTRICULAR]
-                     │                               │
-                     └───────────────┬───────────────┘
-                                     │
-             Is Rhythm Shockable OR Class == "VENTRICULAR"?
-                            ├── NO  ──► Finalize Non-Shockable Triage
-                            │           (NSR / SVTA / Bradycardia)
-                            └── YES
-                                     │
-                                     ▼
-                     Tier 3: Ventricular Subtype Specialist
-                     (Model 3 - 6 Domain-Stable Features)
-                     VT (Tachycardia) vs. VF/VFL (Fibrillation / Flutter)
-                                     │
-                  Morphology & Artifact Guardrails Check
-                     (Equivocal Subtype & Noise Warnings)
-                                     │
-                                     ▼
-                     Integrated Clinical Triage Decision
-                     (Emergency Priority, Shock Advisory, Action)
+```mermaid
+flowchart LR
+    A[ADS1292R<br/>500 SPS · gain 6] --> B[Capture on Start<br/>2500 samples = 5.000 s]
+    B --> C[Resample 18/25<br/>→ 1800 @ 360 Hz]
+    C --> D[50 Hz notch +<br/>0.5–40 Hz band-pass]
+    D --> E{Quality gate}
+    E -- bad --> X[NO RESULT<br/>POOR SIGNAL]
+    E -- ok --> F[Features]
+    F --> M1[M1 shockable?]
+    F --> M2[M2 rhythm]
+    M1 & M2 -- ventricular suspected --> M3[M3 VT vs VF]
+    M1 & M2 & M3 --> G[Decision table]
+    G --> H[HMI: banner + 5 s waveform + voice]
+    H --> I((IDLE))
 ```
 
-### The 3 Models
-1. **Model 1: Shockable Screener (`shockable_classifier_candidate.onnx` - 413 KB)**
-   - *Input:* 10 features (QRS-independent chaos & spectral power).
-   - *Task:* Binary shockable screening ($0 = \text{Non-Shockable}$, $1 = \text{Shockable}$).
-   - *Deployment Status:* **APPROVED FOR RESEARCH DEMO**.
-2. **Model 2: Multi-Arrhythmia 4-Class (`arrhythmia_multiclass_4class_candidate.onnx` - 1.28 MB)**
-   - *Input:* 12 features (timing, rhythm regularity, morphology, spectral bands).
-   - *Task:* 4-class categorization: `NSR`, `TACHY` (Supraventricular Tachycardia), `BRADY_ASY` (Bradycardia/Asystole), `VENTRICULAR`.
-   - *Deployment Status:* **APPROVED FOR RESEARCH DEMO**.
-3. **Model 3: Ventricular Subtype Specialist (`vf_vt_subtype_classifier_candidate.onnx` - 199 KB)**
-   - *Input:* 6 domain-stable features (`lz_complexity`, `ac_decay_time`, `ac_zero_crossing_lag`, `ac_max_peak_ratio`, `sample_entropy`, `hjorth_mobility`).
-   - *Task:* Differentiates monomorphic Ventricular Tachycardia (`VT`) from chaotic Ventricular Fibrillation / Flutter (`VF/VFL`).
-   - *Deployment Status:* **RESEARCH ONLY** (due to historical archive limit of $N=17$ physical VF patients).
+State machine: `IDLE → ACQUIRING (≈5 s, cancellable) → PROCESSING → IDLE`. Start is ignored unless idle.
 
----
+| Stage | Detail |
+|---|---|
+| Acquisition | SPI mode 1, `CONFIG1=0x02` (500 SPS), `CONFIG2=0xA0` (2.42 V ref), `CH1SET/CH2SET=0x00` (gain 6), `RLDSENS=0x2C`. Channel 1, 24-bit → mV (full scale ±403 mV). 50 settle samples discarded after START. |
+| Timing guard | Capture duration measured: warning if >0.5 % off, rejected if >2 % off (≈50 lost samples). DRDY wait has a timeout. |
+| Resampling | Polyphase 18/25 (500 → 360 Hz); median removed first to avoid edge ringing. |
+| Conditioning | 50 Hz notch (Q = 30) + Butterworth order 2, 0.5–40 Hz, `filtfilt`. |
+| Features | M1: 10, M2: 12, M3: 6 — ported from `training/` (note: M3 uses a different Lempel-Ziv variant than M1/M2, exactly as trained). |
+| Models | `models/*.onnx`, CPU ONNX Runtime, single thread. |
 
-## 3. Repository Structure
+## Classification logic
 
-```text
-ecg-arrhythmia-edge-ai/
-├── deploy/                               # STANDALONE RASPBERRY PI DEPLOYMENT PACKAGE
-│   ├── README_PI.md                      # Detailed hardware & OS guide for Raspberry Pi
-│   ├── requirements-pi.txt               # Minimal edge dependencies (numpy, scipy, onnxruntime)
-│   ├── verify_deployment.py              # Automated hardware & graph self-test script
-│   ├── edge_runtime.py                   # Self-contained edge inference & benchmark runner
-│   ├── run_demo.sh                       # One-click POSIX shell test script
-│   └── models/                           # Final trained ONNX deployment models (~1.9 MB total)
-│       ├── shockable_classifier_candidate.onnx
-│       ├── arrhythmia_multiclass_4class_candidate.onnx
-│       └── vf_vt_subtype_classifier_candidate.onnx
-│
-├── demo_edge_pipeline.py                 # Interactive clinical demonstration on real archives
-├── requirements.txt                      # General Python dependencies
-├── README.md                             # Main project documentation (this file)
-│
-├── training/                             # RESEARCH & TRAINING CODEBASE (Isolated)
-│   ├── final_models/                     # Final controlled evaluation & dataset builders
-│   │   ├── FINAL_MODEL_REPORT.md         # Comprehensive scientific evaluation report
-│   │   ├── export_candidates/            # Canonical exported ONNX models
-│   │   ├── results/                      # 5-fold CV & cross-database comparison tables
-│   │   ├── model1_shockable/             # Model 1 training script
-│   │   ├── model2_multiclass/            # Model 2 training script
-│   │   └── model3_vt_vf/                 # Model 3 training script
-│   ├── model3_phase6/                    # Phase 6 MIT-BIH & CUDB dataset integration audits
-│   └── model3_phase5/                    # Phase 5 physiological feature extraction & audit
-│
-├── models/                               # Legacy baseline ONNX models
-└── tests/                                # Unit & contract smoke tests
-```
+Label maps (verified against the training code): **M1** `0 NON_SHOCKABLE · 1 SHOCKABLE` · **M2** `0 NSR · 1 TACHY · 2 BRADY_ASY · 3 VENTRICULAR` · **M3** `0 VT · 1 VF`.
 
----
+| Rhythm (M2) | Shock (M1) | Subtype (M3) | HMI shows |
+|---|---|---|---|
+| NSR | NON_SHOCKABLE | – | `NSR — NON-SHOCKABLE` |
+| TACHY | NON_SHOCKABLE | – | `TACHY — NON-SHOCKABLE` |
+| BRADY_ASY | NON_SHOCKABLE | – | `BRADY_ASY — NON-SHOCKABLE` |
+| VENTRICULAR | SHOCKABLE | VF | `VF — SHOCKABLE` |
+| VENTRICULAR | SHOCKABLE | VT | `VT — SHOCKABLE` |
+| *anything else* | | | `CONFLICT — NOT CLASSIFIED` (raw outputs shown, no shock wording) |
 
-## 4. Quick Start on PC / Mac / Linux
+Other outcomes: `NO RESULT — POOR SIGNAL` (quality gate) and `NO RESULT — ACQUISITION ERROR` (hardware/timing fault).
 
-### 1. Clone & Set Up Virtual Environment
+> **Open decision:** `VENTRICULAR + NON_SHOCKABLE` (and `SHOCKABLE` with a non-ventricular rhythm) is contradictory — M1 and M2 were trained from the same labels, so it can only be a model error. It currently shows `CONFLICT`. See [`docs/CLASSIFICATION_LOGIC.md`](docs/CLASSIFICATION_LOGIC.md) for the options.
+
+## Hardware
+
+| ADS1292R | Raspberry Pi (BCM) | Header pin* |
+|---|---|---|
+| DIN / DOUT / SCLK | MOSI GPIO10 / MISO GPIO9 / SCLK GPIO11 (SPI0) | 19 / 21 / 23 |
+| CS | GPIO8 (CE0) | 24 |
+| DRDY | GPIO17 | 11 |
+| START | GPIO27 | 13 |
+| PWDN / RESET | GPIO22 | 15 |
+| 3.3 V / GND | 3V3 / GND | – |
+
+<sub>*Standard 40-pin header numbering; confirm against your own wiring. Pins are set in `ecg_edge/config.py`.</sub>
+
+## Quick start
+
+**Raspberry Pi (Raspberry Pi OS, Python ≥ 3.9)**
 ```bash
-git clone <REPOSITORY_URL>
-cd ecg-arrhythmia-edge-ai
-python3 -m venv .venv
+sudo raspi-config nonint do_spi 0                         # enable SPI
+sudo apt install python3-tk espeak-ng pulseaudio-utils    # HMI + optional voice
+git clone https://github.com/daphstarina22/ecg-arrhythmia-edge-ai.git && cd ecg-arrhythmia-edge-ai
+pip3 install -r requirements.txt
 
-# On Linux/macOS:
-source .venv/bin/activate
-
-# On Windows (PowerShell):
-.venv\Scripts\Activate.ps1
+python3 tools/inspect_ads1292r.py                         # 1) wiring / SPI / register probe
+python3 tools/check_acquisition.py -n 5 --save captures   # 2) real 5 s captures: timing, noise, saved .npy
+python3 run_hmi.py                                        # 3) HMI   (--no-voice to silence)
 ```
 
-### 2. Install Dependencies
+**Development machine (no hardware)**
 ```bash
-pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
+python3 run_hmi.py --mock VF        # NSR TACHY BRADY VF VT FLAT LEADOFF
 ```
+`--mock` produces a **synthetic** signal for plumbing/UI work only; it says nothing about model accuracy. The mock is never selected automatically — if SPI/GPIO libraries are missing, the app stops with an error instead.
 
-### 3. Run the Clinical Cascade Demonstration
-Test the cascade on verified clinical episodes extracted from MIT-BIH, VFDB, and C2015:
+## Tools
+| Command | Purpose |
+|---|---|
+| `python3 tools/inspect_ads1292r.py` | SPI/chip-ID/register diagnostics |
+| `python3 tools/check_acquisition.py -n 5 --save captures` | Real captures: duration, lost-sample estimate, noise, saves `.npy` |
+| `python3 tools/replay_window.py captures/<file>.npy` | Run a saved capture (2500 × 500 Hz mV) through the exact production pipeline and print raw probabilities |
+
+## Testing
 ```bash
-python demo_edge_pipeline.py
+pip install -r requirements-dev.txt
+xvfb-run -a pytest        # on a headless Linux box; plain `pytest` if you have a display
+```
+| Area | Tests | What is checked |
+|---|---|---|
+| Decision table | 12 | all 24 model-output combinations; only 5 may be “classified” |
+| ONNX contract | 3 | I/O names, feature counts, class ids, probabilities sum to 1, label = argmax |
+| Feature parity | 2 | features equal the **real training functions** (extracted by AST) |
+| Preprocessing | 5 | 500→360 Hz correctness, DC-offset robustness, mains removal, HR preserved |
+| Acquisition | 9 | register sequence, 24-bit decode, DRDY timeout, start/stop, timing accept/warn/reject, cancel — against **fake SPI/GPIO** and an injected clock |
+| Pipeline | 12 | exactly 2500 samples, one inference per model, ADC stopped on all paths, idle = nothing runs |
+| HMI | 3 | start → result → idle → start again, busy-ignore, cancel, poor-signal banner |
+
+The two failure modes that motivated the rewrite (wrong resample rate; wrong Lempel-Ziv variant for M3) were re-injected on purpose and the suite turned red, then restored.
+
+## Project structure
+```
+ecg_edge/           runtime package
+  config.py           all constants (pins, rates, thresholds, model paths)
+  acquisition.py      ADS1292R driver, mock, 5 s capture + timing checks
+  preprocessing.py    resample → notch → 0.5–40 Hz band-pass
+  quality.py          flat / rail / artifact gate
+  features.py         training-exact feature extraction (M1/M2/M3)
+  models.py           ONNX wrappers + label maps
+  decision.py         table-driven final decision
+  pipeline.py         one-cycle orchestration (run_cycle / process_window)
+  hmi.py, voice.py    Tk HMI and optional spoken prompts
+  simulator.py        synthetic ECG for --mock and tests
+run_hmi.py          entry point
+models/             3 trained ONNX models + SHA256SUMS
+tools/              hardware check, offline replay, SPI probe
+tests/              automated test suite
+docs/               CHANGES.md, CLASSIFICATION_LOGIC.md, legacy/, images/
+research/afib/      patient-adaptive AFib branch (not part of the runtime)
+training/           model training code and notebooks
 ```
 
-### 4. Run the Edge Throughput Benchmark
-```bash
-python demo_edge_pipeline.py --benchmark
-```
+## Design notes
+- **Capture-then-process:** the sample loop only reads and stores; all filtering/inference happens after the 5 s are in memory (the original design filtered inside the loop and dropped samples).
+- **Rate correctness:** the ADS1292R runs at 500 SPS; models expect 360 Hz. Treating 500 SPS as 360 Hz made a true 72 bpm rhythm look like ≈52 bpm.
+- **Train/serve parity:** filter, peak detector and feature algorithms mirror training; Model 3’s trained Lempel-Ziv statistic (~8.4 ± 0.7) differs from the one the old runtime fed it (~1.25).
+- **No web server:** HMI and acquisition share one process; the old HTTP layer called routes that did not exist.
+- **AFib branch removed from runtime:** it needs 12 warm-up windows and a 2-window persistence filter, which a single 5 s capture can never satisfy. Code kept in `research/afib/`.
+- Full cause-by-cause list: [`docs/CHANGES.md`](docs/CHANGES.md).
 
----
+## Status & limitations
+**Verified (x86 sandbox, no Pi/ADS1292R):** the 46 tests above; HMI cycle under Xvfb; ADS1292R driver logic against fake SPI/GPIO.
 
-## 5. Raspberry Pi Deployment
+**Not yet verified — please read:**
+- Real-hardware behaviour: DRDY polling at 500 SPS under Python, SPI reads, electrode signal quality, Pi inference latency, audio output. Run `tools/check_acquisition.py` first.
+- **Model accuracy is not validated.** Only synthetic ECG was available during the rewrite; output probabilities were often near 0.5. Validate on real or simulator recordings before drawing conclusions.
+- Quality-gate thresholds in `config.py` are initial values, not tuned on real electrodes.
+- Lead-off detection registers are not enabled (unchanged from the validated configuration); electrode problems are caught by the signal-quality gate only.
+- Filtering a single 5 s window approximates training (which filtered whole records).
 
-The [`deploy/`](deploy/) folder is completely self-contained and ready to run on Raspberry Pi OS:
+## Troubleshooting
+| Message | Likely cause / fix |
+|---|---|
+| `ADS1292R ID 0x00 … not responding` | Power, SPI enable, CS/MOSI/MISO/SCLK wiring, PWDN pin |
+| `ADS1292R ID 0xFF … MISO floating` | MISO wiring/pull-up |
+| `DRDY timeout` | START/DRDY wiring, power; check `GPIO17` |
+| `Acquisition timing fault … samples lost` | CPU contention; close other programs, retry; report numbers from `check_acquisition.py` |
+| `POOR SIGNAL: BAD_FLAT` / `BAD_SATURATED` | Electrodes off / lead cable fault |
+| `spidev / RPi.GPIO not available` | Not on a Pi, or `pip3 install spidev RPi.GPIO`; use `--mock` only for simulation |
+| No sound | Set `ECG_AUDIO_SINK` (PulseAudio sink name) or run with `--no-voice` |
 
-### 1. Install System Dependencies on the Pi
-```bash
-sudo apt update && sudo apt install -y python3-pip python3-venv libopenblas-dev
-```
+## Roadmap
+- Validate on real/simulator recordings; report confusion matrix and calibration.
+- Decide the model-disagreement policy (see classification doc).
+- Hardware-in-the-loop CI with an ECG simulator on a Pi.
+- Enable ADS1292R lead-off detection; tune quality thresholds.
+- Per-cycle structured logging for field debugging.
 
-### 2. Install Edge Python Packages
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r deploy/requirements-pi.txt
-```
-*(Only `numpy`, `scipy`, and `onnxruntime` are installed — no heavy training frameworks or compilers).*
-
-### 3. Run One-Click Self-Test & Demo
-```bash
-chmod +x deploy/run_demo.sh
-./deploy/run_demo.sh
-```
-
-For complete instructions on wiring an **AD8232 ECG sensor** + **ADS1115 ADC**, setting up a continuous ring-buffer, or enabling a `systemd` background service on boot, see [**`deploy/README_PI.md`**](deploy/README_PI.md).
-
----
-
-## 6. Hardware Benchmarks & Performance Summary
-
-Evaluated on single CPU core (AMD Ryzen 7 / ARM Cortex-A72 Raspberry Pi 4):
-
-| Task / Stage | Input Dimension | Model Architecture | Average Latency | Peak RAM Footprint | Storage Size |
-|---|---|---|---|---|---|
-| **Feature Extraction** | 1,800 raw samples | Bandpass + Welch + LZ + Autocorr | ~9.5 – 12.0 ms | < 15 MB | — |
-| **Tier 1: Shockable** | 10 features | Random Forest (100 trees, d=6) | ~0.20 ms | < 2.5 MB | 413 KB |
-| **Tier 2: 4-Class** | 12 features | Random Forest (100 trees, d=7) | ~0.15 ms | < 5.0 MB | 1.28 MB |
-| **Tier 3: VT vs VF** | 6 features | Random Forest (100 trees, d=5) | ~0.13 ms | < 1.8 MB | 199 KB |
-| **TOTAL CASCADE** | **1,800 samples (5s)** | **3-Tier Hierarchical AI** | **~10.5 – 13.5 ms** | **< 60 MB** | **~1.9 MB** |
-
-**Speedup:** Runs in ~11 ms for a 5,000 ms window (**>450x real-time speedup**), consuming < 3% of available single-core CPU budget.
-
----
-
-## 7. Model Evaluation Summary & Clinical Limitations
-
-For full statistical methodology, cross-database generalization matrices, and confusion matrices, refer to [**`training/final_models/FINAL_MODEL_REPORT.md`**](training/final_models/FINAL_MODEL_REPORT.md).
-
-### Summary Table
-| Model | Evaluated Task | Window Bal Acc | Record Bal Acc | Deployment Status | Key Clinical Limitation |
-|---|---|---|---|---|---|
-| **Model 1** | Shockable vs. Non-Shockable | **60.2%** | **55.9%** | **APPROVED FOR RESEARCH DEMO** | Asymmetric ICU alarm vs. Holter domain shift (requires noise-calibrated thresholds). |
-| **Model 2** | 4-Class (NSR, Tachy, Brady, Ventricular) | **55.8%** | **57.9%** | **APPROVED FOR RESEARCH DEMO** | Borderline rate overlap between sinus tachycardia and normal sinus rhythm. |
-| **Model 3** | VT vs. VF Subtype (6 Domain-Stable Features) | **81.5%** | **88.8%** | **RESEARCH ONLY** | Strict historical physical bottleneck ($N=17$ independent confirmed VF patients across archives). |
-
----
-
-## 8. License & Acknowledgments
-
-- **License:** MIT License.
-- **Data Acknowledgments:** Datasets provided by PhysioNet (Computing in Cardiology Challenge 2015, MIT-BIH Arrhythmia Database, MIT-BIH Malignant Ventricular Ectopy Database, and Creighton University Database).
+## License
+No license file is included yet — add one (e.g. MIT/Apache-2.0) before publishing for reuse.
