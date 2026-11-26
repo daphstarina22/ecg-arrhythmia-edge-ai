@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-10-25 18:49:36",
+  "total_audited_windows": 33584,
+  "supervised_windows": 7669,
+  "quarantined_windows": 25915,
+  "supervised_unique_records": 334,
+  "quarantined_unique_records": 365,
+  "supervised_5class_distribution": {
+    "NSR": 5074,
+    "VENTRICULAR": 1838,
+    "TACHY": 362,
+    "BRADYCARDIA": 220,
+    "ASYSTOLE": 175
+  },
+  "supervised_4class_distribution": {
+    "NSR": 5074,
+    "VENTRICULAR": 1838,
+    "BRADY_ASY": 395,
+    "TACHY": 362
+  },
+  "supervised_source_distribution": {
+    "vfdb": 5343,
+    "mitdb": 1586,
+    "c2015": 739,
+    "cudb": 1
+  },
+  "quarantine_reason_distribution": {
+    "Ambiguous pre-alarm baseline segment (t < 270s); unknown baseline rhythm": 16722,
+    "Atrial Fibrillation/Flutter preserved for dedicated AFib research": 1622,
+    "WFDB annotation marked NOISE": 1162,
+    "Arrhythmia onset transition guard band (270-285s)": 882,
+    "Non-target rhythm annotation: (BI": 822,
+    "Non-target rhythm annotation: (P": 632,
+    "Atrial Fibrillation rhythm preserved for dedicated AFib research": 610,
+    "Window spans rhythm transition: ['(N']": 479,
+    "Ectopic pattern (B quarantined to preserve clean NSR ground truth": 316,
+    "Non-target rhythm annotation: (PM": 290
+  },
+  "quarantine_status_distribution": {
+    "QUARANTINED_PRE_ALARM": 16722,
+    "QUARANTINED_TRANSITION": 2384,
+    "QUARANTINED_NON_TARGET": 2282,
+    "QUARANTINED_AFIB": 2232,
+    "QUARANTINED_NOISE": 1162,
+    "QUARANTINED_ECTOPY": 700,
+    "QUARANTINED_UNSUPPORTED": 433
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "pipeline_name": "AFDB 5-Second Dedicated Classifier",
+  "evaluation_scope": "Independent Multi-Arrhythmia Confounder Testing",
+  "timestamp_utc": "2026-10-26T11:42:02Z",
+  "champion_model_name": "LogisticRegression",
+  "operating_thresholds": {
+    "constrained_theta": 0.56,
+    "triage_theta": 0.56,
+    "default_50": 0.5
+  },
+  "summary_by_category": {
+    "Confounder_AFL": {
+      "category": "Confounder_AFL",
+      "windows_count": 100,
+      "mean_probability": 0.2446,
+      "max_probability": 0.7998,
+      "false_alarms_50": 17,
+      "false_alarm_rate_pct_50": 17.0,
+      "false_alarms_constrained": 12,
+      "false_alarm_rate_pct_constrained": 12.0
+    },
+    "Confounder_Artifact": {
+      "category": "Confounder_Artifact",
+      "windows_count": 3,
+      "mean_probability": 0.9922,
+      "max_probability": 1.0,
+      "false_alarms_50": 3,
+      "false_alarm_rate_pct_50": 100.0,
+      "false_alarms_constrained": 3,
+      "false_alarm_rate_pct_constrained": 100.0
+    },
+    "Confounder_Bigeminy": {
+      "category": "Confounder_Bigeminy",
+      "windows_count": 100,
+      "mean_probability": 0.8287,
+      "max_probability": 0.995,
+      "false_alarms_50": 91,
+      "false_alarm_rate_pct_50": 91.0,
+      "false_alarms_constrained": 89,
+      "false_alarm_rate_pct_constrained": 89.0
+    },
+    "Confounder_Bradycardia": {
+      "category": "Confounder_Bradycardia",
+      "windows_count": 100,
+      "mean_probability": 0.3535,
+      "max_probability": 0.9837,
+      "false_alarms_50": 36,
+      "false_alarm_rate_pct_50": 36.0,
+      "false_alarms_constrained": 33,
+      "false_alarm_rate_pct_constrained": 33.0
+    },
+    "Confounder_VF": {
+      "category": "Confounder_VF",
+      "windows_count": 57,
+      "mean_probability": 0.9625,
+      "max_probability": 1.0,
+      "false_alarms_50": 56,
+      "false_alarm_rate_pct_50": 98.25,
+      "false_alarms_constrained": 56,
+      "false_alarm_rate_pct_constrained": 98.25
+    },
+    "Confounder_VT": {
+      "category": "Confounder_VT",
+      "windows_count": 101,
+      "mean_probability": 0.597,
+      "max_probability": 1.0,
+      "false_alarms_50": 63,
+      "false_alarm_rate_pct_50": 62.38,
+      "false_alarms_constrained": 62,
+      "false_alarm_rate_pct_constrained": 61.39
+    },
+    "Control_Sinus": {
+      "category": "Control_Sinus",
+      "windows_count": 142,
+      "mean_probability": 0.0636,
+      "max_probability": 0.8411,
+      "false_alarms_50": 2,
+      "false_alarm_rate_pct_50": 1.41,
+      "false_alarms_constrained": 2,
+      "false_alarm_rate_pct_constrained": 1.41
+    }
+  },
+  "summary_by_record": {
+    "artifact_flatline_Flatline_Asystole": {
+      "record_id": "artifact_flatline",
+      "clinical_truth": "Flatline_Asystole",
+      "windows_count": 1,
+      "mean_probability": 0.983,
+      "max_probability": 0.983,
+      "false_alarms_50": 1,
+      "false_alarm_rate_pct_50": 100.0,
+      "false_alarms_constrained": 1,
+      "false_alarm_rate_pct_constrained": 100.0
+    },
+    "artifact_hf_noise_High_Frequency_Noise": {
+      "record_id": "artifact_hf_noise",
+      "clinical_truth": "High_Frequency_Noise",
+      "windows_count": 1,
+      "mean_probability": 0.9935,
+      "max_probability": 0.9935,
+      "false_alarms_50": 1,
+      "false_alarm_rate_pct_50": 100.0,
+      "false_alarms_constrained": 1,
+      "false_alarm_rate_pct_constrained": 100.0
+    },
+    "artifact_saturation_Saturation_Clipping": {
+      "record_id": "artifact_saturation",
+      "clinical_truth": "Saturation_Clipping",
+      "windows_count": 1,
+      "mean_probability": 1.0,
+      "max_probability": 1.0,
+      "false_alarms_50": 1,
+      "false_alarm_rate_pct_50": 100.0,
+      "false_alarms_constrained": 1,
+      "false_alarm_rate_pct_constrained": 100.0
+    },
+    "cudb_cu01_Normal_Sinus_Rhythm": {
+      "record_id": "cudb_cu01",
+      "clinical_truth": "Normal_Sinus_Rhythm",
+      "windows_count": 42,
+      "mean_probability": 0.025,
+      "max_probability": 0.2719,
+      "false_alarms_50": 0,
+      "false_alarm_rate_pct_50": 0.0,
+      "false_alarms_constrained": 0,
+      "false_alarm_rate_pct_constrained": 0.0
+    },
+    "cudb_cu01_Ventricular_Fibrillation": {
+      "record_id": "cudb_cu01",
+      "clinical_truth": "Ventricular_Fibrillation",
+      "windows_count": 57,
+      "mean_probability": 0.9625,
+      "max_probability": 1.0,
+      "false_alarms_50": 56,
+      "false_alarm_rate_pct_50": 98.25,
+      "false_alarms_constrained": 56,
+      "false_alarm_rate_pct_constrained": 98.25
+    },
+    "cudb_cu04_Ventricular_Tachycardia_Flutter": {
+      "record_id": "cudb_cu04",
+      "clinical_truth": "Ventricular_Tachycardia_Flutter",
+      "windows_count": 101,
+      "mean_probability": 0.597,
+      "max_probability": 1.0,
+      "false_alarms_50": 63,
+      "false_alarm_rate_pct_50": 62.38,
+      "false_alarms_constrained": 62,
+      "false_alarm_rate_pct_constrained": 61.39
+    },
+    "mitdb_100_Normal_Sinus_Rhythm": {
+      "record_id": "mitdb_100",
+      "clinical_truth": "Normal_Sinus_Rhythm",
+      "windows_count": 100,
+      "mean_probability": 0.0797,
+      "max_probability": 0.8411,
+      "false_alarms_50": 2,
+      "false_alarm_rate_pct_50": 2.0,
+      "false_alarms_constrained": 2,
+      "false_alarm_rate_pct_constrained": 2.0
+    },
+    "mitdb_222_Atrial_Flutter": {
+      "record_id": "mitdb_222",
+      "clinical_truth": "Atrial_Flutter",
+      "windows_count": 100,
+      "mean_probability": 0.2446,
+      "max_probability": 0.7998,
+      "false_alarms_50": 17,
+      "false_alarm_rate_pct_50": 17.0,
+      "false_alarms_constrained": 12,
+      "false_alarm_rate_pct_constrained": 12.0
+    },
+    "mitdb_232_Sinus_Bradycardia": {
+      "record_id": "mitdb_232",
+      "clinical_truth": "Sinus_Bradycardia",
+      "windows_count": 100,
+      "mean_probability": 0.3535,
+      "max_probability": 0.9837,
+      "false_alarms_50": 36,
+      "false_alarm_rate_pct_50": 36.0,
+      "false_alarms_constrained": 33,
+      "false_alarm_rate_pct_constrained": 33.0
+    },
+    "mitdb_233_Ventricular_Bigeminy": {
+      "record_id": "mitdb_233",
+      "clinical_truth": "Ventricular_Bigeminy",
+      "windows_count": 100,
+      "mean_probability": 0.8287,
+      "max_probability": 0.995,
+      "false_alarms_50": 91,
+      "false_alarm_rate_pct_50": 91.0,
+      "false_alarms_constrained": 89,
+      "false_alarm_rate_pct_constrained": 89.0
+    }
+  }
+}

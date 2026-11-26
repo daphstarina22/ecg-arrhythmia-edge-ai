@@ -1,0 +1,59 @@
+{
+  "pipeline_name": "AFDB Model Training and Evaluation",
+  "pipeline_version": "1.0.0",
+  "timestamp_utc": "2026-10-25T11:32:17Z",
+  "feature_columns": [
+    "n_beats",
+    "hr_mean_bpm",
+    "hr_std_bpm",
+    "rr_cv",
+    "rr_rmssd",
+    "rr_mad",
+    "rr_pnn50",
+    "rr_entropy",
+    "alternating_sign_index",
+    "f_band_power_ratio",
+    "f_band_flatness",
+    "f_band_peak_purity",
+    "p_band_power_ratio",
+    "qrs_power_ratio",
+    "hjorth_mobility",
+    "hjorth_complexity",
+    "ac_std_mv",
+    "ac_ptp_mv"
+  ],
+  "scaler_fitted_on": "afdb_features_train.csv",
+  "train_samples": 108522,
+  "val_samples": 29255,
+  "test_samples": 29162,
+  "operating_thresholds": {
+    "constrained_threshold": 0.965,
+    "triage_threshold": 0.7,
+    "consensus_threshold": 0.9
+  },
+  "learned_weights_logistic_regression": {
+    "n_beats": -1.0509,
+    "hr_mean_bpm": 2.8037,
+    "hr_std_bpm": -2.7129,
+    "rr_cv": 2.9693,
+    "rr_rmssd": -1.887,
+    "rr_mad": 0.0451,
+    "rr_pnn50": 1.9312,
+    "rr_entropy": 1.3486,
+    "alternating_sign_index": -0.169,
+    "f_band_power_ratio": 1.2997,
+    "f_band_flatness": 2.2075,
+    "f_band_peak_purity": 0.3908,
+    "p_band_power_ratio": 0.123,
+    "qrs_power_ratio": 0.0036,
+    "hjorth_mobility": 1.2947,
+    "hjorth_complexity": 1.0185,
+    "ac_std_mv": 0.6791,
+    "ac_ptp_mv": 0.2339
+  },
+  "intercept_logistic_regression": -1.9978,
+  "file_checksums_sha256": {
+    "afdb_model_package.joblib": "68597c2a0a1b000867a034a45174841079370c473cd16c57845275ddf10c5f25",
+    "afdb_evaluation_metrics.json": "ed71dcac9f8f480bdb09925005d830ac28cc411d0f3fc927a5e94792f52474c9"
+  }
+}

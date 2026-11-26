@@ -1,0 +1,536 @@
+{
+  "timestamp": "2026-10-25 20:54:06",
+  "features": [
+    "mean_rr",
+    "rr_cv",
+    "qrs_width",
+    "peak_count",
+    "dominant_freq",
+    "vf_band_power_ratio",
+    "spectral_entropy",
+    "zero_crossings",
+    "hjorth_mobility",
+    "hjorth_complexity",
+    "calibrated_ptp",
+    "calibrated_std"
+  ],
+  "classes": [
+    "NSR",
+    "TACHY",
+    "BRADYCARDIA",
+    "ASYSTOLE",
+    "VENTRICULAR"
+  ],
+  "dataset_windows": 7668,
+  "dataset_records": 333,
+  "class_counts": {
+    "NSR": 5073,
+    "VENTRICULAR": 1838,
+    "TACHY": 362,
+    "BRADYCARDIA": 220,
+    "ASYSTOLE": 175
+  },
+  "class_imbalance_ratio": 28.98857142857143,
+  "best_model": "hist_gradient_boosting",
+  "best_macro_f1": 0.6629463070431469,
+  "models": {
+    "random_forest": {
+      "model": "random_forest",
+      "classes": [
+        "NSR",
+        "TACHY",
+        "BRADYCARDIA",
+        "ASYSTOLE",
+        "VENTRICULAR"
+      ],
+      "window_metrics": {
+        "accuracy": 0.7759520083463746,
+        "balanced_accuracy": 0.7508823566243572,
+        "macro_f1": 0.6531165955120236,
+        "weighted_f1": 0.7944796221433087,
+        "per_class": {
+          "NSR": {
+            "precision": 0.9128001865236652,
+            "recall": 0.7717327025428741,
+            "f1": 0.836359752189703,
+            "support": 5073
+          },
+          "TACHY": {
+            "precision": 0.530278232405892,
+            "recall": 0.8950276243093923,
+            "f1": 0.6659815005138746,
+            "support": 362
+          },
+          "BRADYCARDIA": {
+            "precision": 0.22096317280453256,
+            "recall": 0.7090909090909091,
+            "f1": 0.3369330453563715,
+            "support": 220
+          },
+          "ASYSTOLE": {
+            "precision": 0.7357142857142858,
+            "recall": 0.5885714285714285,
+            "f1": 0.653968253968254,
+            "support": 175
+          },
+          "VENTRICULAR": {
+            "precision": 0.7554630593132154,
+            "recall": 0.7899891186071817,
+            "f1": 0.7723404255319148,
+            "support": 1838
+          }
+        },
+        "confusion_matrix": [
+          [
+            3915,
+            223,
+            541,
+            10,
+            384
+          ],
+          [
+            21,
+            324,
+            0,
+            0,
+            17
+          ],
+          [
+            60,
+            0,
+            156,
+            2,
+            2
+          ],
+          [
+            2,
+            0,
+            3,
+            103,
+            67
+          ],
+          [
+            291,
+            64,
+            6,
+            25,
+            1452
+          ]
+        ]
+      },
+      "record_metrics": {
+        "accuracy": 0.6936936936936937,
+        "balanced_accuracy": 0.7624069018148278,
+        "macro_f1": 0.7204131791205434,
+        "weighted_f1": 0.6767783703990533,
+        "per_class": {
+          "NSR": {
+            "precision": 0.36,
+            "recall": 0.8333333333333334,
+            "f1": 0.5027932960893855,
+            "support": 54
+          },
+          "TACHY": {
+            "precision": 0.9206349206349206,
+            "recall": 0.9508196721311475,
+            "f1": 0.9354838709677419,
+            "support": 122
+          },
+          "BRADYCARDIA": {
+            "precision": 0.8857142857142857,
+            "recall": 0.7948717948717948,
+            "f1": 0.8378378378378378,
+            "support": 39
+          },
+          "ASYSTOLE": {
+            "precision": 0.9375,
+            "recall": 1.0,
+            "f1": 0.967741935483871,
+            "support": 15
+          },
+          "VENTRICULAR": {
+            "precision": 0.7741935483870968,
+            "recall": 0.23300970873786409,
+            "f1": 0.3582089552238806,
+            "support": 103
+          }
+        },
+        "confusion_matrix": [
+          [
+            45,
+            1,
+            4,
+            0,
+            4
+          ],
+          [
+            3,
+            116,
+            0,
+            0,
+            3
+          ],
+          [
+            8,
+            0,
+            31,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            69,
+            9,
+            0,
+            1,
+            24
+          ]
+        ],
+        "total_records": 333
+      },
+      "false_brady_on_nsr": {
+        "nsr_windows_total": 5073,
+        "nsr_predicted_brady": 541,
+        "false_brady_pct": 10.664301202444312
+      }
+    },
+    "hist_gradient_boosting": {
+      "model": "hist_gradient_boosting",
+      "classes": [
+        "NSR",
+        "TACHY",
+        "BRADYCARDIA",
+        "ASYSTOLE",
+        "VENTRICULAR"
+      ],
+      "window_metrics": {
+        "accuracy": 0.7837767344809599,
+        "balanced_accuracy": 0.7370303999786201,
+        "macro_f1": 0.6629463070431469,
+        "weighted_f1": 0.7958710189806375,
+        "per_class": {
+          "NSR": {
+            "precision": 0.9246041125029544,
+            "recall": 0.7711413364872857,
+            "f1": 0.8409286328460877,
+            "support": 5073
+          },
+          "TACHY": {
+            "precision": 0.5895522388059702,
+            "recall": 0.8729281767955801,
+            "f1": 0.7037861915367484,
+            "support": 362
+          },
+          "BRADYCARDIA": {
+            "precision": 0.2698412698412698,
+            "recall": 0.6181818181818182,
+            "f1": 0.3756906077348066,
+            "support": 220
+          },
+          "ASYSTOLE": {
+            "precision": 0.7083333333333334,
+            "recall": 0.5828571428571429,
+            "f1": 0.6394984326018809,
+            "support": 175
+          },
+          "VENTRICULAR": {
+            "precision": 0.6853084775854417,
+            "recall": 0.8400435255712732,
+            "f1": 0.7548276704962112,
+            "support": 1838
+          }
+        },
+        "confusion_matrix": [
+          [
+            3912,
+            171,
+            355,
+            21,
+            614
+          ],
+          [
+            24,
+            316,
+            0,
+            0,
+            22
+          ],
+          [
+            76,
+            0,
+            136,
+            2,
+            6
+          ],
+          [
+            2,
+            0,
+            4,
+            102,
+            67
+          ],
+          [
+            217,
+            49,
+            9,
+            19,
+            1544
+          ]
+        ]
+      },
+      "record_metrics": {
+        "accuracy": 0.7477477477477478,
+        "balanced_accuracy": 0.7819606200061398,
+        "macro_f1": 0.7663247684389658,
+        "weighted_f1": 0.7522778551186065,
+        "per_class": {
+          "NSR": {
+            "precision": 0.41818181818181815,
+            "recall": 0.8518518518518519,
+            "f1": 0.5609756097560976,
+            "support": 54
+          },
+          "TACHY": {
+            "precision": 0.9344262295081968,
+            "recall": 0.9344262295081968,
+            "f1": 0.9344262295081968,
+            "support": 122
+          },
+          "BRADYCARDIA": {
+            "precision": 0.90625,
+            "recall": 0.7435897435897436,
+            "f1": 0.8169014084507042,
+            "support": 39
+          },
+          "ASYSTOLE": {
+            "precision": 0.9333333333333333,
+            "recall": 0.9333333333333333,
+            "f1": 0.9333333333333333,
+            "support": 15
+          },
+          "VENTRICULAR": {
+            "precision": 0.8518518518518519,
+            "recall": 0.44660194174757284,
+            "f1": 0.5859872611464968,
+            "support": 103
+          }
+        },
+        "confusion_matrix": [
+          [
+            46,
+            1,
+            3,
+            0,
+            4
+          ],
+          [
+            4,
+            114,
+            0,
+            0,
+            4
+          ],
+          [
+            10,
+            0,
+            29,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            14,
+            0
+          ],
+          [
+            49,
+            7,
+            0,
+            1,
+            46
+          ]
+        ],
+        "total_records": 333
+      },
+      "false_brady_on_nsr": {
+        "nsr_windows_total": 5073,
+        "nsr_predicted_brady": 355,
+        "false_brady_pct": 6.997831657796176
+      }
+    },
+    "logistic_regression": {
+      "model": "logistic_regression",
+      "classes": [
+        "NSR",
+        "TACHY",
+        "BRADYCARDIA",
+        "ASYSTOLE",
+        "VENTRICULAR"
+      ],
+      "window_metrics": {
+        "accuracy": 0.7380020865936359,
+        "balanced_accuracy": 0.7456769319143383,
+        "macro_f1": 0.6026380921556591,
+        "weighted_f1": 0.7617302726146123,
+        "per_class": {
+          "NSR": {
+            "precision": 0.9196988707653702,
+            "recall": 0.7224521979105066,
+            "f1": 0.8092294104658865,
+            "support": 5073
+          },
+          "TACHY": {
+            "precision": 0.49189985272459497,
+            "recall": 0.9226519337016574,
+            "f1": 0.6416906820365034,
+            "support": 362
+          },
+          "BRADYCARDIA": {
+            "precision": 0.18403247631935046,
+            "recall": 0.6181818181818182,
+            "f1": 0.28362877997914493,
+            "support": 220
+          },
+          "ASYSTOLE": {
+            "precision": 0.44727272727272727,
+            "recall": 0.7028571428571428,
+            "f1": 0.5466666666666666,
+            "support": 175
+          },
+          "VENTRICULAR": {
+            "precision": 0.7040201005025125,
+            "recall": 0.7622415669205659,
+            "f1": 0.731974921630094,
+            "support": 1838
+          }
+        },
+        "confusion_matrix": [
+          [
+            3665,
+            259,
+            569,
+            31,
+            549
+          ],
+          [
+            27,
+            334,
+            0,
+            0,
+            1
+          ],
+          [
+            76,
+            0,
+            136,
+            8,
+            0
+          ],
+          [
+            8,
+            0,
+            5,
+            123,
+            39
+          ],
+          [
+            209,
+            86,
+            29,
+            113,
+            1401
+          ]
+        ]
+      },
+      "record_metrics": {
+        "accuracy": 0.6846846846846847,
+        "balanced_accuracy": 0.6995536275020597,
+        "macro_f1": 0.6840856820154112,
+        "weighted_f1": 0.6774560778742835,
+        "per_class": {
+          "NSR": {
+            "precision": 0.35344827586206895,
+            "recall": 0.7592592592592593,
+            "f1": 0.4823529411764706,
+            "support": 54
+          },
+          "TACHY": {
+            "precision": 0.9193548387096774,
+            "recall": 0.9344262295081968,
+            "f1": 0.926829268292683,
+            "support": 122
+          },
+          "BRADYCARDIA": {
+            "precision": 0.7333333333333333,
+            "recall": 0.8461538461538461,
+            "f1": 0.7857142857142857,
+            "support": 39
+          },
+          "ASYSTOLE": {
+            "precision": 1.0,
+            "recall": 0.6666666666666666,
+            "f1": 0.8,
+            "support": 15
+          },
+          "VENTRICULAR": {
+            "precision": 0.7894736842105263,
+            "recall": 0.2912621359223301,
+            "f1": 0.425531914893617,
+            "support": 103
+          }
+        },
+        "confusion_matrix": [
+          [
+            41,
+            1,
+            6,
+            0,
+            6
+          ],
+          [
+            8,
+            114,
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            33,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            10,
+            2
+          ],
+          [
+            61,
+            9,
+            3,
+            0,
+            30
+          ]
+        ],
+        "total_records": 333
+      },
+      "false_brady_on_nsr": {
+        "nsr_windows_total": 5073,
+        "nsr_predicted_brady": 569,
+        "false_brady_pct": 11.216242854326829
+      }
+    }
+  }
+}

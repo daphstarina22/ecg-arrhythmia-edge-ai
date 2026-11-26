@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-10-25 22:05:34",
+  "pipeline_file": "C:\\Users\\LENOVO\\Downloads\\ecg-arrhythmia-edge-ai\\training\\final_models\\results\\model2_xgboost_4class_research\\research_xgboost_4class_pipeline.joblib",
+  "target_classes": [
+    "NSR",
+    "TACHY",
+    "BRADYCARDIA",
+    "VENTRICULAR"
+  ],
+  "class_mapping": {
+    "0": "NSR",
+    "1": "TACHY",
+    "2": "BRADYCARDIA",
+    "3": "VENTRICULAR"
+  },
+  "records_queried": [
+    "mitdb_100",
+    "vfdb_425",
+    "mitdb_200",
+    "vfdb_424",
+    "mitdb_999",
+    "vfdb_999"
+  ],
+  "record_summaries": [
+    {
+      "record_id": "mitdb_100",
+      "status": "EVALUATED",
+      "duration_sec": 1805.5555555555557,
+      "total_windows": 361,
+      "evaluable_windows": 361,
+      "unevaluable_windows": 0,
+      "predictions_distribution": {
+        "NSR": 361,
+        "TACHY": 0,
+        "BRADYCARDIA": 0,
+        "VENTRICULAR": 0
+      },
+      "evaluation_time_sec": 2.84
+    },
+    {
+      "record_id": "vfdb_425",
+      "status": "EVALUATED",
+      "duration_sec": 2100.0,
+      "total_windows": 420,
+      "evaluable_windows": 420,
+      "unevaluable_windows": 0,
+      "predictions_distribution": {
+        "NSR": 395,
+        "TACHY": 6,
+        "BRADYCARDIA": 12,
+        "VENTRICULAR": 7
+      },
+      "evaluation_time_sec": 2.84
+    },
+    {
+      "record_id": "mitdb_200",
+      "status": "EVALUATED",
+      "duration_sec": 1805.5555555555557,
+      "total_windows": 361,
+      "evaluable_windows": 361,
+      "unevaluable_windows": 0,
+      "predictions_distribution": {
+        "NSR": 355,
+        "TACHY": 2,
+        "BRADYCARDIA": 0,
+        "VENTRICULAR": 4
+      },
+      "evaluation_time_sec": 2.71
+    },
+    {
+      "record_id": "vfdb_424",
+      "status": "EVALUATED",
+      "duration_sec": 2100.0,
+      "total_windows": 420,
+      "evaluable_windows": 420,
+      "unevaluable_windows": 0,
+      "predictions_distribution": {
+        "NSR": 324,
+        "TACHY": 21,
+        "BRADYCARDIA": 14,
+        "VENTRICULAR": 61
+      },
+      "evaluation_time_sec": 2.62
+    },
+    {
+      "record_id": "mitdb_999",
+      "status": "UNAVAILABLE",
+      "reason": "File or channel data not found in local MITDB archive."
+    },
+    {
+      "record_id": "vfdb_999",
+      "status": "UNAVAILABLE",
+      "reason": "File or channel data not found in local VFDB archive."
+    }
+  ],
+  "total_windows_evaluated": 1562
+}

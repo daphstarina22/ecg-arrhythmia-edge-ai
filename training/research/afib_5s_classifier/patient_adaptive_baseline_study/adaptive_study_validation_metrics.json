@@ -1,0 +1,1126 @@
+{
+  "Config_A_Absolute_Only": {
+    "feature_columns": [
+      "n_beats",
+      "hr_mean_bpm",
+      "hr_std_bpm",
+      "rr_cv",
+      "rr_rmssd",
+      "rr_mad",
+      "rr_pnn50",
+      "rr_sample_dispersion",
+      "rr_turning_point_ratio",
+      "alternating_sign_index",
+      "f_band_power_ratio",
+      "f_band_flatness",
+      "f_band_peak_purity",
+      "p_band_power_ratio",
+      "qrs_power_ratio",
+      "hjorth_mobility",
+      "hjorth_complexity",
+      "ac_std_mv",
+      "ac_ptp_mv",
+      "zero_crossings",
+      "lz_complexity"
+    ],
+    "feature_count": 21,
+    "logistic_regression": {
+      "weights": {
+        "n_beats": -0.1121,
+        "hr_mean_bpm": 1.7423,
+        "hr_std_bpm": -2.7312,
+        "rr_cv": 5.2012,
+        "rr_rmssd": -2.3584,
+        "rr_mad": 0.2594,
+        "rr_pnn50": 1.8183,
+        "rr_sample_dispersion": -0.2406,
+        "rr_turning_point_ratio": -0.0743,
+        "alternating_sign_index": 0.3645,
+        "f_band_power_ratio": 1.4082,
+        "f_band_flatness": 0.9511,
+        "f_band_peak_purity": 0.6575,
+        "p_band_power_ratio": 0.1107,
+        "qrs_power_ratio": 0.6405,
+        "hjorth_mobility": 1.5248,
+        "hjorth_complexity": 1.0667,
+        "ac_std_mv": 0.9902,
+        "ac_ptp_mv": -0.1033,
+        "zero_crossings": -0.2956,
+        "lz_complexity": -0.4683
+      },
+      "intercept": -1.1005,
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 19567,
+          "fp": 1781,
+          "fn": 1370,
+          "tn": 35927,
+          "sensitivity": 0.9346,
+          "specificity": 0.9528,
+          "precision": 0.9166,
+          "f1_score": 0.9255,
+          "balanced_accuracy": 0.9437,
+          "roc_auc": 0.9832,
+          "pr_auc": 0.9568,
+          "fp_per_hour": 68.01,
+          "false_alarm_count": 1781,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.56,
+          "metrics": {
+            "tp": 19567,
+            "fp": 1781,
+            "fn": 1370,
+            "tn": 35927,
+            "sensitivity": 0.9346,
+            "specificity": 0.9528,
+            "precision": 0.9166,
+            "f1_score": 0.9255,
+            "balanced_accuracy": 0.9437,
+            "roc_auc": 0.9832,
+            "pr_auc": 0.9568,
+            "fp_per_hour": 68.01,
+            "false_alarm_count": 1781,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 519,
+              "fp": 847,
+              "fn": 4,
+              "tn": 13300,
+              "sensitivity": 0.9924,
+              "specificity": 0.9401,
+              "precision": 0.3799,
+              "f1_score": 0.5495,
+              "balanced_accuracy": 0.9662,
+              "roc_auc": 0.9954,
+              "pr_auc": 0.8053,
+              "fp_per_hour": 86.21,
+              "false_alarm_count": 847,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 8683,
+              "fp": 697,
+              "fn": 524,
+              "tn": 4665,
+              "sensitivity": 0.9431,
+              "specificity": 0.87,
+              "precision": 0.9257,
+              "f1_score": 0.9343,
+              "balanced_accuracy": 0.9065,
+              "roc_auc": 0.955,
+              "pr_auc": 0.9644,
+              "fp_per_hour": 187.18,
+              "false_alarm_count": 697,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 8663,
+              "fp": 120,
+              "fn": 213,
+              "tn": 5718,
+              "sensitivity": 0.976,
+              "specificity": 0.9794,
+              "precision": 0.9863,
+              "f1_score": 0.9811,
+              "balanced_accuracy": 0.9777,
+              "roc_auc": 0.9973,
+              "pr_auc": 0.9968,
+              "fp_per_hour": 29.6,
+              "false_alarm_count": 120,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 1702,
+              "fp": 117,
+              "fn": 629,
+              "tn": 12244,
+              "sensitivity": 0.7302,
+              "specificity": 0.9905,
+              "precision": 0.9357,
+              "f1_score": 0.8202,
+              "balanced_accuracy": 0.8603,
+              "roc_auc": 0.9869,
+              "pr_auc": 0.9119,
+              "fp_per_hour": 13.63,
+              "false_alarm_count": 117,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 23,
+            "fp": 6,
+            "fn": 0,
+            "tn": 46,
+            "sensitivity": 1.0,
+            "specificity": 0.8846,
+            "precision": 0.7931,
+            "f1_score": 0.8846,
+            "balanced_accuracy": 0.9423,
+            "roc_auc": 0.9967,
+            "pr_auc": 0.9936,
+            "fp_per_hour": 166.15,
+            "false_alarm_count": 6,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 19544,
+            "fp": 1775,
+            "fn": 1370,
+            "tn": 35881,
+            "sensitivity": 0.9345,
+            "specificity": 0.9529,
+            "precision": 0.9167,
+            "f1_score": 0.9255,
+            "balanced_accuracy": 0.9437,
+            "roc_auc": 0.9832,
+            "pr_auc": 0.9568,
+            "fp_per_hour": 67.88,
+            "false_alarm_count": 1775,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    },
+    "hist_gradient_boosting": {
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 18274,
+          "fp": 3124,
+          "fn": 2663,
+          "tn": 34584,
+          "sensitivity": 0.8728,
+          "specificity": 0.9172,
+          "precision": 0.854,
+          "f1_score": 0.8633,
+          "balanced_accuracy": 0.895,
+          "roc_auc": 0.9633,
+          "pr_auc": 0.9215,
+          "fp_per_hour": 119.3,
+          "false_alarm_count": 3124,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.76,
+          "metrics": {
+            "tp": 16387,
+            "fp": 1851,
+            "fn": 4550,
+            "tn": 35857,
+            "sensitivity": 0.7827,
+            "specificity": 0.9509,
+            "precision": 0.8985,
+            "f1_score": 0.8366,
+            "balanced_accuracy": 0.8668,
+            "roc_auc": 0.9633,
+            "pr_auc": 0.9215,
+            "fp_per_hour": 70.69,
+            "false_alarm_count": 1851,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 523,
+              "fp": 586,
+              "fn": 0,
+              "tn": 13561,
+              "sensitivity": 1.0,
+              "specificity": 0.9586,
+              "precision": 0.4716,
+              "f1_score": 0.6409,
+              "balanced_accuracy": 0.9793,
+              "roc_auc": 0.9945,
+              "pr_auc": 0.7874,
+              "fp_per_hour": 59.65,
+              "false_alarm_count": 586,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 8629,
+              "fp": 1219,
+              "fn": 578,
+              "tn": 4143,
+              "sensitivity": 0.9372,
+              "specificity": 0.7727,
+              "precision": 0.8762,
+              "f1_score": 0.9057,
+              "balanced_accuracy": 0.8549,
+              "roc_auc": 0.9306,
+              "pr_auc": 0.9481,
+              "fp_per_hour": 327.37,
+              "false_alarm_count": 1219,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 7500,
+              "fp": 15,
+              "fn": 1376,
+              "tn": 5823,
+              "sensitivity": 0.845,
+              "specificity": 0.9974,
+              "precision": 0.998,
+              "f1_score": 0.9151,
+              "balanced_accuracy": 0.9212,
+              "roc_auc": 0.9965,
+              "pr_auc": 0.9975,
+              "fp_per_hour": 3.7,
+              "false_alarm_count": 15,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 1622,
+              "fp": 1304,
+              "fn": 709,
+              "tn": 11057,
+              "sensitivity": 0.6958,
+              "specificity": 0.8945,
+              "precision": 0.5543,
+              "f1_score": 0.6171,
+              "balanced_accuracy": 0.7952,
+              "roc_auc": 0.9154,
+              "pr_auc": 0.6006,
+              "fp_per_hour": 151.91,
+              "false_alarm_count": 1304,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 23,
+            "fp": 2,
+            "fn": 0,
+            "tn": 50,
+            "sensitivity": 1.0,
+            "specificity": 0.9615,
+            "precision": 0.92,
+            "f1_score": 0.9583,
+            "balanced_accuracy": 0.9808,
+            "roc_auc": 1.0,
+            "pr_auc": 1.0,
+            "fp_per_hour": 55.38,
+            "false_alarm_count": 2,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 18251,
+            "fp": 3122,
+            "fn": 2663,
+            "tn": 34534,
+            "sensitivity": 0.8727,
+            "specificity": 0.9171,
+            "precision": 0.8539,
+            "f1_score": 0.8632,
+            "balanced_accuracy": 0.8949,
+            "roc_auc": 0.9633,
+            "pr_auc": 0.9214,
+            "fp_per_hour": 119.39,
+            "false_alarm_count": 3122,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    }
+  },
+  "Config_B_Adaptive_Only": {
+    "feature_columns": [
+      "delta_hr_bpm",
+      "rr_cv_relative",
+      "hr_z_robust",
+      "afib_index_relative",
+      "baseline_warmup_fraction"
+    ],
+    "feature_count": 5,
+    "logistic_regression": {
+      "weights": {
+        "delta_hr_bpm": 1.731,
+        "rr_cv_relative": -0.0416,
+        "hr_z_robust": -1.4509,
+        "afib_index_relative": 0.3665,
+        "baseline_warmup_fraction": 0.29
+      },
+      "intercept": -0.0209,
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 9372,
+          "fp": 3800,
+          "fn": 11565,
+          "tn": 33908,
+          "sensitivity": 0.4476,
+          "specificity": 0.8992,
+          "precision": 0.7115,
+          "f1_score": 0.5495,
+          "balanced_accuracy": 0.6734,
+          "roc_auc": 0.7032,
+          "pr_auc": 0.6165,
+          "fp_per_hour": 145.12,
+          "false_alarm_count": 3800,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.65,
+          "metrics": {
+            "tp": 5384,
+            "fp": 1885,
+            "fn": 15553,
+            "tn": 35823,
+            "sensitivity": 0.2572,
+            "specificity": 0.95,
+            "precision": 0.7407,
+            "f1_score": 0.3818,
+            "balanced_accuracy": 0.6036,
+            "roc_auc": 0.7032,
+            "pr_auc": 0.6165,
+            "fp_per_hour": 71.98,
+            "false_alarm_count": 1885,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 305,
+              "fp": 2085,
+              "fn": 218,
+              "tn": 12062,
+              "sensitivity": 0.5832,
+              "specificity": 0.8526,
+              "precision": 0.1276,
+              "f1_score": 0.2094,
+              "balanced_accuracy": 0.7179,
+              "roc_auc": 0.6284,
+              "pr_auc": 0.4058,
+              "fp_per_hour": 212.23,
+              "false_alarm_count": 2085,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 4186,
+              "fp": 707,
+              "fn": 5021,
+              "tn": 4655,
+              "sensitivity": 0.4547,
+              "specificity": 0.8681,
+              "precision": 0.8555,
+              "f1_score": 0.5938,
+              "balanced_accuracy": 0.6614,
+              "roc_auc": 0.7046,
+              "pr_auc": 0.8084,
+              "fp_per_hour": 189.87,
+              "false_alarm_count": 707,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 3760,
+              "fp": 126,
+              "fn": 5116,
+              "tn": 5712,
+              "sensitivity": 0.4236,
+              "specificity": 0.9784,
+              "precision": 0.9676,
+              "f1_score": 0.5892,
+              "balanced_accuracy": 0.701,
+              "roc_auc": 0.743,
+              "pr_auc": 0.8608,
+              "fp_per_hour": 31.08,
+              "false_alarm_count": 126,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 1121,
+              "fp": 882,
+              "fn": 1210,
+              "tn": 11479,
+              "sensitivity": 0.4809,
+              "specificity": 0.9286,
+              "precision": 0.5597,
+              "f1_score": 0.5173,
+              "balanced_accuracy": 0.7048,
+              "roc_auc": 0.7625,
+              "pr_auc": 0.4574,
+              "fp_per_hour": 102.75,
+              "false_alarm_count": 882,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 22,
+            "tn": 52,
+            "sensitivity": 0.0435,
+            "specificity": 1.0,
+            "precision": 1.0,
+            "f1_score": 0.0833,
+            "balanced_accuracy": 0.5217,
+            "roc_auc": 0.1622,
+            "pr_auc": 0.2435,
+            "fp_per_hour": 0.0,
+            "false_alarm_count": 0,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 9371,
+            "fp": 3800,
+            "fn": 11543,
+            "tn": 33856,
+            "sensitivity": 0.4481,
+            "specificity": 0.8991,
+            "precision": 0.7115,
+            "f1_score": 0.5499,
+            "balanced_accuracy": 0.6736,
+            "roc_auc": 0.7035,
+            "pr_auc": 0.6168,
+            "fp_per_hour": 145.32,
+            "false_alarm_count": 3800,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    },
+    "hist_gradient_boosting": {
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 20093,
+          "fp": 3137,
+          "fn": 844,
+          "tn": 34571,
+          "sensitivity": 0.9597,
+          "specificity": 0.9168,
+          "precision": 0.865,
+          "f1_score": 0.9099,
+          "balanced_accuracy": 0.9382,
+          "roc_auc": 0.9815,
+          "pr_auc": 0.9589,
+          "fp_per_hour": 119.8,
+          "false_alarm_count": 3137,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.76,
+          "metrics": {
+            "tp": 19085,
+            "fp": 1826,
+            "fn": 1852,
+            "tn": 35882,
+            "sensitivity": 0.9115,
+            "specificity": 0.9516,
+            "precision": 0.9127,
+            "f1_score": 0.9121,
+            "balanced_accuracy": 0.9316,
+            "roc_auc": 0.9815,
+            "pr_auc": 0.9589,
+            "fp_per_hour": 69.73,
+            "false_alarm_count": 1826,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 513,
+              "fp": 1933,
+              "fn": 10,
+              "tn": 12214,
+              "sensitivity": 0.9809,
+              "specificity": 0.8634,
+              "precision": 0.2097,
+              "f1_score": 0.3456,
+              "balanced_accuracy": 0.9221,
+              "roc_auc": 0.9608,
+              "pr_auc": 0.4645,
+              "fp_per_hour": 196.76,
+              "false_alarm_count": 1933,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 8588,
+              "fp": 714,
+              "fn": 619,
+              "tn": 4648,
+              "sensitivity": 0.9328,
+              "specificity": 0.8668,
+              "precision": 0.9232,
+              "f1_score": 0.928,
+              "balanced_accuracy": 0.8998,
+              "roc_auc": 0.9592,
+              "pr_auc": 0.9679,
+              "fp_per_hour": 191.75,
+              "false_alarm_count": 714,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 8747,
+              "fp": 179,
+              "fn": 129,
+              "tn": 5659,
+              "sensitivity": 0.9855,
+              "specificity": 0.9693,
+              "precision": 0.9799,
+              "f1_score": 0.9827,
+              "balanced_accuracy": 0.9774,
+              "roc_auc": 0.9975,
+              "pr_auc": 0.9983,
+              "fp_per_hour": 44.15,
+              "false_alarm_count": 179,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 2245,
+              "fp": 311,
+              "fn": 86,
+              "tn": 12050,
+              "sensitivity": 0.9631,
+              "specificity": 0.9748,
+              "precision": 0.8783,
+              "f1_score": 0.9188,
+              "balanced_accuracy": 0.969,
+              "roc_auc": 0.9947,
+              "pr_auc": 0.9723,
+              "fp_per_hour": 36.23,
+              "false_alarm_count": 311,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 5,
+            "tn": 52,
+            "sensitivity": 0.7826,
+            "specificity": 1.0,
+            "precision": 1.0,
+            "f1_score": 0.878,
+            "balanced_accuracy": 0.8913,
+            "roc_auc": 0.9732,
+            "pr_auc": 0.9575,
+            "fp_per_hour": 0.0,
+            "false_alarm_count": 0,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 20075,
+            "fp": 3137,
+            "fn": 839,
+            "tn": 34519,
+            "sensitivity": 0.9599,
+            "specificity": 0.9167,
+            "precision": 0.8649,
+            "f1_score": 0.9099,
+            "balanced_accuracy": 0.9383,
+            "roc_auc": 0.9816,
+            "pr_auc": 0.959,
+            "fp_per_hour": 119.96,
+            "false_alarm_count": 3137,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    }
+  },
+  "Config_C_Combined_Absolute_Plus_Adaptive": {
+    "feature_columns": [
+      "n_beats",
+      "hr_mean_bpm",
+      "hr_std_bpm",
+      "rr_cv",
+      "rr_rmssd",
+      "rr_mad",
+      "rr_pnn50",
+      "rr_sample_dispersion",
+      "rr_turning_point_ratio",
+      "alternating_sign_index",
+      "f_band_power_ratio",
+      "f_band_flatness",
+      "f_band_peak_purity",
+      "p_band_power_ratio",
+      "qrs_power_ratio",
+      "hjorth_mobility",
+      "hjorth_complexity",
+      "ac_std_mv",
+      "ac_ptp_mv",
+      "zero_crossings",
+      "lz_complexity",
+      "delta_hr_bpm",
+      "rr_cv_relative",
+      "hr_z_robust",
+      "afib_index_relative",
+      "baseline_warmup_fraction"
+    ],
+    "feature_count": 26,
+    "logistic_regression": {
+      "weights": {
+        "n_beats": -0.0695,
+        "hr_mean_bpm": 1.715,
+        "hr_std_bpm": -3.0785,
+        "rr_cv": 8.8221,
+        "rr_rmssd": -1.758,
+        "rr_mad": 0.1978,
+        "rr_pnn50": 1.3618,
+        "rr_sample_dispersion": -0.0667,
+        "rr_turning_point_ratio": -0.0313,
+        "alternating_sign_index": 0.3207,
+        "f_band_power_ratio": 1.2016,
+        "f_band_flatness": 1.0661,
+        "f_band_peak_purity": 0.5211,
+        "p_band_power_ratio": -0.4991,
+        "qrs_power_ratio": -0.815,
+        "hjorth_mobility": 1.7324,
+        "hjorth_complexity": 0.7793,
+        "ac_std_mv": 0.7271,
+        "ac_ptp_mv": -0.2964,
+        "zero_crossings": -0.0478,
+        "lz_complexity": -0.74,
+        "delta_hr_bpm": 0.5225,
+        "rr_cv_relative": -2.6011,
+        "hr_z_robust": -0.3624,
+        "afib_index_relative": -0.4128,
+        "baseline_warmup_fraction": 1.4057
+      },
+      "intercept": -0.4126,
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 20340,
+          "fp": 1051,
+          "fn": 597,
+          "tn": 36657,
+          "sensitivity": 0.9715,
+          "specificity": 0.9721,
+          "precision": 0.9509,
+          "f1_score": 0.9611,
+          "balanced_accuracy": 0.9718,
+          "roc_auc": 0.9944,
+          "pr_auc": 0.9887,
+          "fp_per_hour": 40.14,
+          "false_alarm_count": 1051,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.76,
+          "metrics": {
+            "tp": 20097,
+            "fp": 580,
+            "fn": 840,
+            "tn": 37128,
+            "sensitivity": 0.9599,
+            "specificity": 0.9846,
+            "precision": 0.9719,
+            "f1_score": 0.9659,
+            "balanced_accuracy": 0.9722,
+            "roc_auc": 0.9944,
+            "pr_auc": 0.9887,
+            "fp_per_hour": 22.15,
+            "false_alarm_count": 580,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 491,
+              "fp": 387,
+              "fn": 32,
+              "tn": 13760,
+              "sensitivity": 0.9388,
+              "specificity": 0.9726,
+              "precision": 0.5592,
+              "f1_score": 0.7009,
+              "balanced_accuracy": 0.9557,
+              "roc_auc": 0.9934,
+              "pr_auc": 0.8828,
+              "fp_per_hour": 39.39,
+              "false_alarm_count": 387,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 8900,
+              "fp": 515,
+              "fn": 307,
+              "tn": 4847,
+              "sensitivity": 0.9667,
+              "specificity": 0.904,
+              "precision": 0.9453,
+              "f1_score": 0.9559,
+              "balanced_accuracy": 0.9353,
+              "roc_auc": 0.9789,
+              "pr_auc": 0.9846,
+              "fp_per_hour": 138.31,
+              "false_alarm_count": 515,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 8826,
+              "fp": 81,
+              "fn": 50,
+              "tn": 5757,
+              "sensitivity": 0.9944,
+              "specificity": 0.9861,
+              "precision": 0.9909,
+              "f1_score": 0.9926,
+              "balanced_accuracy": 0.9902,
+              "roc_auc": 0.9997,
+              "pr_auc": 0.9998,
+              "fp_per_hour": 19.98,
+              "false_alarm_count": 81,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 2123,
+              "fp": 68,
+              "fn": 208,
+              "tn": 12293,
+              "sensitivity": 0.9108,
+              "specificity": 0.9945,
+              "precision": 0.969,
+              "f1_score": 0.939,
+              "balanced_accuracy": 0.9526,
+              "roc_auc": 0.9938,
+              "pr_auc": 0.9806,
+              "fp_per_hour": 7.92,
+              "false_alarm_count": 68,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 23,
+            "fp": 2,
+            "fn": 0,
+            "tn": 50,
+            "sensitivity": 1.0,
+            "specificity": 0.9615,
+            "precision": 0.92,
+            "f1_score": 0.9583,
+            "balanced_accuracy": 0.9808,
+            "roc_auc": 0.9916,
+            "pr_auc": 0.9802,
+            "fp_per_hour": 55.38,
+            "false_alarm_count": 2,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 20317,
+            "fp": 1049,
+            "fn": 597,
+            "tn": 36607,
+            "sensitivity": 0.9715,
+            "specificity": 0.9721,
+            "precision": 0.9509,
+            "f1_score": 0.9611,
+            "balanced_accuracy": 0.9718,
+            "roc_auc": 0.9944,
+            "pr_auc": 0.9887,
+            "fp_per_hour": 40.11,
+            "false_alarm_count": 1049,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    },
+    "hist_gradient_boosting": {
+      "evaluation": {
+        "pooled_fixed_threshold_0_560": {
+          "tp": 20538,
+          "fp": 1454,
+          "fn": 399,
+          "tn": 36254,
+          "sensitivity": 0.9809,
+          "specificity": 0.9614,
+          "precision": 0.9339,
+          "f1_score": 0.9568,
+          "balanced_accuracy": 0.9712,
+          "roc_auc": 0.9955,
+          "pr_auc": 0.9907,
+          "fp_per_hour": 55.53,
+          "false_alarm_count": 1454,
+          "non_afib_hours": 26.19
+        },
+        "optimal_threshold_spec95": {
+          "threshold": 0.79,
+          "metrics": {
+            "tp": 20178,
+            "fp": 714,
+            "fn": 759,
+            "tn": 36994,
+            "sensitivity": 0.9637,
+            "specificity": 0.9811,
+            "precision": 0.9658,
+            "f1_score": 0.9648,
+            "balanced_accuracy": 0.9724,
+            "roc_auc": 0.9955,
+            "pr_auc": 0.9907,
+            "fp_per_hour": 27.27,
+            "false_alarm_count": 714,
+            "non_afib_hours": 26.19
+          }
+        },
+        "per_patient_breakdown": {
+          "04126": {
+            "total_windows": 14670,
+            "afib_windows": 523,
+            "non_afib_windows": 14147,
+            "afib_prevalence_pct": 3.57,
+            "metrics_at_fixed_threshold": {
+              "tp": 505,
+              "fp": 426,
+              "fn": 18,
+              "tn": 13721,
+              "sensitivity": 0.9656,
+              "specificity": 0.9699,
+              "precision": 0.5424,
+              "f1_score": 0.6946,
+              "balanced_accuracy": 0.9677,
+              "roc_auc": 0.9928,
+              "pr_auc": 0.8237,
+              "fp_per_hour": 43.36,
+              "false_alarm_count": 426,
+              "non_afib_hours": 9.82
+            }
+          },
+          "05121": {
+            "total_windows": 14569,
+            "afib_windows": 9207,
+            "non_afib_windows": 5362,
+            "afib_prevalence_pct": 63.2,
+            "metrics_at_fixed_threshold": {
+              "tp": 9024,
+              "fp": 780,
+              "fn": 183,
+              "tn": 4582,
+              "sensitivity": 0.9801,
+              "specificity": 0.8545,
+              "precision": 0.9204,
+              "f1_score": 0.9493,
+              "balanced_accuracy": 0.9173,
+              "roc_auc": 0.9823,
+              "pr_auc": 0.9883,
+              "fp_per_hour": 209.47,
+              "false_alarm_count": 780,
+              "non_afib_hours": 3.72
+            }
+          },
+          "07879": {
+            "total_windows": 14714,
+            "afib_windows": 8876,
+            "non_afib_windows": 5838,
+            "afib_prevalence_pct": 60.32,
+            "metrics_at_fixed_threshold": {
+              "tp": 8809,
+              "fp": 117,
+              "fn": 67,
+              "tn": 5721,
+              "sensitivity": 0.9925,
+              "specificity": 0.98,
+              "precision": 0.9869,
+              "f1_score": 0.9897,
+              "balanced_accuracy": 0.9862,
+              "roc_auc": 0.9995,
+              "pr_auc": 0.9997,
+              "fp_per_hour": 28.86,
+              "false_alarm_count": 117,
+              "non_afib_hours": 4.05
+            }
+          },
+          "07910": {
+            "total_windows": 14692,
+            "afib_windows": 2331,
+            "non_afib_windows": 12361,
+            "afib_prevalence_pct": 15.87,
+            "metrics_at_fixed_threshold": {
+              "tp": 2200,
+              "fp": 131,
+              "fn": 131,
+              "tn": 12230,
+              "sensitivity": 0.9438,
+              "specificity": 0.9894,
+              "precision": 0.9438,
+              "f1_score": 0.9438,
+              "balanced_accuracy": 0.9666,
+              "roc_auc": 0.9957,
+              "pr_auc": 0.9845,
+              "fp_per_hour": 15.26,
+              "false_alarm_count": 131,
+              "non_afib_hours": 8.58
+            }
+          }
+        },
+        "warmup_analysis": {
+          "warmup_windows_count": 75,
+          "warmup_windows_pct": 0.13,
+          "post_warmup_windows_count": 58570,
+          "warmup_subset_metrics": {
+            "tp": 18,
+            "fp": 19,
+            "fn": 5,
+            "tn": 33,
+            "sensitivity": 0.7826,
+            "specificity": 0.6346,
+            "precision": 0.4865,
+            "f1_score": 0.6,
+            "balanced_accuracy": 0.7086,
+            "roc_auc": 0.8043,
+            "pr_auc": 0.5715,
+            "fp_per_hour": 526.15,
+            "false_alarm_count": 19,
+            "non_afib_hours": 0.04
+          },
+          "post_warmup_subset_metrics": {
+            "tp": 20520,
+            "fp": 1435,
+            "fn": 394,
+            "tn": 36221,
+            "sensitivity": 0.9812,
+            "specificity": 0.9619,
+            "precision": 0.9346,
+            "f1_score": 0.9573,
+            "balanced_accuracy": 0.9715,
+            "roc_auc": 0.9956,
+            "pr_auc": 0.9908,
+            "fp_per_hour": 54.88,
+            "false_alarm_count": 1435,
+            "non_afib_hours": 26.15
+          }
+        }
+      }
+    }
+  }
+}

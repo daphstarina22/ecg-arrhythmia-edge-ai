@@ -1,0 +1,122 @@
+{
+  "pipeline": "AFDB 5-Second Dedicated Classifier",
+  "sampling_rate_hz": 360,
+  "source_sampling_rate_hz": 250,
+  "window_duration_sec": 5.0,
+  "window_samples_360hz": 1800,
+  "train_stride_sec": 2.5,
+  "test_stride_sec": 5.0,
+  "transition_guard_band_sec": 2.5,
+  "splits": {
+    "train": [
+      "04015",
+      "04043",
+      "04048",
+      "04746",
+      "04936",
+      "05091",
+      "05261",
+      "06426",
+      "06453",
+      "06995",
+      "07859",
+      "08378",
+      "08405",
+      "08434",
+      "08455"
+    ],
+    "val": [
+      "04126",
+      "05121",
+      "07879",
+      "07910"
+    ],
+    "test": [
+      "04908",
+      "07162",
+      "08215",
+      "08219"
+    ]
+  },
+  "audit_results": {
+    "file_check": {
+      "total_records_checked": 23,
+      "valid_count": 23,
+      "missing_count": 0,
+      "missing_details": [],
+      "passed": true
+    },
+    "patient_disjointness": {
+      "train_patients_count": 15,
+      "val_patients_count": 4,
+      "test_patients_count": 4,
+      "total_unique_patients": 23,
+      "train_val_overlap": [],
+      "train_test_overlap": [],
+      "val_test_overlap": [],
+      "passed": true
+    },
+    "annotation_parsing": {
+      "samples_checked": {
+        "04015": {
+          "cohort": "train",
+          "annotation_count": 15,
+          "unique_rhythms": [
+            "(AFIB",
+            "(N"
+          ],
+          "first_rhythm": "(N"
+        },
+        "04126": {
+          "cohort": "val",
+          "annotation_count": 15,
+          "unique_rhythms": [
+            "(AFIB",
+            "(N"
+          ],
+          "first_rhythm": "(N"
+        },
+        "04908": {
+          "cohort": "test",
+          "annotation_count": 17,
+          "unique_rhythms": [
+            "(AFIB",
+            "(AFL",
+            "(N"
+          ],
+          "first_rhythm": "(N"
+        }
+      },
+      "passed": true
+    },
+    "external_resources": {
+      "external_resources": {
+        "cu-ventricular-tachyarrhythmia-database-1.0.0.zip": {
+          "exists": true,
+          "size_bytes": 6783051
+        },
+        "MITBIH.zip": {
+          "exists": true,
+          "size_bytes": 302308888
+        },
+        "VFDB.zip": {
+          "exists": true,
+          "size_bytes": 27352198
+        },
+        "shockable_classifier_candidate.onnx": {
+          "exists": true,
+          "size_bytes": 413135
+        },
+        "arrhythmia_multiclass_4class_candidate.onnx": {
+          "exists": true,
+          "size_bytes": 1275011
+        },
+        "vf_vt_subtype_classifier_candidate.onnx": {
+          "exists": true,
+          "size_bytes": 199397
+        }
+      },
+      "passed": true
+    }
+  }
+}

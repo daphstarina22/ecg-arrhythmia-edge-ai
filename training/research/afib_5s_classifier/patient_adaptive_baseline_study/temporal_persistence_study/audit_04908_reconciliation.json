@@ -1,0 +1,61 @@
+{
+  "record_id": "04908",
+  "cohort": "test",
+  "stride_sec": 5.0,
+  "window_counts": {
+    "total_candidate_windows": 7364,
+    "kept_usable_windows": 7333,
+    "rejected_guard_band_windows": 31,
+    "afib_positive_windows": 600,
+    "non_afib_negative_windows": 6733,
+    "rhythm_composition": {
+      "(N": 6689,
+      "(AFIB": 600,
+      "(AFL": 44
+    }
+  },
+  "durations_in_hours": {
+    "eligible_non_afib_hours": 9.3514,
+    "total_eligible_recording_hours": 10.1847,
+    "raw_total_recording_hours": 10.23
+  },
+  "model_Config_A_Original": {
+    "confusion_matrix": {
+      "tp": 588,
+      "fp": 759,
+      "fn": 12,
+      "tn": 5974
+    },
+    "sensitivity": 0.98,
+    "specificity": 0.8873,
+    "false_positives_by_rhythm": {
+      "(AFL": 42,
+      "(N": 717
+    },
+    "false_alarm_rates": {
+      "fp_per_eligible_non_afib_hour": 81.16,
+      "fp_per_total_eligible_hour": 74.52,
+      "fp_per_raw_recording_hour": 74.19
+    }
+  },
+  "model_Config_C_Adaptive": {
+    "confusion_matrix": {
+      "tp": 535,
+      "fp": 381,
+      "fn": 65,
+      "tn": 6352
+    },
+    "sensitivity": 0.8917,
+    "specificity": 0.9434,
+    "false_positives_by_rhythm": {
+      "(AFL": 40,
+      "(N": 341
+    },
+    "false_alarm_rates": {
+      "fp_per_eligible_non_afib_hour": 40.74,
+      "fp_per_total_eligible_hour": 37.41,
+      "fp_per_raw_recording_hour": 37.24
+    }
+  },
+  "reconciliation_explanation": "The discrepancy stems from three factors: (1) Denominator definition: False alarms per eligible non-AFib hour (9.35h) yields 81.16 FP/hr, whereas false alarms per total eligible recording hour (10.18h) yields 74.52 FP/hr. (2) Confounder composition: Of the 759 false positives in Config A, 42 occur during Atrial Flutter (AFL) segments (42/44 = 95.5% flagged as AFib), while 717 occur during Normal Sinus (N) rhythm. (3) Guard band rejection: 31 windows (155s) fell within 2.5s transition guard bands and were excluded."
+}

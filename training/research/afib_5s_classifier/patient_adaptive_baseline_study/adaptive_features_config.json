@@ -1,0 +1,90 @@
+{
+  "experiment_name": "Causal Patient-Adaptive Baseline Feasibility Study",
+  "pipeline_version": "2.1.0-adaptive-research",
+  "window_duration_sec": 5.0,
+  "sampling_rate_hz": 360,
+  "feature_counts": {
+    "config_a_absolute": 21,
+    "config_b_adaptive": 5,
+    "config_c_combined": 26
+  },
+  "tracker_parameters": {
+    "history_window_sec": 300.0,
+    "min_warmup_windows": 12,
+    "max_gap_sec": 300.0,
+    "anti_contamination": true,
+    "rate_percentile": 25.0,
+    "cv_percentile": 20.0,
+    "gating_cv_threshold": 0.18,
+    "epsilons": {
+      "eps_cv": 0.01,
+      "eps_mad": 2.0,
+      "eps_f": 0.05
+    },
+    "clipping_bounds": {
+      "hr_baseline_min_max": [40.0, 160.0],
+      "rr_cv_baseline_min_max": [0.015, 0.25],
+      "f_band_baseline_min_max": [0.05, 0.90]
+    }
+  },
+  "population_priors_from_train": {
+    "hr_mean_bpm": 83.5591,
+    "rr_cv": 0.1016,
+    "f_band_power_ratio": 0.3952
+  },
+  "feature_definitions": {
+    "delta_hr_bpm": {
+      "formula": "hr_mean_bpm - hr_baseline",
+      "units": "bpm",
+      "description": "Causal difference between current 5s heart rate and patient running resting baseline (25th percentile over past 300s strictly preceding current window)."
+    },
+    "rr_cv_relative": {
+      "formula": "rr_cv / (rr_cv_baseline + 0.01)",
+      "units": "dimensionless ratio",
+      "description": "Ratio of current 5s RR CV to patient resting baseline RR CV (20th percentile over past 300s, gated against chaotic windows)."
+    },
+    "hr_z_robust": {
+      "formula": "(hr_mean_bpm - hr_baseline) / (1.4826 * hr_mad + 2.0)",
+      "units": "robust standard deviations",
+      "description": "Standardized heart rate elevation normalized by recent baseline median absolute deviation."
+    },
+    "afib_index_relative": {
+      "formula": "rr_cv_relative * (f_band_power_ratio / (f_band_baseline + 0.05))",
+      "units": "dimensionless ratio product",
+      "description": "Joint product of relative RR irregularity and relative fibrillatory spectral power elevation."
+    },
+    "baseline_warmup_fraction": {
+      "formula": "min(1.0, buffered_valid_windows / 12)",
+      "units": "fraction [0.0, 1.0]",
+      "description": "Continuous indicator of baseline confidence, representing warm-up maturity from 0 (cold start) to 1.0 (fully established)."
+    }
+  },
+  "feature_columns_combined": [
+    "n_beats",
+    "hr_mean_bpm",
+    "hr_std_bpm",
+    "rr_cv",
+    "rr_rmssd",
+    "rr_mad",
+    "rr_pnn50",
+    "rr_sample_dispersion",
+    "rr_turning_point_ratio",
+    "alternating_sign_index",
+    "f_band_power_ratio",
+    "f_band_flatness",
+    "f_band_peak_purity",
+    "p_band_power_ratio",
+    "qrs_power_ratio",
+    "hjorth_mobility",
+    "hjorth_complexity",
+    "ac_std_mv",
+    "ac_ptp_mv",
+    "zero_crossings",
+    "lz_complexity",
+    "delta_hr_bpm",
+    "rr_cv_relative",
+    "hr_z_robust",
+    "afib_index_relative",
+    "baseline_warmup_fraction"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "best_config": "xgboost_depth6_lr005",
+  "total_pre_alarm_windows": 16722,
+  "prediction_distribution": {
+    "TACHY": 5690,
+    "NSR": 5448,
+    "VENTRICULAR": 3695,
+    "BRADYCARDIA": 1565,
+    "ASYSTOLE": 324
+  },
+  "bradycardia_count": 1565,
+  "bradycardia_pct": 9.358928357851932
+}

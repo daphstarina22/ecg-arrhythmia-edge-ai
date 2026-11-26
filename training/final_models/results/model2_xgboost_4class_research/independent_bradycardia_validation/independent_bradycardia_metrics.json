@@ -1,0 +1,279 @@
+{
+  "evaluation_scope": "INDEPENDENT_RESEARCH_VALIDATION",
+  "total_records_evaluated": 10,
+  "total_windows_evaluated": 648,
+  "total_duration_hours": 0.9,
+  "primary_candidate_b265l": {
+    "record_id": "b265l",
+    "duration_sec": 330.0,
+    "total_windows": 66,
+    "alarm_window_recall": 1.0,
+    "segment_predictions": {
+      "ALARM_EVENT_WINDOW": {
+        "BRADYCARDIA": 3,
+        "NSR": 0,
+        "VENTRICULAR": 0
+      },
+      "POST_ALARM_RECOVERY": {
+        "BRADYCARDIA": 0,
+        "NSR": 2,
+        "VENTRICULAR": 4
+      },
+      "PRE_ALARM_BASELINE": {
+        "BRADYCARDIA": 54,
+        "NSR": 0,
+        "VENTRICULAR": 0
+      },
+      "PRE_ALARM_TRANSITION": {
+        "BRADYCARDIA": 3,
+        "NSR": 0,
+        "VENTRICULAR": 0
+      }
+    },
+    "alarm_windows": [
+      {
+        "window_index": 57,
+        "time_start_sec": 285.0,
+        "time_end_sec": 290.0,
+        "heart_rate_bpm": 44.29254955570745,
+        "peak_count": 4,
+        "predicted_class": "BRADYCARDIA",
+        "prob_BRADYCARDIA": 0.8087413907051086,
+        "prob_NSR": 0.14684607088565826,
+        "prob_VENTRICULAR": 0.027390185743570328,
+        "prob_TACHY": 0.01702234335243702
+      },
+      {
+        "window_index": 58,
+        "time_start_sec": 290.0,
+        "time_end_sec": 295.0,
+        "heart_rate_bpm": 32.677760968229954,
+        "peak_count": 3,
+        "predicted_class": "BRADYCARDIA",
+        "prob_BRADYCARDIA": 0.8788055181503296,
+        "prob_NSR": 0.07395107299089432,
+        "prob_VENTRICULAR": 0.0314231738448143,
+        "prob_TACHY": 0.01582021825015545
+      },
+      {
+        "window_index": 59,
+        "time_start_sec": 295.0,
+        "time_end_sec": 300.0,
+        "heart_rate_bpm": 21.011673151750973,
+        "peak_count": 2,
+        "predicted_class": "BRADYCARDIA",
+        "prob_BRADYCARDIA": 0.5240327715873718,
+        "prob_NSR": 0.29451969265937805,
+        "prob_VENTRICULAR": 0.14195093512535095,
+        "prob_TACHY": 0.039496567100286484
+      }
+    ]
+  },
+  "true_bradycardia_cohort": {
+    "records": [
+      "b187l",
+      "b265l",
+      "b269l",
+      "b379l",
+      "b455l",
+      "b734s",
+      "b757l",
+      "b839l"
+    ],
+    "total_windows": 522,
+    "total_alarm_windows": 24,
+    "alarm_recall": 0.4166666666666667,
+    "alarm_brady_or_nsr_concordance": 0.9166666666666666,
+    "per_record_alarm_breakdown": {
+      "b187l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 0,
+        "recall": 0.0,
+        "mean_hr_bpm": 81.2278268794008,
+        "mean_prob_brady": 0.016830175494154293,
+        "predictions": [
+          "NSR",
+          "NSR",
+          "NSR"
+        ]
+      },
+      "b265l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 3,
+        "recall": 1.0,
+        "mean_hr_bpm": 32.660661225229454,
+        "mean_prob_brady": 0.73719322681427,
+        "predictions": [
+          "BRADYCARDIA",
+          "BRADYCARDIA",
+          "BRADYCARDIA"
+        ]
+      },
+      "b269l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 2,
+        "recall": 0.6666666666666666,
+        "mean_hr_bpm": 59.657003549601306,
+        "mean_prob_brady": 0.6115056965500116,
+        "predictions": [
+          "TACHY",
+          "BRADYCARDIA",
+          "BRADYCARDIA"
+        ]
+      },
+      "b379l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 0,
+        "recall": 0.0,
+        "mean_hr_bpm": 70.67041875446856,
+        "mean_prob_brady": 0.06946211804946263,
+        "predictions": [
+          "NSR",
+          "NSR",
+          "NSR"
+        ]
+      },
+      "b455l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 1,
+        "recall": 0.3333333333333333,
+        "mean_hr_bpm": 32.72437740522847,
+        "mean_prob_brady": 0.2808327420304219,
+        "predictions": [
+          "NSR",
+          "BRADYCARDIA",
+          "NSR"
+        ]
+      },
+      "b734s": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 0,
+        "recall": 0.0,
+        "mean_hr_bpm": 69.97245510094062,
+        "mean_prob_brady": 0.035707298355797924,
+        "predictions": [
+          "NSR",
+          "NSR",
+          "VENTRICULAR"
+        ]
+      },
+      "b757l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 1,
+        "recall": 0.3333333333333333,
+        "mean_hr_bpm": 65.15713399823535,
+        "mean_prob_brady": 0.34735828389724094,
+        "predictions": [
+          "NSR",
+          "NSR",
+          "BRADYCARDIA"
+        ]
+      },
+      "b839l": {
+        "n_alarm_windows": 3,
+        "brady_predicted": 3,
+        "recall": 1.0,
+        "mean_hr_bpm": 36.86536365489803,
+        "mean_prob_brady": 0.9463133613268534,
+        "predictions": [
+          "BRADYCARDIA",
+          "BRADYCARDIA",
+          "BRADYCARDIA"
+        ]
+      }
+    }
+  },
+  "rate_based_performance": {
+    "total_rate_brady_windows": 234,
+    "total_non_brady_windows": 414,
+    "tp": 125,
+    "fn": 109,
+    "fp": 0,
+    "tn": 414,
+    "sensitivity_recall": 0.5341880341880342,
+    "specificity": 1.0,
+    "precision": 1.0,
+    "f1_score": 0.6963788300835655,
+    "confusion_matrix": {
+      "NON_BRADY_RATE": {
+        "BRADYCARDIA": 0,
+        "NSR": 276,
+        "TACHY": 59,
+        "VENTRICULAR": 79
+      },
+      "TRUE_RATE_BRADY": {
+        "BRADYCARDIA": 125,
+        "NSR": 40,
+        "TACHY": 0,
+        "VENTRICULAR": 69
+      }
+    }
+  },
+  "nsr_false_positive_rate": {
+    "normocardic_windows_count": 344,
+    "false_bradycardia_predictions": 0,
+    "false_positive_rate": 0.0
+  },
+  "negative_controls": {
+    "records": [
+      "b184s",
+      "b215l"
+    ],
+    "total_windows": 126,
+    "alarm_windows_count": 6,
+    "false_alarm_brady_predicted": 2,
+    "alarm_window_specificity": 0.6666666666666666
+  },
+  "segment_distribution": {
+    "ALARM_EVENT_WINDOW": {
+      "BRADYCARDIA": 12,
+      "NSR": 12,
+      "TACHY": 1,
+      "VENTRICULAR": 5
+    },
+    "POST_ALARM_RECOVERY": {
+      "BRADYCARDIA": 3,
+      "NSR": 21,
+      "TACHY": 3,
+      "VENTRICULAR": 21
+    },
+    "PRE_ALARM_BASELINE": {
+      "BRADYCARDIA": 103,
+      "NSR": 271,
+      "TACHY": 52,
+      "VENTRICULAR": 114
+    },
+    "PRE_ALARM_TRANSITION": {
+      "BRADYCARDIA": 7,
+      "NSR": 12,
+      "TACHY": 3,
+      "VENTRICULAR": 8
+    }
+  },
+  "segment_probabilities": {
+    "ALARM_EVENT_WINDOW": {
+      "prob_NSR": 0.36215175905575353,
+      "prob_TACHY": 0.04701624569327881,
+      "prob_BRADYCARDIA": 0.36809898357217513,
+      "prob_VENTRICULAR": 0.222733007868131
+    },
+    "POST_ALARM_RECOVERY": {
+      "prob_NSR": 0.4205891605427799,
+      "prob_TACHY": 0.08364225160524559,
+      "prob_BRADYCARDIA": 0.1324352485826239,
+      "prob_VENTRICULAR": 0.3633333423252528
+    },
+    "PRE_ALARM_BASELINE": {
+      "prob_NSR": 0.42010382895047466,
+      "prob_TACHY": 0.11015123182786973,
+      "prob_BRADYCARDIA": 0.199363489376588,
+      "prob_VENTRICULAR": 0.2703814514774691
+    },
+    "PRE_ALARM_TRANSITION": {
+      "prob_NSR": 0.3981602799768249,
+      "prob_TACHY": 0.1065169762664785,
+      "prob_BRADYCARDIA": 0.23469048156403005,
+      "prob_VENTRICULAR": 0.26063227336853745
+    }
+  }
+}

@@ -1,0 +1,335 @@
+{
+  "timestamp": "2026-10-25 22:26:34",
+  "window_duration_sec": 5.0,
+  "stride_duration_sec": 1.0,
+  "sampling_rate_hz": 360,
+  "pipeline_file": "C:\\Users\\LENOVO\\Downloads\\ecg-arrhythmia-edge-ai\\training\\final_models\\results\\model2_xgboost_4class_research\\research_xgboost_4class_pipeline.joblib",
+  "target_classes": [
+    "NSR",
+    "TACHY",
+    "BRADYCARDIA",
+    "VENTRICULAR"
+  ],
+  "record_summaries": [
+    {
+      "record_id": "mitdb_200",
+      "duration_sec": 1805.5555555555557,
+      "total_sliding_windows": 1801,
+      "prediction_distribution": {
+        "NSR": 1759,
+        "VENTRICULAR": 31,
+        "TACHY": 10,
+        "BRADYCARDIA": 1
+      },
+      "relation_breakdown": {
+        "OUTSIDE_VENTRICULAR_NSR": 680,
+        "NON_VENTRICULAR_TRANSITION": 567,
+        "OUTSIDE_VENTRICULAR_BIGEMINY": 503,
+        "VENTRICULAR_TRANSITION": 51
+      },
+      "evaluation_time_sec": 10.37
+    },
+    {
+      "record_id": "vfdb_424",
+      "duration_sec": 2100.0,
+      "total_sliding_windows": 2096,
+      "prediction_distribution": {
+        "NSR": 1611,
+        "VENTRICULAR": 312,
+        "TACHY": 124,
+        "BRADYCARDIA": 49
+      },
+      "relation_breakdown": {
+        "OUTSIDE_VENTRICULAR_NSR": 1462,
+        "OUTSIDE_VENTRICULAR_OTHER": 417,
+        "INSIDE_VENTRICULAR": 154,
+        "NON_VENTRICULAR_TRANSITION": 43,
+        "VENTRICULAR_TRANSITION": 20
+      },
+      "evaluation_time_sec": 11.5
+    }
+  ],
+  "comparison_with_non_overlapping": {
+    "mitdb_200": {
+      "non_overlapping_5s": {
+        "total_windows": 361,
+        "ventricular_count": 4,
+        "ventricular_pct": 1.10803324099723,
+        "nsr_count": 355,
+        "tachy_count": 2,
+        "brady_count": 0
+      },
+      "sliding_1s": {
+        "total_windows": 1801,
+        "ventricular_count": 31,
+        "ventricular_pct": 1.7212659633536922,
+        "nsr_count": 1759,
+        "tachy_count": 10,
+        "brady_count": 1
+      }
+    },
+    "vfdb_424": {
+      "non_overlapping_5s": {
+        "total_windows": 420,
+        "ventricular_count": 61,
+        "ventricular_pct": 14.523809523809526,
+        "nsr_count": 324,
+        "tachy_count": 21,
+        "brady_count": 14
+      },
+      "sliding_1s": {
+        "total_windows": 2096,
+        "ventricular_count": 312,
+        "ventricular_pct": 14.885496183206106,
+        "nsr_count": 1611,
+        "tachy_count": 124,
+        "brady_count": 49
+      }
+    }
+  },
+  "ventricular_interval_statistics": {
+    "mitdb_200": {
+      "NON_VENTRICULAR_TRANSITION": {
+        "total_windows": 567,
+        "predicted_ventricular_count": 10,
+        "predicted_ventricular_pct": 1.76,
+        "prob_vent_mean": 0.157,
+        "prob_vent_std": 0.0852,
+        "prob_vent_median": 0.1467,
+        "prob_vent_min": 0.0283,
+        "prob_vent_max": 0.6436
+      },
+      "OUTSIDE_VENTRICULAR_BIGEMINY": {
+        "total_windows": 503,
+        "predicted_ventricular_count": 3,
+        "predicted_ventricular_pct": 0.6,
+        "prob_vent_mean": 0.1819,
+        "prob_vent_std": 0.078,
+        "prob_vent_median": 0.1751,
+        "prob_vent_min": 0.0331,
+        "prob_vent_max": 0.5458
+      },
+      "OUTSIDE_VENTRICULAR_NSR": {
+        "total_windows": 680,
+        "predicted_ventricular_count": 17,
+        "predicted_ventricular_pct": 2.5,
+        "prob_vent_mean": 0.1614,
+        "prob_vent_std": 0.1043,
+        "prob_vent_median": 0.1373,
+        "prob_vent_min": 0.0344,
+        "prob_vent_max": 0.6645
+      },
+      "VENTRICULAR_TRANSITION": {
+        "total_windows": 51,
+        "predicted_ventricular_count": 1,
+        "predicted_ventricular_pct": 1.96,
+        "prob_vent_mean": 0.203,
+        "prob_vent_std": 0.1003,
+        "prob_vent_median": 0.1952,
+        "prob_vent_min": 0.0463,
+        "prob_vent_max": 0.543
+      }
+    },
+    "vfdb_424": {
+      "INSIDE_VENTRICULAR": {
+        "total_windows": 154,
+        "predicted_ventricular_count": 144,
+        "predicted_ventricular_pct": 93.51,
+        "prob_vent_mean": 0.8974,
+        "prob_vent_std": 0.2084,
+        "prob_vent_median": 0.9835,
+        "prob_vent_min": 0.0976,
+        "prob_vent_max": 0.9898
+      },
+      "NON_VENTRICULAR_TRANSITION": {
+        "total_windows": 43,
+        "predicted_ventricular_count": 15,
+        "predicted_ventricular_pct": 34.88,
+        "prob_vent_mean": 0.3825,
+        "prob_vent_std": 0.2593,
+        "prob_vent_median": 0.3687,
+        "prob_vent_min": 0.0519,
+        "prob_vent_max": 0.8146
+      },
+      "OUTSIDE_VENTRICULAR_NSR": {
+        "total_windows": 1462,
+        "predicted_ventricular_count": 35,
+        "predicted_ventricular_pct": 2.39,
+        "prob_vent_mean": 0.0844,
+        "prob_vent_std": 0.1129,
+        "prob_vent_median": 0.0493,
+        "prob_vent_min": 0.0064,
+        "prob_vent_max": 0.8857
+      },
+      "OUTSIDE_VENTRICULAR_OTHER": {
+        "total_windows": 417,
+        "predicted_ventricular_count": 102,
+        "predicted_ventricular_pct": 24.46,
+        "prob_vent_mean": 0.3305,
+        "prob_vent_std": 0.2222,
+        "prob_vent_median": 0.2693,
+        "prob_vent_min": 0.0289,
+        "prob_vent_max": 0.968
+      },
+      "VENTRICULAR_TRANSITION": {
+        "total_windows": 20,
+        "predicted_ventricular_count": 16,
+        "predicted_ventricular_pct": 80.0,
+        "prob_vent_mean": 0.7016,
+        "prob_vent_std": 0.3211,
+        "prob_vent_median": 0.8508,
+        "prob_vent_min": 0.0348,
+        "prob_vent_max": 0.9884
+      }
+    }
+  },
+  "centered_vt_episodes_mitdb200": [
+    {
+      "episode_index": 1,
+      "vt_time_start_sec": 108.92,
+      "vt_time_end_sec": 111.41,
+      "vt_duration_sec": 2.5,
+      "vt_prev_rhythm": "(B",
+      "vt_next_rhythm": "(B",
+      "window_time_start_sec": 107.66,
+      "window_time_end_sec": 112.66,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.8125,
+      "prob_TACHY": 0.0113,
+      "prob_BRADYCARDIA": 0.0111,
+      "prob_VENTRICULAR": 0.165,
+      "dominant_freq": 2.0,
+      "vf_band_power_ratio": 0.37,
+      "spectral_entropy": 0.7312,
+      "calibrated_ptp": 4.24,
+      "peak_count": 7,
+      "heart_rate_bpm": 82.7
+    },
+    {
+      "episode_index": 2,
+      "vt_time_start_sec": 629.91,
+      "vt_time_end_sec": 631.61,
+      "vt_duration_sec": 1.7,
+      "vt_prev_rhythm": "(N",
+      "vt_next_rhythm": "(N",
+      "window_time_start_sec": 628.26,
+      "window_time_end_sec": 633.26,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.8386,
+      "prob_TACHY": 0.0103,
+      "prob_BRADYCARDIA": 0.0103,
+      "prob_VENTRICULAR": 0.1408,
+      "dominant_freq": 1.5,
+      "vf_band_power_ratio": 0.4396,
+      "spectral_entropy": 0.741,
+      "calibrated_ptp": 3.77,
+      "peak_count": 7,
+      "heart_rate_bpm": 87.2
+    },
+    {
+      "episode_index": 3,
+      "vt_time_start_sec": 945.38,
+      "vt_time_end_sec": 948.2,
+      "vt_duration_sec": 2.82,
+      "vt_prev_rhythm": "(N",
+      "vt_next_rhythm": "(N",
+      "window_time_start_sec": 944.29,
+      "window_time_end_sec": 949.29,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.7901,
+      "prob_TACHY": 0.0175,
+      "prob_BRADYCARDIA": 0.0174,
+      "prob_VENTRICULAR": 0.1749,
+      "dominant_freq": 2.5,
+      "vf_band_power_ratio": 0.4774,
+      "spectral_entropy": 0.7638,
+      "calibrated_ptp": 3.9,
+      "peak_count": 8,
+      "heart_rate_bpm": 91.9
+    },
+    {
+      "episode_index": 4,
+      "vt_time_start_sec": 1070.61,
+      "vt_time_end_sec": 1072.28,
+      "vt_duration_sec": 1.67,
+      "vt_prev_rhythm": "(B",
+      "vt_next_rhythm": "(B",
+      "window_time_start_sec": 1068.94,
+      "window_time_end_sec": 1073.94,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.7544,
+      "prob_TACHY": 0.0172,
+      "prob_BRADYCARDIA": 0.0171,
+      "prob_VENTRICULAR": 0.2112,
+      "dominant_freq": 2.5,
+      "vf_band_power_ratio": 0.3722,
+      "spectral_entropy": 0.7296,
+      "calibrated_ptp": 3.47,
+      "peak_count": 7,
+      "heart_rate_bpm": 79.3
+    },
+    {
+      "episode_index": 5,
+      "vt_time_start_sec": 1100.11,
+      "vt_time_end_sec": 1102.29,
+      "vt_duration_sec": 2.19,
+      "vt_prev_rhythm": "(B",
+      "vt_next_rhythm": "(B",
+      "window_time_start_sec": 1098.7,
+      "window_time_end_sec": 1103.7,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.6702,
+      "prob_TACHY": 0.0182,
+      "prob_BRADYCARDIA": 0.019,
+      "prob_VENTRICULAR": 0.2925,
+      "dominant_freq": 3.0,
+      "vf_band_power_ratio": 0.4879,
+      "spectral_entropy": 0.7331,
+      "calibrated_ptp": 4.15,
+      "peak_count": 6,
+      "heart_rate_bpm": 70.9
+    },
+    {
+      "episode_index": 6,
+      "vt_time_start_sec": 1133.57,
+      "vt_time_end_sec": 1135.73,
+      "vt_duration_sec": 2.16,
+      "vt_prev_rhythm": "(B",
+      "vt_next_rhythm": "(B",
+      "window_time_start_sec": 1132.15,
+      "window_time_end_sec": 1137.15,
+      "predicted_class_4c": "NSR",
+      "prob_NSR": 0.7223,
+      "prob_TACHY": 0.0084,
+      "prob_BRADYCARDIA": 0.0082,
+      "prob_VENTRICULAR": 0.2611,
+      "dominant_freq": 1.5,
+      "vf_band_power_ratio": 0.4721,
+      "spectral_entropy": 0.7133,
+      "calibrated_ptp": 4.25,
+      "peak_count": 7,
+      "heart_rate_bpm": 86.4
+    },
+    {
+      "episode_index": 7,
+      "vt_time_start_sec": 1494.2,
+      "vt_time_end_sec": 1496.41,
+      "vt_duration_sec": 2.21,
+      "vt_prev_rhythm": "(N",
+      "vt_next_rhythm": "(N",
+      "window_time_start_sec": 1492.81,
+      "window_time_end_sec": 1497.81,
+      "predicted_class_4c": "VENTRICULAR",
+      "prob_NSR": 0.4073,
+      "prob_TACHY": 0.0145,
+      "prob_BRADYCARDIA": 0.0142,
+      "prob_VENTRICULAR": 0.564,
+      "dominant_freq": 3.0,
+      "vf_band_power_ratio": 0.5035,
+      "spectral_entropy": 0.7166,
+      "calibrated_ptp": 4.14,
+      "peak_count": 7,
+      "heart_rate_bpm": 85.7
+    }
+  ]
+}

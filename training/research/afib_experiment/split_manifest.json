@@ -1,0 +1,126 @@
+{
+  "metadata": {
+    "window_sec": 10.0,
+    "stride_sec": 5.0,
+    "guard_sec": 2.5,
+    "sampling_rate_hz": 360
+  },
+  "train": {
+    "subjects": [
+      "MIT_S100",
+      "MIT_S101",
+      "MIT_S103",
+      "MIT_S105",
+      "MIT_S106",
+      "MIT_S108",
+      "MIT_S109",
+      "MIT_S111",
+      "MIT_S112",
+      "MIT_S113",
+      "MIT_S115",
+      "MIT_S116",
+      "MIT_S117",
+      "MIT_S118",
+      "MIT_S119",
+      "MIT_S121",
+      "MIT_S122",
+      "MIT_S123",
+      "MIT_S201_202",
+      "MIT_S203",
+      "MIT_S219"
+    ],
+    "records": [
+      "100",
+      "101",
+      "103",
+      "105",
+      "106",
+      "108",
+      "109",
+      "111",
+      "112",
+      "113",
+      "115",
+      "116",
+      "117",
+      "118",
+      "119",
+      "121",
+      "122",
+      "123",
+      "201",
+      "202",
+      "203",
+      "219"
+    ],
+    "afib_windows": 730,
+    "non_afib_windows": 900,
+    "total_windows": 1630
+  },
+  "val": {
+    "subjects": [
+      "MIT_S124",
+      "MIT_S200",
+      "MIT_S205",
+      "MIT_S208",
+      "MIT_S209",
+      "MIT_S210",
+      "MIT_S212",
+      "MIT_S213",
+      "MIT_S214",
+      "MIT_S222"
+    ],
+    "records": [
+      "124",
+      "200",
+      "205",
+      "208",
+      "209",
+      "210",
+      "212",
+      "213",
+      "214",
+      "222"
+    ],
+    "afib_windows": 340,
+    "non_afib_windows": 360,
+    "total_windows": 700
+  },
+  "test": {
+    "subjects": [
+      "MIT_S215",
+      "MIT_S220",
+      "MIT_S221",
+      "MIT_S223",
+      "MIT_S228",
+      "MIT_S230",
+      "MIT_S231",
+      "MIT_S233",
+      "MIT_S234"
+    ],
+    "records": [
+      "215",
+      "220",
+      "221",
+      "223",
+      "228",
+      "230",
+      "231",
+      "233",
+      "234"
+    ],
+    "afib_windows": 321,
+    "non_afib_windows": 2123,
+    "total_windows": 2444
+  },
+  "confounders": {
+    "categories": [
+      "confounder_afl",
+      "confounder_bigeminy",
+      "confounder_bradycardia",
+      "confounder_paced_afib",
+      "confounder_paced_normal"
+    ],
+    "total_windows": 253
+  }
+}

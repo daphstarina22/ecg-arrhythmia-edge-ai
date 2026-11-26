@@ -1,0 +1,32 @@
+{
+  "total_afib_windows_audited": 1000,
+  "tier1_false_shockable_intercepts": 131,
+  "tier2_false_ventricular_intercepts": 125,
+  "global_pass_through_rate_pct": 74.4,
+  "per_record_audit": {
+    "04908": {
+      "afib_windows_audited": 250,
+      "false_shockable_intercepts": 93,
+      "false_ventricular_intercepts": 84,
+      "afib_pass_through_rate_pct": 29.2
+    },
+    "07162": {
+      "afib_windows_audited": 250,
+      "false_shockable_intercepts": 12,
+      "false_ventricular_intercepts": 18,
+      "afib_pass_through_rate_pct": 88.0
+    },
+    "08215": {
+      "afib_windows_audited": 250,
+      "false_shockable_intercepts": 25,
+      "false_ventricular_intercepts": 10,
+      "afib_pass_through_rate_pct": 86.0
+    },
+    "08219": {
+      "afib_windows_audited": 250,
+      "false_shockable_intercepts": 1,
+      "false_ventricular_intercepts": 13,
+      "afib_pass_through_rate_pct": 94.4
+    }
+  }
+}

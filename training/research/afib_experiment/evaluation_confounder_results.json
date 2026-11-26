@@ -1,0 +1,37 @@
+{
+  "confounder_afl": {
+    "total_windows": 90,
+    "afib_alarms_emitted": 90,
+    "alarm_rate_pct": 100.0,
+    "mean_afib_probability": 0.7862,
+    "clinical_interpretation": "Atrial Flutter: Should be flagged as non-AFib or specialized"
+  },
+  "confounder_bigeminy": {
+    "total_windows": 50,
+    "afib_alarms_emitted": 49,
+    "alarm_rate_pct": 98.0,
+    "mean_afib_probability": 0.7721,
+    "clinical_interpretation": "Frequent PVCs: Tests resistance to irregular RR confounding"
+  },
+  "confounder_bradycardia": {
+    "total_windows": 50,
+    "afib_alarms_emitted": 0,
+    "alarm_rate_pct": 0.0,
+    "mean_afib_probability": 0.1412,
+    "clinical_interpretation": "Sinus Bradycardia: Low HR must not trigger false AFib"
+  },
+  "confounder_paced_afib": {
+    "total_windows": 13,
+    "afib_alarms_emitted": 12,
+    "alarm_rate_pct": 92.31,
+    "mean_afib_probability": 0.7432,
+    "clinical_interpretation": "Paced patient with true paroxysmal AFib"
+  },
+  "confounder_paced_normal": {
+    "total_windows": 50,
+    "afib_alarms_emitted": 8,
+    "alarm_rate_pct": 16.0,
+    "mean_afib_probability": 0.2045,
+    "clinical_interpretation": "Pacemaker spikes: Evaluates artificial hardware distortion"
+  }
+}

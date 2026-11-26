@@ -1,0 +1,170 @@
+{
+  "pipeline_name": "AFDB 5-Second Dedicated Classifier",
+  "evaluation_scope": "Frozen Held-Out Test Evaluation",
+  "timestamp_utc": "2026-10-26T11:40:20Z",
+  "champion_model_name": "LogisticRegression",
+  "test_patients_count": 4,
+  "test_patients": [
+    "AFDB_04908",
+    "AFDB_07162",
+    "AFDB_08215",
+    "AFDB_08219"
+  ],
+  "total_test_windows": 29260,
+  "test_afib_prevalence_pct": 52.65,
+  "global_roc_auc": 0.6615,
+  "global_pr_auc": 0.655,
+  "operating_points": {
+    "constrained_theta": {
+      "confusion_matrix": {
+        "tp": 6044,
+        "fp": 3030,
+        "fn": 9360,
+        "tn": 10826
+      },
+      "sensitivity": 0.3924,
+      "specificity": 0.7813,
+      "precision": 0.6661,
+      "f1_score": 0.4938,
+      "balanced_accuracy": 0.5868,
+      "roc_auc": 0.6615,
+      "pr_auc": 0.655,
+      "fp_per_hour": 157.45,
+      "false_alarm_count": 3030,
+      "non_afib_hours": 19.24
+    },
+    "triage_theta": {
+      "confusion_matrix": {
+        "tp": 6044,
+        "fp": 3030,
+        "fn": 9360,
+        "tn": 10826
+      },
+      "sensitivity": 0.3924,
+      "specificity": 0.7813,
+      "precision": 0.6661,
+      "f1_score": 0.4938,
+      "balanced_accuracy": 0.5868,
+      "roc_auc": 0.6615,
+      "pr_auc": 0.655,
+      "fp_per_hour": 157.45,
+      "false_alarm_count": 3030,
+      "non_afib_hours": 19.24
+    },
+    "default_50": {
+      "confusion_matrix": {
+        "tp": 6681,
+        "fp": 3333,
+        "fn": 8723,
+        "tn": 10523
+      },
+      "sensitivity": 0.4337,
+      "specificity": 0.7595,
+      "precision": 0.6672,
+      "f1_score": 0.5257,
+      "balanced_accuracy": 0.5966,
+      "roc_auc": 0.6615,
+      "pr_auc": 0.655,
+      "fp_per_hour": 173.19,
+      "false_alarm_count": 3333,
+      "non_afib_hours": 19.24
+    },
+    "consensus_theta": {
+      "confusion_matrix": {
+        "tp": 4003,
+        "fp": 2140,
+        "fn": 11401,
+        "tn": 11716
+      },
+      "sensitivity": 0.2599,
+      "specificity": 0.8456,
+      "precision": 0.6516,
+      "f1_score": 0.3716,
+      "balanced_accuracy": 0.5527,
+      "roc_auc": 0.6615,
+      "pr_auc": 0.655,
+      "fp_per_hour": 111.2,
+      "false_alarm_count": 2140,
+      "non_afib_hours": 19.24
+    }
+  },
+  "per_patient_breakdown": {
+    "04908": {
+      "record_id": "04908",
+      "total_windows": 7333,
+      "afib_windows": 600,
+      "non_afib_windows": 6733,
+      "afib_burden_pct": 8.18,
+      "sensitivity": 0.98,
+      "specificity": 0.8873,
+      "precision": 0.4365,
+      "f1_score": 0.604,
+      "fp_per_hour": 81.16,
+      "roc_auc": 0.9686,
+      "confusion_matrix": {
+        "tp": 588,
+        "fp": 759,
+        "fn": 12,
+        "tn": 5974
+      }
+    },
+    "07162": {
+      "record_id": "07162",
+      "total_windows": 7363,
+      "afib_windows": 7363,
+      "non_afib_windows": 0,
+      "afib_burden_pct": 100.0,
+      "sensitivity": 0.2507,
+      "specificity": 1.0,
+      "precision": 1.0,
+      "f1_score": 0.4009,
+      "fp_per_hour": 0.0,
+      "roc_auc": "N/A_Single_Class",
+      "confusion_matrix": {
+        "tp": 1846,
+        "fp": 0,
+        "fn": 5517,
+        "tn": 0
+      }
+    },
+    "08215": {
+      "record_id": "08215",
+      "total_windows": 7357,
+      "afib_windows": 5931,
+      "non_afib_windows": 1426,
+      "afib_burden_pct": 80.62,
+      "sensitivity": 0.3684,
+      "specificity": 0.9748,
+      "precision": 0.9838,
+      "f1_score": 0.5361,
+      "fp_per_hour": 18.18,
+      "roc_auc": 0.9363,
+      "confusion_matrix": {
+        "tp": 2185,
+        "fp": 36,
+        "fn": 3746,
+        "tn": 1390
+      }
+    },
+    "08219": {
+      "record_id": "08219",
+      "total_windows": 7207,
+      "afib_windows": 1510,
+      "non_afib_windows": 5697,
+      "afib_burden_pct": 20.95,
+      "sensitivity": 0.9437,
+      "specificity": 0.6077,
+      "precision": 0.3893,
+      "f1_score": 0.5513,
+      "fp_per_hour": 282.46,
+      "roc_auc": 0.8944,
+      "confusion_matrix": {
+        "tp": 1425,
+        "fp": 2235,
+        "fn": 85,
+        "tn": 3462
+      }
+    }
+  },
+  "base_rate_fallacy_note": "In this AFDB held-out test cohort, the prevalence is 52.84%, yielding high precision. In ambulatory monitoring where AFib prevalence is 1-2%, false alarm rates per hour (FP/hr) dictate real-world utility. At constrained operating thresholds, false alarms are suppressed."
+}

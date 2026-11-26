@@ -1,0 +1,176 @@
+{
+  "evaluation_timestamp_utc": "2026-10-25T11:32:17Z",
+  "champion_model": "LogisticRegression",
+  "feature_count": 18,
+  "feature_names": [
+    "n_beats",
+    "hr_mean_bpm",
+    "hr_std_bpm",
+    "rr_cv",
+    "rr_rmssd",
+    "rr_mad",
+    "rr_pnn50",
+    "rr_entropy",
+    "alternating_sign_index",
+    "f_band_power_ratio",
+    "f_band_flatness",
+    "f_band_peak_purity",
+    "p_band_power_ratio",
+    "qrs_power_ratio",
+    "hjorth_mobility",
+    "hjorth_complexity",
+    "ac_std_mv",
+    "ac_ptp_mv"
+  ],
+  "held_out_test_prevalence_pct": 52.65,
+  "global_roc_auc": 0.9013,
+  "global_pr_auc": 0.8876,
+  "protocol_a_constrained": {
+    "confusion_matrix": {
+      "tp": 1670,
+      "fp": 78,
+      "fn": 13684,
+      "tn": 13730
+    },
+    "sensitivity": 0.1088,
+    "specificity": 0.9944,
+    "precision": 0.9554,
+    "f1_score": 0.1953,
+    "balanced_accuracy": 0.5516,
+    "roc_auc": 0.9013,
+    "pr_auc": 0.8876,
+    "fp_per_hour": 4.07,
+    "false_alarm_count": 78,
+    "non_afib_hours": 19.18
+  },
+  "protocol_a_triage": {
+    "confusion_matrix": {
+      "tp": 7926,
+      "fp": 911,
+      "fn": 7428,
+      "tn": 12897
+    },
+    "sensitivity": 0.5162,
+    "specificity": 0.934,
+    "precision": 0.8969,
+    "f1_score": 0.6553,
+    "balanced_accuracy": 0.7251,
+    "roc_auc": 0.9013,
+    "pr_auc": 0.8876,
+    "fp_per_hour": 47.5,
+    "false_alarm_count": 911,
+    "non_afib_hours": 19.18
+  },
+  "protocol_a_default_50": {
+    "confusion_matrix": {
+      "tp": 10658,
+      "fp": 1645,
+      "fn": 4696,
+      "tn": 12163
+    },
+    "sensitivity": 0.6942,
+    "specificity": 0.8809,
+    "precision": 0.8663,
+    "f1_score": 0.7707,
+    "balanced_accuracy": 0.7875,
+    "roc_auc": 0.9013,
+    "pr_auc": 0.8876,
+    "fp_per_hour": 85.78,
+    "false_alarm_count": 1645,
+    "non_afib_hours": 19.18
+  },
+  "protocol_b_consensus": {
+    "confusion_matrix": {
+      "tp": 2610,
+      "fp": 115,
+      "fn": 12744,
+      "tn": 13693
+    },
+    "sensitivity": 0.17,
+    "specificity": 0.9917,
+    "precision": 0.9578,
+    "f1_score": 0.2887,
+    "balanced_accuracy": 0.5808,
+    "roc_auc": 0.9013,
+    "pr_auc": 0.8876,
+    "fp_per_hour": 6.0,
+    "false_alarm_count": 115,
+    "non_afib_hours": 19.18
+  },
+  "per_record_performance": {
+    "04908": {
+      "record_id": "04908",
+      "total_windows": 7318,
+      "afib_windows": 592,
+      "non_afib_windows": 6726,
+      "sensitivity": 0.9814,
+      "specificity": 0.9483,
+      "precision": 0.6254,
+      "f1_score": 0.764,
+      "fp_per_hour": 37.25,
+      "confusion_matrix": {
+        "tp": 581,
+        "fp": 348,
+        "fn": 11,
+        "tn": 6378
+      }
+    },
+    "07162": {
+      "record_id": "07162",
+      "total_windows": 7362,
+      "afib_windows": 7362,
+      "non_afib_windows": 0,
+      "sensitivity": 0.2403,
+      "specificity": 1.0,
+      "precision": 1.0,
+      "f1_score": 0.3875,
+      "fp_per_hour": 0.0,
+      "confusion_matrix": {
+        "tp": 1769,
+        "fp": 0,
+        "fn": 5593,
+        "tn": 0
+      }
+    },
+    "08215": {
+      "record_id": "08215",
+      "total_windows": 7353,
+      "afib_windows": 5929,
+      "non_afib_windows": 1424,
+      "sensitivity": 0.7059,
+      "specificity": 0.9986,
+      "precision": 0.9995,
+      "f1_score": 0.8274,
+      "fp_per_hour": 1.01,
+      "confusion_matrix": {
+        "tp": 4185,
+        "fp": 2,
+        "fn": 1744,
+        "tn": 1422
+      }
+    },
+    "08219": {
+      "record_id": "08219",
+      "total_windows": 7129,
+      "afib_windows": 1471,
+      "non_afib_windows": 5658,
+      "sensitivity": 0.9456,
+      "specificity": 0.9008,
+      "precision": 0.7126,
+      "f1_score": 0.8127,
+      "fp_per_hour": 71.39,
+      "confusion_matrix": {
+        "tp": 1391,
+        "fp": 561,
+        "fn": 80,
+        "tn": 5097
+      }
+    }
+  },
+  "confounder_atrial_flutter": {
+    "total_afl_windows": 49,
+    "mean_predicted_probability": 0.4685,
+    "correctly_rejected_non_afib_triage": 38,
+    "correctly_rejected_non_afib_const": 47
+  }
+}

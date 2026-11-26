@@ -1,0 +1,937 @@
+[
+  {
+    "record_id": "04015",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 15,
+    "pre_annotation_gap_s": 0.12,
+    "first_annotation_sample": 30,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -8.175,
+      8.53
+    ],
+    "v_range_ch1": [
+      -5.67,
+      5.97
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 33,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7330,
+    "n_afib_windows": 35,
+    "n_non_afib_windows": 7295,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7295,
+    "rhythm_window_counts": {
+      "(N": 7295,
+      "(AFIB": 35
+    }
+  },
+  {
+    "record_id": "04043",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 166,
+    "pre_annotation_gap_s": 0.272,
+    "first_annotation_sample": 68,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(AFL"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -5.075,
+      4.54
+    ],
+    "v_range_ch1": [
+      -7.28,
+      6.225
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 492,
+    "n_rejected_dropout": 4,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 4,
+    "n_kept_windows": 6867,
+    "n_afib_windows": 1342,
+    "n_non_afib_windows": 5525,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 5525,
+    "rhythm_window_counts": {
+      "(N": 5525,
+      "(AFIB": 1342
+    }
+  },
+  {
+    "record_id": "04048",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 15,
+    "pre_annotation_gap_s": 0.704,
+    "first_annotation_sample": 176,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -5.28,
+      5.215
+    ],
+    "v_range_ch1": [
+      -4.335,
+      4.83
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 43,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7320,
+    "n_afib_windows": 52,
+    "n_non_afib_windows": 7268,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7268,
+    "rhythm_window_counts": {
+      "(N": 7268,
+      "(AFIB": 52
+    }
+  },
+  {
+    "record_id": "04126",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 15,
+    "pre_annotation_gap_s": 0.616,
+    "first_annotation_sample": 154,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.54,
+      4.05
+    ],
+    "v_range_ch1": [
+      -4.785,
+      4.295
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 43,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7320,
+    "n_afib_windows": 255,
+    "n_non_afib_windows": 7065,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7065,
+    "rhythm_window_counts": {
+      "(N": 7065,
+      "(AFIB": 255
+    }
+  },
+  {
+    "record_id": "04746",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 11,
+    "pre_annotation_gap_s": 0.248,
+    "first_annotation_sample": 62,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -5.79,
+      4.485
+    ],
+    "v_range_ch1": [
+      -2.185,
+      4.285
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 28,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7335,
+    "n_afib_windows": 3900,
+    "n_non_afib_windows": 3435,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 3435,
+    "rhythm_window_counts": {
+      "(N": 3435,
+      "(AFIB": 3900
+    }
+  },
+  {
+    "record_id": "04908",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 17,
+    "pre_annotation_gap_s": 0.076,
+    "first_annotation_sample": 19,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(AFL"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -4.905,
+      3.4
+    ],
+    "v_range_ch1": [
+      -4.18,
+      6.275
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 45,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7318,
+    "n_afib_windows": 592,
+    "n_non_afib_windows": 6726,
+    "n_afl_windows": 42,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 6684,
+    "rhythm_window_counts": {
+      "(N": 6684,
+      "(AFIB": 592,
+      "(AFL": 42
+    }
+  },
+  {
+    "record_id": "04936",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 73,
+    "pre_annotation_gap_s": 0.168,
+    "first_annotation_sample": 42,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(AFL"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.665,
+      3.28
+    ],
+    "v_range_ch1": [
+      -5.2,
+      6.28
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 206,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7157,
+    "n_afib_windows": 5214,
+    "n_non_afib_windows": 1943,
+    "n_afl_windows": 676,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 1267,
+    "rhythm_window_counts": {
+      "(N": 1267,
+      "(AFIB": 5214,
+      "(AFL": 676
+    }
+  },
+  {
+    "record_id": "05091",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 17,
+    "pre_annotation_gap_s": 0.316,
+    "first_annotation_sample": 79,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -5.485,
+      6.315
+    ],
+    "v_range_ch1": [
+      -4.245,
+      2.92
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 37,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7326,
+    "n_afib_windows": 6,
+    "n_non_afib_windows": 7320,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7320,
+    "rhythm_window_counts": {
+      "(N": 7320,
+      "(AFIB": 6
+    }
+  },
+  {
+    "record_id": "05121",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 42,
+    "pre_annotation_gap_s": 0.112,
+    "first_annotation_sample": 28,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(J"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -7.17,
+      6.74
+    ],
+    "v_range_ch1": [
+      -5.48,
+      5.195
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 120,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7243,
+    "n_afib_windows": 4583,
+    "n_non_afib_windows": 2660,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 29,
+    "n_normal_windows": 2631,
+    "rhythm_window_counts": {
+      "(N": 2631,
+      "(AFIB": 4583,
+      "(J": 29
+    }
+  },
+  {
+    "record_id": "05261",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 23,
+    "pre_annotation_gap_s": 0.416,
+    "first_annotation_sample": 104,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.06,
+      3.87
+    ],
+    "v_range_ch1": [
+      -1.885,
+      1.77
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 59,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7304,
+    "n_afib_windows": 72,
+    "n_non_afib_windows": 7232,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7232,
+    "rhythm_window_counts": {
+      "(N": 7232,
+      "(AFIB": 72
+    }
+  },
+  {
+    "record_id": "06426",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 55,
+    "pre_annotation_gap_s": 0.148,
+    "first_annotation_sample": 37,
+    "first_annotation_rhythm": "(AFIB",
+    "unique_rhythms": [
+      "(AFIB",
+      "(AFL",
+      "(J",
+      "(N"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -7.22,
+      5.55
+    ],
+    "v_range_ch1": [
+      -7.18,
+      5.47
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 150,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7213,
+    "n_afib_windows": 6947,
+    "n_non_afib_windows": 266,
+    "n_afl_windows": 20,
+    "n_junctional_windows": 15,
+    "n_normal_windows": 231,
+    "rhythm_window_counts": {
+      "(AFIB": 6947,
+      "(N": 231,
+      "(AFL": 20,
+      "(J": 15
+    }
+  },
+  {
+    "record_id": "06453",
+    "fs": 250,
+    "n_samples": 8325000,
+    "duration_hours": 9.25,
+    "n_transitions": 13,
+    "pre_annotation_gap_s": 0.6,
+    "first_annotation_sample": 150,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.55,
+      3.005
+    ],
+    "v_range_ch1": [
+      -4.675,
+      4.8
+    ],
+    "total_possible_windows": 6659,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 36,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 6623,
+    "n_afib_windows": 56,
+    "n_non_afib_windows": 6567,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 6567,
+    "rhythm_window_counts": {
+      "(N": 6567,
+      "(AFIB": 56
+    }
+  },
+  {
+    "record_id": "06995",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 11,
+    "pre_annotation_gap_s": 0.028,
+    "first_annotation_sample": 7,
+    "first_annotation_rhythm": "(AFIB",
+    "unique_rhythms": [
+      "(AFIB",
+      "(AFL",
+      "(N"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.195,
+      2.67
+    ],
+    "v_range_ch1": [
+      -3.41,
+      3.525
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 28,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7335,
+    "n_afib_windows": 3454,
+    "n_non_afib_windows": 3881,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 3881,
+    "rhythm_window_counts": {
+      "(AFIB": 3454,
+      "(N": 3881
+    }
+  },
+  {
+    "record_id": "07162",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 1,
+    "pre_annotation_gap_s": 0.696,
+    "first_annotation_sample": 174,
+    "first_annotation_rhythm": "(AFIB",
+    "unique_rhythms": [
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -1.31,
+      1.485
+    ],
+    "v_range_ch1": [
+      -1.385,
+      1.165
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 1,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7362,
+    "n_afib_windows": 7362,
+    "n_non_afib_windows": 0,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 0,
+    "rhythm_window_counts": {
+      "(AFIB": 7362
+    }
+  },
+  {
+    "record_id": "07859",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 1,
+    "pre_annotation_gap_s": 0.172,
+    "first_annotation_sample": 43,
+    "first_annotation_rhythm": "(AFIB",
+    "unique_rhythms": [
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -1.885,
+      1.83
+    ],
+    "v_range_ch1": [
+      -1.51,
+      1.43
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 1,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7362,
+    "n_afib_windows": 7362,
+    "n_non_afib_windows": 0,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 0,
+    "rhythm_window_counts": {
+      "(AFIB": 7362
+    }
+  },
+  {
+    "record_id": "07879",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 5,
+    "pre_annotation_gap_s": 0.216,
+    "first_annotation_sample": 54,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(J"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -4.32,
+      4.52
+    ],
+    "v_range_ch1": [
+      -3.09,
+      3.345
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 9,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7354,
+    "n_afib_windows": 4437,
+    "n_non_afib_windows": 2917,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 2917,
+    "rhythm_window_counts": {
+      "(N": 2917,
+      "(AFIB": 4437
+    }
+  },
+  {
+    "record_id": "07910",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 10,
+    "pre_annotation_gap_s": 0.412,
+    "first_annotation_sample": 103,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(AFL"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -2.77,
+      2.535
+    ],
+    "v_range_ch1": [
+      -2.36,
+      2.295
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 25,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7338,
+    "n_afib_windows": 1163,
+    "n_non_afib_windows": 6175,
+    "n_afl_windows": 94,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 6081,
+    "rhythm_window_counts": {
+      "(N": 6081,
+      "(AFIB": 1163,
+      "(AFL": 94
+    }
+  },
+  {
+    "record_id": "08215",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 4,
+    "pre_annotation_gap_s": 0.632,
+    "first_annotation_sample": 158,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB",
+      "(AFL"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.22,
+      2.93
+    ],
+    "v_range_ch1": [
+      -3.24,
+      2.86
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 10,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7353,
+    "n_afib_windows": 5929,
+    "n_non_afib_windows": 1424,
+    "n_afl_windows": 7,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 1417,
+    "rhythm_window_counts": {
+      "(N": 1417,
+      "(AFIB": 5929,
+      "(AFL": 7
+    }
+  },
+  {
+    "record_id": "08219",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 79,
+    "pre_annotation_gap_s": 0.688,
+    "first_annotation_sample": 172,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -3.06,
+      3.585
+    ],
+    "v_range_ch1": [
+      -3.38,
+      2.905
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 234,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7129,
+    "n_afib_windows": 1471,
+    "n_non_afib_windows": 5658,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 5658,
+    "rhythm_window_counts": {
+      "(N": 5658,
+      "(AFIB": 1471
+    }
+  },
+  {
+    "record_id": "08378",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 17,
+    "pre_annotation_gap_s": 0.372,
+    "first_annotation_sample": 93,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFL",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -6.155,
+      4.98
+    ],
+    "v_range_ch1": [
+      -6.13,
+      4.47
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 47,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7316,
+    "n_afib_windows": 1524,
+    "n_non_afib_windows": 5792,
+    "n_afl_windows": 303,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 5489,
+    "rhythm_window_counts": {
+      "(N": 5489,
+      "(AFL": 303,
+      "(AFIB": 1524
+    }
+  },
+  {
+    "record_id": "08405",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 4,
+    "pre_annotation_gap_s": 0.288,
+    "first_annotation_sample": 72,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -6.63,
+      7.615
+    ],
+    "v_range_ch1": [
+      -6.38,
+      5.575
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 10,
+    "n_rejected_dropout": 4,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 4,
+    "n_kept_windows": 7349,
+    "n_afib_windows": 5309,
+    "n_non_afib_windows": 2040,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 2040,
+    "rhythm_window_counts": {
+      "(N": 2040,
+      "(AFIB": 5309
+    }
+  },
+  {
+    "record_id": "08434",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 7,
+    "pre_annotation_gap_s": 0.216,
+    "first_annotation_sample": 54,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -4.32,
+      4.815
+    ],
+    "v_range_ch1": [
+      -5.75,
+      6.03
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 19,
+    "n_rejected_dropout": 12,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 12,
+    "n_kept_windows": 7332,
+    "n_afib_windows": 271,
+    "n_non_afib_windows": 7061,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 7061,
+    "rhythm_window_counts": {
+      "(N": 7061,
+      "(AFIB": 271
+    }
+  },
+  {
+    "record_id": "08455",
+    "fs": 250,
+    "n_samples": 9205760,
+    "duration_hours": 10.2286,
+    "n_transitions": 4,
+    "pre_annotation_gap_s": 0.384,
+    "first_annotation_sample": 96,
+    "first_annotation_rhythm": "(N",
+    "unique_rhythms": [
+      "(N",
+      "(AFIB"
+    ],
+    "n_nans": 0,
+    "n_infs": 0,
+    "v_range_ch0": [
+      -7.865,
+      9.065
+    ],
+    "v_range_ch1": [
+      -7.225,
+      7.2
+    ],
+    "total_possible_windows": 7363,
+    "n_rejected_unknown": 1,
+    "n_rejected_transition": 10,
+    "n_rejected_dropout": 0,
+    "n_rejected_low_amplitude": 0,
+    "total_rejected_quality": 0,
+    "n_kept_windows": 7353,
+    "n_afib_windows": 5089,
+    "n_non_afib_windows": 2264,
+    "n_afl_windows": 0,
+    "n_junctional_windows": 0,
+    "n_normal_windows": 2264,
+    "rhythm_window_counts": {
+      "(N": 2264,
+      "(AFIB": 5089
+    }
+  }
+]

@@ -1,0 +1,352 @@
+{
+  "benchmark_metadata": {
+    "evaluation_title": "Independent 5-Second Model 2 Validation on CUDB (cu01 and cu04)",
+    "execution_timestamp": "2026-10-25 23:30:07",
+    "target_model": "research_xgboost_4class_pipeline.joblib",
+    "classes": [
+      "NSR",
+      "TACHY",
+      "BRADYCARDIA",
+      "VENTRICULAR"
+    ],
+    "target_database": "Creighton University Ventricular Tachyarrhythmia Database (CUDB)",
+    "source_archive": "cu-ventricular-tachyarrhythmia-database-1.0.0.zip",
+    "records_evaluated": [
+      "cu01",
+      "cu04"
+    ],
+    "source_sampling_rate_hz": 250,
+    "resampled_sampling_rate_hz": 360,
+    "window_length_sec": 5.0,
+    "window_length_samples_360hz": 1800,
+    "primary_stride_sec": 5.0,
+    "secondary_timing_stride_sec": 1.0
+  },
+  "anti_leakage_audit": {
+    "status": "PASSED_ZERO_LEAKAGE",
+    "total_training_records_in_dataset": 318,
+    "total_training_windows_in_dataset": 7493,
+    "records_audited": {
+      "cu01": {
+        "record_id": "cu01",
+        "raw_match_in_training": false,
+        "prefixed_match_in_training": false,
+        "matching_training_records": [],
+        "training_windows_count": 0,
+        "is_completely_independent": true
+      },
+      "cu04": {
+        "record_id": "cu04",
+        "raw_match_in_training": false,
+        "prefixed_match_in_training": false,
+        "matching_training_records": [],
+        "training_windows_count": 0,
+        "is_completely_independent": true
+      }
+    }
+  },
+  "combined_benchmark_metrics": {
+    "total_windows_5s": 202,
+    "evaluable_windows_5s": 202,
+    "ground_truth_category_counts": {
+      "UNAMBIGUOUS_VENTRICULAR": 110,
+      "UNAMBIGUOUS_SINUS": 83,
+      "TRANSITION": 9
+    },
+    "predicted_class_counts_overall": {
+      "VENTRICULAR": 116,
+      "NSR": 79,
+      "BRADYCARDIA": 7
+    },
+    "unambiguous_evaluation": {
+      "total_unambiguous_windows": 193,
+      "unambiguous_ventricular_windows": 110,
+      "ventricular_true_positives": 95,
+      "ventricular_false_negatives": 15,
+      "ventricular_recall": 0.8636,
+      "unambiguous_sinus_windows": 83,
+      "sinus_true_negatives_nsr": 63,
+      "sinus_nsr_concordance_rate": 0.759,
+      "sinus_ventricular_false_alarm_rate": 0.1566,
+      "sinus_predicted_bradycardia_count": 7,
+      "sinus_predicted_tachycardia_count": 0,
+      "sinus_predicted_ventricular_count": 13,
+      "confusion_matrix_unambiguous": {
+        "UNAMBIGUOUS_SINUS": {
+          "NSR": 63,
+          "TACHY": 0,
+          "BRADYCARDIA": 7,
+          "VENTRICULAR": 13
+        },
+        "UNAMBIGUOUS_VENTRICULAR": {
+          "NSR": 15,
+          "TACHY": 0,
+          "BRADYCARDIA": 0,
+          "VENTRICULAR": 95
+        }
+      }
+    },
+    "probability_distributions": {
+      "ventricular_prob_during_ventricular": {
+        "mean": 0.829843596606092,
+        "median": 0.9811455011367798,
+        "min": 0.05049095302820206,
+        "max": 0.9904286861419678
+      },
+      "ventricular_prob_during_sinus": {
+        "mean": 0.15253932261278472,
+        "median": 0.016664475202560425,
+        "min": 0.0072290063835680485,
+        "max": 0.9792883992195129
+      }
+    },
+    "transition_windows": {
+      "total_transition_windows": 9,
+      "transition_predictions_breakdown": {
+        "VENTRICULAR": 8,
+        "NSR": 1
+      }
+    },
+    "episode_timing_and_latencies": [
+      {
+        "episode_index": 1,
+        "start_time_sec": 214.184,
+        "end_time_sec": 508.924,
+        "duration_sec": 294.74,
+        "aux_note": "",
+        "onset_detected": true,
+        "onset_detection_latency_sec_1s_stride": 0.0,
+        "termination_deescalated": false,
+        "termination_latency_sec_1s_stride": null
+      },
+      {
+        "episode_index": 1,
+        "start_time_sec": 155.312,
+        "end_time_sec": 210.952,
+        "duration_sec": 55.639999999999986,
+        "aux_note": "",
+        "onset_detected": true,
+        "onset_detection_latency_sec_1s_stride": 0.0,
+        "termination_deescalated": true,
+        "termination_latency_sec_1s_stride": 0.05
+      },
+      {
+        "episode_index": 2,
+        "start_time_sec": 223.78,
+        "end_time_sec": 243.532,
+        "duration_sec": 19.75200000000001,
+        "aux_note": "",
+        "onset_detected": true,
+        "onset_detection_latency_sec_1s_stride": 0.0,
+        "termination_deescalated": true,
+        "termination_latency_sec_1s_stride": 3.47
+      },
+      {
+        "episode_index": 3,
+        "start_time_sec": 254.56,
+        "end_time_sec": 345.948,
+        "duration_sec": 91.38799999999998,
+        "aux_note": "",
+        "onset_detected": true,
+        "onset_detection_latency_sec_1s_stride": 0.0,
+        "termination_deescalated": true,
+        "termination_latency_sec_1s_stride": 7.05
+      },
+      {
+        "episode_index": 4,
+        "start_time_sec": 369.72,
+        "end_time_sec": 475.168,
+        "duration_sec": 105.44799999999998,
+        "aux_note": "",
+        "onset_detected": true,
+        "onset_detection_latency_sec_1s_stride": 0.0,
+        "termination_deescalated": true,
+        "termination_latency_sec_1s_stride": 1.83
+      }
+    ]
+  },
+  "per_record_metrics": {
+    "cudb_cu01": {
+      "total_windows_5s": 101,
+      "evaluable_windows_5s": 101,
+      "ground_truth_category_counts": {
+        "UNAMBIGUOUS_VENTRICULAR": 58,
+        "UNAMBIGUOUS_SINUS": 42,
+        "TRANSITION": 1
+      },
+      "predicted_class_counts_overall": {
+        "VENTRICULAR": 58,
+        "NSR": 43
+      },
+      "unambiguous_evaluation": {
+        "total_unambiguous_windows": 100,
+        "unambiguous_ventricular_windows": 58,
+        "ventricular_true_positives": 58,
+        "ventricular_false_negatives": 0,
+        "ventricular_recall": 1.0,
+        "unambiguous_sinus_windows": 42,
+        "sinus_true_negatives_nsr": 42,
+        "sinus_nsr_concordance_rate": 1.0,
+        "sinus_ventricular_false_alarm_rate": 0.0,
+        "sinus_predicted_bradycardia_count": 0,
+        "sinus_predicted_tachycardia_count": 0,
+        "sinus_predicted_ventricular_count": 0,
+        "confusion_matrix_unambiguous": {
+          "UNAMBIGUOUS_SINUS": {
+            "NSR": 42,
+            "TACHY": 0,
+            "BRADYCARDIA": 0,
+            "VENTRICULAR": 0
+          },
+          "UNAMBIGUOUS_VENTRICULAR": {
+            "NSR": 0,
+            "TACHY": 0,
+            "BRADYCARDIA": 0,
+            "VENTRICULAR": 58
+          }
+        }
+      },
+      "probability_distributions": {
+        "ventricular_prob_during_ventricular": {
+          "mean": 0.9828622875542476,
+          "median": 0.9843855798244476,
+          "min": 0.9518171548843384,
+          "max": 0.9904286861419678
+        },
+        "ventricular_prob_during_sinus": {
+          "mean": 0.009215824949067263,
+          "median": 0.008183429017663002,
+          "min": 0.0072290063835680485,
+          "max": 0.016664475202560425
+        }
+      },
+      "transition_windows": {
+        "total_transition_windows": 1,
+        "transition_predictions_breakdown": {
+          "NSR": 1
+        }
+      },
+      "episode_timing_and_latencies": [
+        {
+          "episode_index": 1,
+          "start_time_sec": 214.184,
+          "end_time_sec": 508.924,
+          "duration_sec": 294.74,
+          "aux_note": "",
+          "onset_detected": true,
+          "onset_detection_latency_sec_1s_stride": 0.0,
+          "termination_deescalated": false,
+          "termination_latency_sec_1s_stride": null
+        }
+      ]
+    },
+    "cudb_cu04": {
+      "total_windows_5s": 101,
+      "evaluable_windows_5s": 101,
+      "ground_truth_category_counts": {
+        "UNAMBIGUOUS_VENTRICULAR": 52,
+        "UNAMBIGUOUS_SINUS": 41,
+        "TRANSITION": 8
+      },
+      "predicted_class_counts_overall": {
+        "VENTRICULAR": 58,
+        "NSR": 36,
+        "BRADYCARDIA": 7
+      },
+      "unambiguous_evaluation": {
+        "total_unambiguous_windows": 93,
+        "unambiguous_ventricular_windows": 52,
+        "ventricular_true_positives": 37,
+        "ventricular_false_negatives": 15,
+        "ventricular_recall": 0.7115,
+        "unambiguous_sinus_windows": 41,
+        "sinus_true_negatives_nsr": 21,
+        "sinus_nsr_concordance_rate": 0.5122,
+        "sinus_ventricular_false_alarm_rate": 0.3171,
+        "sinus_predicted_bradycardia_count": 7,
+        "sinus_predicted_tachycardia_count": 0,
+        "sinus_predicted_ventricular_count": 13,
+        "confusion_matrix_unambiguous": {
+          "UNAMBIGUOUS_SINUS": {
+            "NSR": 21,
+            "TACHY": 0,
+            "BRADYCARDIA": 7,
+            "VENTRICULAR": 13
+          },
+          "UNAMBIGUOUS_VENTRICULAR": {
+            "NSR": 15,
+            "TACHY": 0,
+            "BRADYCARDIA": 0,
+            "VENTRICULAR": 37
+          }
+        }
+      },
+      "probability_distributions": {
+        "ventricular_prob_during_ventricular": {
+          "mean": 0.6591689028562262,
+          "median": 0.7716966271400452,
+          "min": 0.05049095302820206,
+          "max": 0.989434540271759
+        },
+        "ventricular_prob_during_sinus": {
+          "mean": 0.2993585153414709,
+          "median": 0.23019684851169586,
+          "min": 0.02455122210085392,
+          "max": 0.9792883992195129
+        }
+      },
+      "transition_windows": {
+        "total_transition_windows": 8,
+        "transition_predictions_breakdown": {
+          "VENTRICULAR": 8
+        }
+      },
+      "episode_timing_and_latencies": [
+        {
+          "episode_index": 1,
+          "start_time_sec": 155.312,
+          "end_time_sec": 210.952,
+          "duration_sec": 55.639999999999986,
+          "aux_note": "",
+          "onset_detected": true,
+          "onset_detection_latency_sec_1s_stride": 0.0,
+          "termination_deescalated": true,
+          "termination_latency_sec_1s_stride": 0.05
+        },
+        {
+          "episode_index": 2,
+          "start_time_sec": 223.78,
+          "end_time_sec": 243.532,
+          "duration_sec": 19.75200000000001,
+          "aux_note": "",
+          "onset_detected": true,
+          "onset_detection_latency_sec_1s_stride": 0.0,
+          "termination_deescalated": true,
+          "termination_latency_sec_1s_stride": 3.47
+        },
+        {
+          "episode_index": 3,
+          "start_time_sec": 254.56,
+          "end_time_sec": 345.948,
+          "duration_sec": 91.38799999999998,
+          "aux_note": "",
+          "onset_detected": true,
+          "onset_detection_latency_sec_1s_stride": 0.0,
+          "termination_deescalated": true,
+          "termination_latency_sec_1s_stride": 7.05
+        },
+        {
+          "episode_index": 4,
+          "start_time_sec": 369.72,
+          "end_time_sec": 475.168,
+          "duration_sec": 105.44799999999998,
+          "aux_note": "",
+          "onset_detected": true,
+          "onset_detection_latency_sec_1s_stride": 0.0,
+          "termination_deescalated": true,
+          "termination_latency_sec_1s_stride": 1.83
+        }
+      ]
+    }
+  }
+}

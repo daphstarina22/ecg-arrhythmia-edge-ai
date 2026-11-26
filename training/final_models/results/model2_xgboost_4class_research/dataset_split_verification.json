@@ -1,0 +1,63 @@
+{
+  "status": "PASSED",
+  "master_dataset_source": "C:\\Users\\LENOVO\\Downloads\\ecg-arrhythmia-edge-ai\\training\\final_models\\artifacts\\corrected_master_feature_dataset.csv",
+  "total_master_rows": 7669,
+  "asystole_windows_excluded": 175,
+  "asystole_records_count": 20,
+  "asystole_records_list": [
+    "c2015_a142s",
+    "c2015_a161l",
+    "c2015_a167l",
+    "c2015_a172s",
+    "c2015_a185l",
+    "c2015_a203l",
+    "c2015_a345l",
+    "c2015_a372s",
+    "c2015_a385l",
+    "c2015_a386s",
+    "c2015_a443l",
+    "c2015_a449l",
+    "c2015_a604s",
+    "c2015_a754s",
+    "c2015_a796s",
+    "vfdb_423",
+    "vfdb_424",
+    "vfdb_427",
+    "vfdb_430",
+    "vfdb_607"
+  ],
+  "four_class_rows_total": 7494,
+  "four_class_rows_clean": 7493,
+  "four_class_records_clean": 318,
+  "dropped_nan_rows": 1,
+  "target_classes": [
+    "NSR",
+    "TACHY",
+    "BRADYCARDIA",
+    "VENTRICULAR"
+  ],
+  "class_distribution": {
+    "NSR": {
+      "count": 5073,
+      "percentage": 67.70318964366743
+    },
+    "TACHY": {
+      "count": 362,
+      "percentage": 4.831175764046444
+    },
+    "BRADYCARDIA": {
+      "count": 220,
+      "percentage": 2.936073668757507
+    },
+    "VENTRICULAR": {
+      "count": 1838,
+      "percentage": 24.529560923528628
+    }
+  },
+  "integrity_checks": {
+    "no_asystole_in_4class_dataset": true,
+    "no_silent_relabeling": true,
+    "classes_match_expected_target": true,
+    "row_count_partition_conserved": true
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "experiment_metadata": {
+    "evaluation_name": "AFib Model Compatibility & Confounder Audit",
+    "timestamp_utc": "2026-10-26T00:55:00Z",
+    "evaluated_model": "afdb_model_package.joblib (LogisticRegression)",
+    "window_duration_seconds": 10.0,
+    "sampling_rate_hz": 360,
+    "operating_thresholds": {
+      "constrained_threshold": 0.965,
+      "triage_threshold": 0.7,
+      "consensus_threshold": 0.9
+    }
+  },
+  "independent_benchmark_evaluation": {
+    "b265l": {
+      "dataset": "Challenge2015",
+      "reference_rhythm": "Sinus Bradycardia",
+      "total_10s_windows": 33,
+      "mean_afib_probability": 0.0439,
+      "max_afib_probability": 0.4486,
+      "false_alarms_threshold_050": 0,
+      "false_alarm_rate_pct_050": 0.0,
+      "false_alarms_threshold_070": 0,
+      "false_alarm_rate_pct_070": 0.0,
+      "false_alarms_threshold_0965": 0,
+      "false_alarm_rate_pct_0965": 0.0
+    },
+    "b839l": {
+      "dataset": "Challenge2015",
+      "reference_rhythm": "Sustained Sinus Bradycardia",
+      "total_10s_windows": 33,
+      "mean_afib_probability": 0.2065,
+      "max_afib_probability": 0.9512,
+      "false_alarms_threshold_050": 6,
+      "false_alarm_rate_pct_050": 18.18,
+      "false_alarms_threshold_070": 5,
+      "false_alarm_rate_pct_070": 15.15,
+      "false_alarms_threshold_0965": 0,
+      "false_alarm_rate_pct_0965": 0.0
+    },
+    "cu01": {
+      "dataset": "CUDB",
+      "reference_rhythm": "Normal_Sinus_Rhythm",
+      "total_10s_windows": 50,
+      "mean_afib_probability": 0.475,
+      "max_afib_probability": 0.9999,
+      "false_alarms_threshold_050": 25,
+      "false_alarm_rate_pct_050": 50.0,
+      "false_alarms_threshold_070": 24,
+      "false_alarm_rate_pct_070": 48.0,
+      "false_alarms_threshold_0965": 17,
+      "false_alarm_rate_pct_0965": 34.0
+    },
+    "cu04": {
+      "dataset": "CUDB",
+      "reference_rhythm": "Sinus_Baseline",
+      "total_10s_windows": 50,
+      "mean_afib_probability": 0.3253,
+      "max_afib_probability": 0.9996,
+      "false_alarms_threshold_050": 15,
+      "false_alarm_rate_pct_050": 30.0,
+      "false_alarms_threshold_070": 13,
+      "false_alarm_rate_pct_070": 26.0,
+      "false_alarms_threshold_0965": 6,
+      "false_alarm_rate_pct_0965": 12.0
+    }
+  },
+  "conflation_and_failure_analysis": {
+    "cu01_sinus_interval": {
+      "total_windows": 22,
+      "mean_afib_probability": 0.0598,
+      "false_alarms_050": 1,
+      "false_alarm_rate_pct_050": 4.55
+    },
+    "cu01_ventricular_fibrillation_interval": {
+      "total_windows": 28,
+      "mean_afib_probability": 0.8012,
+      "false_alarms_050": 24,
+      "false_alarm_rate_pct_050": 85.71,
+      "false_alarms_070": 23,
+      "false_alarm_rate_pct_070": 82.14,
+      "false_alarms_0965": 16,
+      "false_alarm_rate_pct_0965": 57.14,
+      "clinical_severity": "CRITICAL_HAZARD: Coarse Ventricular Fibrillation triggers false AFib alarms at up to 86.2% rate"
+    }
+  }
+}

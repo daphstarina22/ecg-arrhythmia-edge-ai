@@ -1,0 +1,1286 @@
+{
+  "unfiltered": {
+    "rule_name": "unfiltered",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 20340,
+        "fp": 1051,
+        "fn": 597,
+        "tn": 36657
+      },
+      "sensitivity": 0.9715,
+      "specificity": 0.9721,
+      "precision": 0.9509,
+      "f1_score": 0.9611,
+      "balanced_accuracy": 0.9718,
+      "fp_per_eligible_non_afib_hour": 40.14,
+      "fp_per_total_eligible_hour": 25.81,
+      "false_alarm_windows_count": 1051,
+      "false_alarm_events_count": 940
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 30,
+      "missed_episodes": 0,
+      "episode_sensitivity": 1.0,
+      "median_delay_sec": 4.0,
+      "mean_delay_sec": 12.29
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 491,
+            "fp": 387,
+            "fn": 32,
+            "tn": 13760
+          },
+          "sensitivity": 0.9388,
+          "specificity": 0.9726,
+          "precision": 0.5592,
+          "f1_score": 0.7009,
+          "balanced_accuracy": 0.9557,
+          "fp_per_eligible_non_afib_hour": 39.39,
+          "fp_per_total_eligible_hour": 37.99,
+          "false_alarm_windows_count": 387,
+          "false_alarm_events_count": 402
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 7,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 6.37,
+          "median_delay_sec": 4.45,
+          "delays_sec": [
+            4.45,
+            3.63,
+            3.86,
+            4.45,
+            3.41,
+            15.44,
+            9.37
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8900,
+            "fp": 515,
+            "fn": 307,
+            "tn": 4847
+          },
+          "sensitivity": 0.9667,
+          "specificity": 0.904,
+          "precision": 0.9453,
+          "f1_score": 0.9559,
+          "balanced_accuracy": 0.9353,
+          "fp_per_eligible_non_afib_hour": 138.31,
+          "fp_per_total_eligible_hour": 50.9,
+          "false_alarm_windows_count": 515,
+          "false_alarm_events_count": 356
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 3.77,
+          "median_delay_sec": 3.57,
+          "delays_sec": [
+            4.84,
+            4.97,
+            3.4,
+            2.72,
+            4.07,
+            3.57,
+            3.45,
+            4.34,
+            2.68,
+            3.55,
+            3.0,
+            4.0,
+            2.5,
+            4.5,
+            4.5,
+            4.5,
+            3.5,
+            3.5,
+            4.0
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8826,
+            "fp": 81,
+            "fn": 50,
+            "tn": 5757
+          },
+          "sensitivity": 0.9944,
+          "specificity": 0.9861,
+          "precision": 0.9909,
+          "f1_score": 0.9926,
+          "balanced_accuracy": 0.9902,
+          "fp_per_eligible_non_afib_hour": 19.98,
+          "fp_per_total_eligible_hour": 7.93,
+          "false_alarm_windows_count": 81,
+          "false_alarm_events_count": 100
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 7.68,
+          "median_delay_sec": 7.68,
+          "delays_sec": [
+            7.68
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2123,
+            "fp": 68,
+            "fn": 208,
+            "tn": 12293
+          },
+          "sensitivity": 0.9108,
+          "specificity": 0.9945,
+          "precision": 0.969,
+          "f1_score": 0.939,
+          "balanced_accuracy": 0.9526,
+          "fp_per_eligible_non_afib_hour": 7.92,
+          "fp_per_total_eligible_hour": 6.66,
+          "false_alarm_windows_count": 68,
+          "false_alarm_events_count": 82
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 81.63,
+          "median_delay_sec": 37.62,
+          "delays_sec": [
+            204.46,
+            37.62,
+            2.82
+          ]
+        }
+      }
+    }
+  },
+  "consecutive_2": {
+    "rule_name": "consecutive_2",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 20089,
+        "fp": 581,
+        "fn": 848,
+        "tn": 37127
+      },
+      "sensitivity": 0.9595,
+      "specificity": 0.9846,
+      "precision": 0.9719,
+      "f1_score": 0.9657,
+      "balanced_accuracy": 0.972,
+      "fp_per_eligible_non_afib_hour": 22.19,
+      "fp_per_total_eligible_hour": 14.27,
+      "false_alarm_windows_count": 581,
+      "false_alarm_events_count": 416
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 29,
+      "missed_episodes": 1,
+      "episode_sensitivity": 0.9667,
+      "median_delay_sec": 6.5,
+      "mean_delay_sec": 16.79
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 468,
+            "fp": 186,
+            "fn": 55,
+            "tn": 13961
+          },
+          "sensitivity": 0.8948,
+          "specificity": 0.9869,
+          "precision": 0.7156,
+          "f1_score": 0.7952,
+          "balanced_accuracy": 0.9408,
+          "fp_per_eligible_non_afib_hour": 18.93,
+          "fp_per_total_eligible_hour": 18.26,
+          "false_alarm_windows_count": 186,
+          "false_alarm_events_count": 176
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 6,
+          "missed_episodes": 1,
+          "episode_sensitivity": 0.8571,
+          "mean_delay_sec": 11.29,
+          "median_delay_sec": 6.95,
+          "delays_sec": [
+            6.95,
+            6.13,
+            11.36,
+            6.95,
+            5.91,
+            30.44
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8755,
+            "fp": 337,
+            "fn": 452,
+            "tn": 5025
+          },
+          "sensitivity": 0.9509,
+          "specificity": 0.9372,
+          "precision": 0.9629,
+          "f1_score": 0.9569,
+          "balanced_accuracy": 0.944,
+          "fp_per_eligible_non_afib_hour": 90.5,
+          "fp_per_total_eligible_hour": 33.31,
+          "false_alarm_windows_count": 337,
+          "false_alarm_events_count": 174
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 6.27,
+          "median_delay_sec": 6.07,
+          "delays_sec": [
+            7.34,
+            7.47,
+            5.9,
+            5.22,
+            6.57,
+            6.07,
+            5.95,
+            6.84,
+            5.18,
+            6.05,
+            5.5,
+            6.5,
+            5.0,
+            7.0,
+            7.0,
+            7.0,
+            6.0,
+            6.0,
+            6.5
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8791,
+            "fp": 31,
+            "fn": 85,
+            "tn": 5807
+          },
+          "sensitivity": 0.9904,
+          "specificity": 0.9947,
+          "precision": 0.9965,
+          "f1_score": 0.9934,
+          "balanced_accuracy": 0.9926,
+          "fp_per_eligible_non_afib_hour": 7.65,
+          "fp_per_total_eligible_hour": 3.03,
+          "false_alarm_windows_count": 31,
+          "false_alarm_events_count": 38
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 10.18,
+          "median_delay_sec": 10.18,
+          "delays_sec": [
+            10.18
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2075,
+            "fp": 27,
+            "fn": 256,
+            "tn": 12334
+          },
+          "sensitivity": 0.8902,
+          "specificity": 0.9978,
+          "precision": 0.9872,
+          "f1_score": 0.9362,
+          "balanced_accuracy": 0.944,
+          "fp_per_eligible_non_afib_hour": 3.15,
+          "fp_per_total_eligible_hour": 2.65,
+          "false_alarm_windows_count": 27,
+          "false_alarm_events_count": 28
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 96.63,
+          "median_delay_sec": 77.62,
+          "delays_sec": [
+            206.96,
+            77.62,
+            5.32
+          ]
+        }
+      }
+    }
+  },
+  "consecutive_3": {
+    "rule_name": "consecutive_3",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 19868,
+        "fp": 373,
+        "fn": 1069,
+        "tn": 37335
+      },
+      "sensitivity": 0.9489,
+      "specificity": 0.9901,
+      "precision": 0.9816,
+      "f1_score": 0.965,
+      "balanced_accuracy": 0.9695,
+      "fp_per_eligible_non_afib_hour": 14.24,
+      "fp_per_total_eligible_hour": 9.16,
+      "false_alarm_windows_count": 373,
+      "false_alarm_events_count": 180
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 28,
+      "missed_episodes": 2,
+      "episode_sensitivity": 0.9333,
+      "median_delay_sec": 9.0,
+      "mean_delay_sec": 26.75
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 453,
+            "fp": 98,
+            "fn": 70,
+            "tn": 14049
+          },
+          "sensitivity": 0.8662,
+          "specificity": 0.9931,
+          "precision": 0.8221,
+          "f1_score": 0.8436,
+          "balanced_accuracy": 0.9296,
+          "fp_per_eligible_non_afib_hour": 9.98,
+          "fp_per_total_eligible_hour": 9.62,
+          "false_alarm_windows_count": 98,
+          "false_alarm_events_count": 74
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 5,
+          "missed_episodes": 2,
+          "episode_sensitivity": 0.7143,
+          "mean_delay_sec": 9.96,
+          "median_delay_sec": 9.45,
+          "delays_sec": [
+            9.45,
+            8.63,
+            13.86,
+            9.45,
+            8.41
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8622,
+            "fp": 250,
+            "fn": 585,
+            "tn": 5112
+          },
+          "sensitivity": 0.9365,
+          "specificity": 0.9534,
+          "precision": 0.9718,
+          "f1_score": 0.9538,
+          "balanced_accuracy": 0.9449,
+          "fp_per_eligible_non_afib_hour": 67.14,
+          "fp_per_total_eligible_hour": 24.71,
+          "false_alarm_windows_count": 250,
+          "false_alarm_events_count": 82
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 8.77,
+          "median_delay_sec": 8.57,
+          "delays_sec": [
+            9.84,
+            9.97,
+            8.4,
+            7.72,
+            9.07,
+            8.57,
+            8.45,
+            9.34,
+            7.68,
+            8.55,
+            8.0,
+            9.0,
+            7.5,
+            9.5,
+            9.5,
+            9.5,
+            8.5,
+            8.5,
+            9.0
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8759,
+            "fp": 12,
+            "fn": 117,
+            "tn": 5826
+          },
+          "sensitivity": 0.9868,
+          "specificity": 0.9979,
+          "precision": 0.9986,
+          "f1_score": 0.9927,
+          "balanced_accuracy": 0.9924,
+          "fp_per_eligible_non_afib_hour": 2.96,
+          "fp_per_total_eligible_hour": 1.17,
+          "false_alarm_windows_count": 12,
+          "false_alarm_events_count": 14
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 47.68,
+          "median_delay_sec": 47.68,
+          "delays_sec": [
+            47.68
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2034,
+            "fp": 13,
+            "fn": 297,
+            "tn": 12348
+          },
+          "sensitivity": 0.8726,
+          "specificity": 0.9989,
+          "precision": 0.9936,
+          "f1_score": 0.9292,
+          "balanced_accuracy": 0.9358,
+          "fp_per_eligible_non_afib_hour": 1.51,
+          "fp_per_total_eligible_hour": 1.27,
+          "false_alarm_windows_count": 13,
+          "false_alarm_events_count": 10
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 161.63,
+          "median_delay_sec": 224.46,
+          "delays_sec": [
+            224.46,
+            252.62,
+            7.82
+          ]
+        }
+      }
+    }
+  },
+  "consecutive_4": {
+    "rule_name": "consecutive_4",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 19675,
+        "fp": 283,
+        "fn": 1262,
+        "tn": 37425
+      },
+      "sensitivity": 0.9397,
+      "specificity": 0.9925,
+      "precision": 0.9858,
+      "f1_score": 0.9622,
+      "balanced_accuracy": 0.9661,
+      "fp_per_eligible_non_afib_hour": 10.81,
+      "fp_per_total_eligible_hour": 6.95,
+      "false_alarm_windows_count": 283,
+      "false_alarm_events_count": 102
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 26,
+      "missed_episodes": 4,
+      "episode_sensitivity": 0.8667,
+      "median_delay_sec": 11.5,
+      "mean_delay_sec": 24.18
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 442,
+            "fp": 61,
+            "fn": 81,
+            "tn": 14086
+          },
+          "sensitivity": 0.8451,
+          "specificity": 0.9957,
+          "precision": 0.8787,
+          "f1_score": 0.8616,
+          "balanced_accuracy": 0.9204,
+          "fp_per_eligible_non_afib_hour": 6.21,
+          "fp_per_total_eligible_hour": 5.99,
+          "false_alarm_windows_count": 61,
+          "false_alarm_events_count": 44
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 4,
+          "missed_episodes": 3,
+          "episode_sensitivity": 0.5714,
+          "mean_delay_sec": 12.85,
+          "median_delay_sec": 11.95,
+          "delays_sec": [
+            11.95,
+            11.13,
+            16.36,
+            11.95
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8506,
+            "fp": 209,
+            "fn": 701,
+            "tn": 5153
+          },
+          "sensitivity": 0.9239,
+          "specificity": 0.961,
+          "precision": 0.976,
+          "f1_score": 0.9492,
+          "balanced_accuracy": 0.9424,
+          "fp_per_eligible_non_afib_hour": 56.13,
+          "fp_per_total_eligible_hour": 20.66,
+          "false_alarm_windows_count": 209,
+          "false_alarm_events_count": 46
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 11.27,
+          "median_delay_sec": 11.07,
+          "delays_sec": [
+            12.34,
+            12.47,
+            10.9,
+            10.22,
+            11.57,
+            11.07,
+            10.95,
+            11.84,
+            10.18,
+            11.05,
+            10.5,
+            11.5,
+            10.0,
+            12.0,
+            12.0,
+            12.0,
+            11.0,
+            11.0,
+            11.5
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8730,
+            "fp": 5,
+            "fn": 146,
+            "tn": 5833
+          },
+          "sensitivity": 0.9836,
+          "specificity": 0.9991,
+          "precision": 0.9994,
+          "f1_score": 0.9914,
+          "balanced_accuracy": 0.9913,
+          "fp_per_eligible_non_afib_hour": 1.23,
+          "fp_per_total_eligible_hour": 0.49,
+          "false_alarm_windows_count": 5,
+          "false_alarm_events_count": 6
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 97.68,
+          "median_delay_sec": 97.68,
+          "delays_sec": [
+            97.68
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 1997,
+            "fp": 8,
+            "fn": 334,
+            "tn": 12353
+          },
+          "sensitivity": 0.8567,
+          "specificity": 0.9994,
+          "precision": 0.996,
+          "f1_score": 0.9211,
+          "balanced_accuracy": 0.928,
+          "fp_per_eligible_non_afib_hour": 0.93,
+          "fp_per_total_eligible_hour": 0.78,
+          "false_alarm_windows_count": 8,
+          "false_alarm_events_count": 6
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 2,
+          "missed_episodes": 1,
+          "episode_sensitivity": 0.6667,
+          "mean_delay_sec": 132.72,
+          "median_delay_sec": 132.72,
+          "delays_sec": [
+            255.12,
+            10.32
+          ]
+        }
+      }
+    }
+  },
+  "majority_2_of_3": {
+    "rule_name": "majority_2_of_3",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 20405,
+        "fp": 861,
+        "fn": 532,
+        "tn": 36847
+      },
+      "sensitivity": 0.9746,
+      "specificity": 0.9772,
+      "precision": 0.9595,
+      "f1_score": 0.967,
+      "balanced_accuracy": 0.9759,
+      "fp_per_eligible_non_afib_hour": 32.88,
+      "fp_per_total_eligible_hour": 21.14,
+      "false_alarm_windows_count": 861,
+      "false_alarm_events_count": 394
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 29,
+      "missed_episodes": 1,
+      "episode_sensitivity": 0.9667,
+      "median_delay_sec": 6.5,
+      "mean_delay_sec": 16.36
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 489,
+            "fp": 297,
+            "fn": 34,
+            "tn": 13850
+          },
+          "sensitivity": 0.935,
+          "specificity": 0.979,
+          "precision": 0.6221,
+          "f1_score": 0.7471,
+          "balanced_accuracy": 0.957,
+          "fp_per_eligible_non_afib_hour": 30.23,
+          "fp_per_total_eligible_hour": 29.15,
+          "false_alarm_windows_count": 297,
+          "false_alarm_events_count": 178
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 6,
+          "missed_episodes": 1,
+          "episode_sensitivity": 0.8571,
+          "mean_delay_sec": 9.21,
+          "median_delay_sec": 6.95,
+          "delays_sec": [
+            6.95,
+            6.13,
+            8.86,
+            6.95,
+            5.91,
+            20.44
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8926,
+            "fp": 453,
+            "fn": 281,
+            "tn": 4909
+          },
+          "sensitivity": 0.9695,
+          "specificity": 0.9155,
+          "precision": 0.9517,
+          "f1_score": 0.9605,
+          "balanced_accuracy": 0.9425,
+          "fp_per_eligible_non_afib_hour": 121.66,
+          "fp_per_total_eligible_hour": 44.77,
+          "false_alarm_windows_count": 453,
+          "false_alarm_events_count": 156
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 6.27,
+          "median_delay_sec": 6.07,
+          "delays_sec": [
+            7.34,
+            7.47,
+            5.9,
+            5.22,
+            6.57,
+            6.07,
+            5.95,
+            6.84,
+            5.18,
+            6.05,
+            5.5,
+            6.5,
+            5.0,
+            7.0,
+            7.0,
+            7.0,
+            6.0,
+            6.0,
+            6.5
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8845,
+            "fp": 63,
+            "fn": 31,
+            "tn": 5775
+          },
+          "sensitivity": 0.9965,
+          "specificity": 0.9892,
+          "precision": 0.9929,
+          "f1_score": 0.9947,
+          "balanced_accuracy": 0.9929,
+          "fp_per_eligible_non_afib_hour": 15.54,
+          "fp_per_total_eligible_hour": 6.17,
+          "false_alarm_windows_count": 63,
+          "false_alarm_events_count": 36
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 10.18,
+          "median_delay_sec": 10.18,
+          "delays_sec": [
+            10.18
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2145,
+            "fp": 48,
+            "fn": 186,
+            "tn": 12313
+          },
+          "sensitivity": 0.9202,
+          "specificity": 0.9961,
+          "precision": 0.9781,
+          "f1_score": 0.9483,
+          "balanced_accuracy": 0.9582,
+          "fp_per_eligible_non_afib_hour": 5.59,
+          "fp_per_total_eligible_hour": 4.7,
+          "false_alarm_windows_count": 48,
+          "false_alarm_events_count": 24
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 96.63,
+          "median_delay_sec": 77.62,
+          "delays_sec": [
+            206.96,
+            77.62,
+            5.32
+          ]
+        }
+      }
+    }
+  },
+  "majority_3_of_4": {
+    "rule_name": "majority_3_of_4",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 20260,
+        "fp": 547,
+        "fn": 677,
+        "tn": 37161
+      },
+      "sensitivity": 0.9677,
+      "specificity": 0.9855,
+      "precision": 0.9737,
+      "f1_score": 0.9707,
+      "balanced_accuracy": 0.9766,
+      "fp_per_eligible_non_afib_hour": 20.89,
+      "fp_per_total_eligible_hour": 13.43,
+      "false_alarm_windows_count": 547,
+      "false_alarm_events_count": 214
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 29,
+      "missed_episodes": 1,
+      "episode_sensitivity": 0.9667,
+      "median_delay_sec": 9.0,
+      "mean_delay_sec": 25.84
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 473,
+            "fp": 158,
+            "fn": 50,
+            "tn": 13989
+          },
+          "sensitivity": 0.9044,
+          "specificity": 0.9888,
+          "precision": 0.7496,
+          "f1_score": 0.8198,
+          "balanced_accuracy": 0.9466,
+          "fp_per_eligible_non_afib_hour": 16.08,
+          "fp_per_total_eligible_hour": 15.51,
+          "false_alarm_windows_count": 158,
+          "false_alarm_events_count": 88
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 6,
+          "missed_episodes": 1,
+          "episode_sensitivity": 0.8571,
+          "mean_delay_sec": 13.79,
+          "median_delay_sec": 9.45,
+          "delays_sec": [
+            9.45,
+            8.63,
+            11.36,
+            9.45,
+            8.41,
+            35.44
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8825,
+            "fp": 329,
+            "fn": 382,
+            "tn": 5033
+          },
+          "sensitivity": 0.9585,
+          "specificity": 0.9386,
+          "precision": 0.9641,
+          "f1_score": 0.9613,
+          "balanced_accuracy": 0.9486,
+          "fp_per_eligible_non_afib_hour": 88.36,
+          "fp_per_total_eligible_hour": 32.52,
+          "false_alarm_windows_count": 329,
+          "false_alarm_events_count": 94
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 8.77,
+          "median_delay_sec": 8.57,
+          "delays_sec": [
+            9.84,
+            9.97,
+            8.4,
+            7.72,
+            9.07,
+            8.57,
+            8.45,
+            9.34,
+            7.68,
+            8.55,
+            8.0,
+            9.0,
+            7.5,
+            9.5,
+            9.5,
+            9.5,
+            8.5,
+            8.5,
+            9.0
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8832,
+            "fp": 33,
+            "fn": 44,
+            "tn": 5805
+          },
+          "sensitivity": 0.995,
+          "specificity": 0.9943,
+          "precision": 0.9963,
+          "f1_score": 0.9957,
+          "balanced_accuracy": 0.9947,
+          "fp_per_eligible_non_afib_hour": 8.14,
+          "fp_per_total_eligible_hour": 3.23,
+          "false_alarm_windows_count": 33,
+          "false_alarm_events_count": 22
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 15.18,
+          "median_delay_sec": 15.18,
+          "delays_sec": [
+            15.18
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2130,
+            "fp": 27,
+            "fn": 201,
+            "tn": 12334
+          },
+          "sensitivity": 0.9138,
+          "specificity": 0.9978,
+          "precision": 0.9875,
+          "f1_score": 0.9492,
+          "balanced_accuracy": 0.9558,
+          "fp_per_eligible_non_afib_hour": 3.15,
+          "fp_per_total_eligible_hour": 2.65,
+          "false_alarm_windows_count": 27,
+          "false_alarm_events_count": 10
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 161.63,
+          "median_delay_sec": 224.46,
+          "delays_sec": [
+            224.46,
+            252.62,
+            7.82
+          ]
+        }
+      }
+    }
+  },
+  "hysteresis_on3_off2": {
+    "rule_name": "hysteresis_on3_off2",
+    "pooled_window_metrics": {
+      "confusion_matrix": {
+        "tp": 20273,
+        "fp": 530,
+        "fn": 664,
+        "tn": 37178
+      },
+      "sensitivity": 0.9683,
+      "specificity": 0.9859,
+      "precision": 0.9745,
+      "f1_score": 0.9714,
+      "balanced_accuracy": 0.9771,
+      "fp_per_eligible_non_afib_hour": 20.24,
+      "fp_per_total_eligible_hour": 13.01,
+      "false_alarm_windows_count": 530,
+      "false_alarm_events_count": 164
+    },
+    "pooled_episode_metrics": {
+      "total_wfdb_episodes": 34,
+      "usable_episodes": 30,
+      "detected_episodes": 28,
+      "missed_episodes": 2,
+      "episode_sensitivity": 0.9333,
+      "median_delay_sec": 9.0,
+      "mean_delay_sec": 26.75
+    },
+    "per_patient_breakdown": {
+      "04126": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 473,
+            "fp": 158,
+            "fn": 50,
+            "tn": 13989
+          },
+          "sensitivity": 0.9044,
+          "specificity": 0.9888,
+          "precision": 0.7496,
+          "f1_score": 0.8198,
+          "balanced_accuracy": 0.9466,
+          "fp_per_eligible_non_afib_hour": 16.08,
+          "fp_per_total_eligible_hour": 15.51,
+          "false_alarm_windows_count": 158,
+          "false_alarm_events_count": 70
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 7,
+          "usable_episodes": 7,
+          "unusable_micro_episodes": 0,
+          "detected_episodes": 5,
+          "missed_episodes": 2,
+          "episode_sensitivity": 0.7143,
+          "mean_delay_sec": 9.96,
+          "median_delay_sec": 9.45,
+          "delays_sec": [
+            9.45,
+            8.63,
+            13.86,
+            9.45,
+            8.41
+          ]
+        }
+      },
+      "05121": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8837,
+            "fp": 315,
+            "fn": 370,
+            "tn": 5047
+          },
+          "sensitivity": 0.9598,
+          "specificity": 0.9413,
+          "precision": 0.9656,
+          "f1_score": 0.9627,
+          "balanced_accuracy": 0.9505,
+          "fp_per_eligible_non_afib_hour": 84.6,
+          "fp_per_total_eligible_hour": 31.13,
+          "false_alarm_windows_count": 315,
+          "false_alarm_events_count": 76
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 20,
+          "usable_episodes": 19,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 19,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 8.77,
+          "median_delay_sec": 8.57,
+          "delays_sec": [
+            9.84,
+            9.97,
+            8.4,
+            7.72,
+            9.07,
+            8.57,
+            8.45,
+            9.34,
+            7.68,
+            8.55,
+            8.0,
+            9.0,
+            7.5,
+            9.5,
+            9.5,
+            9.5,
+            8.5,
+            8.5,
+            9.0
+          ]
+        }
+      },
+      "07879": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 8831,
+            "fp": 30,
+            "fn": 45,
+            "tn": 5808
+          },
+          "sensitivity": 0.9949,
+          "specificity": 0.9949,
+          "precision": 0.9966,
+          "f1_score": 0.9958,
+          "balanced_accuracy": 0.9949,
+          "fp_per_eligible_non_afib_hour": 7.4,
+          "fp_per_total_eligible_hour": 2.94,
+          "false_alarm_windows_count": 30,
+          "false_alarm_events_count": 12
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 2,
+          "usable_episodes": 1,
+          "unusable_micro_episodes": 1,
+          "detected_episodes": 1,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 47.68,
+          "median_delay_sec": 47.68,
+          "delays_sec": [
+            47.68
+          ]
+        }
+      },
+      "07910": {
+        "window_metrics": {
+          "confusion_matrix": {
+            "tp": 2132,
+            "fp": 27,
+            "fn": 199,
+            "tn": 12334
+          },
+          "sensitivity": 0.9146,
+          "specificity": 0.9978,
+          "precision": 0.9875,
+          "f1_score": 0.9497,
+          "balanced_accuracy": 0.9562,
+          "fp_per_eligible_non_afib_hour": 3.15,
+          "fp_per_total_eligible_hour": 2.65,
+          "false_alarm_windows_count": 27,
+          "false_alarm_events_count": 6
+        },
+        "episode_metrics": {
+          "total_wfdb_episodes": 5,
+          "usable_episodes": 3,
+          "unusable_micro_episodes": 2,
+          "detected_episodes": 3,
+          "missed_episodes": 0,
+          "episode_sensitivity": 1.0,
+          "mean_delay_sec": 161.63,
+          "median_delay_sec": 224.46,
+          "delays_sec": [
+            224.46,
+            252.62,
+            7.82
+          ]
+        }
+      }
+    }
+  }
+}

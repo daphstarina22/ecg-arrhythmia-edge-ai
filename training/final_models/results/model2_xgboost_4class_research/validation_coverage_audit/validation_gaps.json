@@ -1,0 +1,153 @@
+{
+  "audit_timestamp": "2026-10-25 23:03:15",
+  "model_under_audit": {
+    "name": "Model 2 Four-Class XGBoost Classifier",
+    "pipeline_file": "research_xgboost_4class_pipeline.joblib",
+    "classes": [
+      "NSR",
+      "TACHY",
+      "BRADYCARDIA",
+      "VENTRICULAR"
+    ],
+    "window_duration_sec": 5.0,
+    "sampling_rate_hz": 360,
+    "decision_threshold": "argmax (0.50)"
+  },
+  "training_set_statistics": {
+    "total_supervised_windows": 7493,
+    "total_independent_records": 318,
+    "class_distribution": {
+      "NSR": 5073,
+      "VENTRICULAR": 1838,
+      "TACHY": 362,
+      "BRADYCARDIA": 220
+    },
+    "source_distribution": {
+      "vfdb": 5204,
+      "mitdb": 1586,
+      "c2015": 703
+    }
+  },
+  "existing_offline_evaluation_audit": {
+    "total_records_evaluated": 4,
+    "records_evaluated": [
+      "mitdb_100",
+      "mitdb_200",
+      "vfdb_424",
+      "vfdb_425"
+    ],
+    "total_5s_windows_evaluated": 1562,
+    "overlap_with_training_set": {
+      "overlap_count": 4,
+      "overlap_pct": 100.0,
+      "overlapping_records": [
+        "mitdb_100",
+        "mitdb_200",
+        "vfdb_424",
+        "vfdb_425"
+      ],
+      "unseen_independent_records_evaluated": 0
+    },
+    "leakage_risk_explanation": "Critical Finding: research_xgboost_4class_pipeline.joblib was fitted on X_full (all 7,493 rows across 318 records), which explicitly included mitdb_100, vfdb_425, mitdb_200, and vfdb_424. Consequently, evaluating this specific joblib artifact offline on these four records measures re-substitution / in-sample behavior rather than generalization to unseen patients. While fold-level cross-validation was strictly grouped, zero unseen records have been evaluated offline with the serialized model."
+  },
+  "class_coverage_gaps": {
+    "BRADYCARDIA": {
+      "status": "SEVERE_GAP",
+      "training_support": 220,
+      "training_records": 39,
+      "primary_training_source": "mitdb_232 provided 55.0% of all bradycardia windows (121/220)",
+      "evaluated_in_offline_csv": 12,
+      "unambiguous_ground_truth_windows_evaluated": 0,
+      "evaluation_deficiency": "Zero records with official reference-annotated (SBR (Sinus Bradycardia) have been evaluated offline. vfdb_425 was evaluated, but its WFDB annotation is (N (sinus origin); the 12 BRADYCARDIA predictions were rate-based post-hoc discoveries. mitdb_232 (the source of 55% of all training bradycardia) was never evaluated offline across its full 30-minute recording."
+    },
+    "VENTRICULAR": {
+      "status": "CRITICAL_SAMPLE_SIZE_GAP",
+      "training_support": 1838,
+      "training_records": 119,
+      "primary_training_source": "vfdb provided 82.3% (1,512/1,838) of all training ventricular windows",
+      "evaluated_in_offline_csv": 65,
+      "unambiguous_ground_truth_windows_evaluated": 35,
+      "evaluation_deficiency": "Only 35 unambiguous 5-second ventricular windows across only 2 records (vfdb_424 and vfdb_425) have been evaluated offline. Both records were in the training set. Model 2 has NEVER been evaluated on sustained ventricular tachycardia or fibrillation from an independent, unseen database like CUDB."
+    },
+    "TACHY": {
+      "status": "TOTAL_EVALUATION_ABSENCE",
+      "training_support": 362,
+      "training_records": 127,
+      "primary_training_source": "c2015 provided 89.2% (323/362) of training tachycardia windows",
+      "evaluated_in_offline_csv": 23,
+      "unambiguous_ground_truth_windows_evaluated": 0,
+      "evaluation_deficiency": "Zero true reference-annotated (SVTA or (ST windows have been evaluated offline. The 23 TACHY predictions in vfdb_424/mitdb_200 were misclassifications of ventricular flutter, noise, or borderlines. Model 2's offline performance on genuine supraventricular tachycardia is completely unvalidated."
+    },
+    "NSR": {
+      "status": "OVER_REPRESENTED_BUT_TRAINED_OVERLAP",
+      "training_support": 5073,
+      "training_records": 56,
+      "primary_training_source": "vfdb (3,673) and mitdb (1,400)",
+      "evaluated_in_offline_csv": 1435,
+      "unambiguous_ground_truth_windows_evaluated": 1064,
+      "evaluation_deficiency": "1,064 unambiguous NSR windows have been evaluated, but 100% came from records present in the training set. Independent negative control testing on clean, unseen normal sinus rhythm subjects is missing."
+    }
+  },
+  "prioritized_independent_record_recommendations": [
+    {
+      "priority_rank": 1,
+      "record_id": "cudb_cu01",
+      "dataset_source": "cu-ventricular-tachyarrhythmia-database",
+      "independence": "100% Independent (Zero rows in training)",
+      "target_class": "VENTRICULAR (Sustained Ventricular Fibrillation)",
+      "clinical_description": "Clean 214s normal sinus baseline transitioning into 295s (~59 windows) continuous, sustained coarse VFIB.",
+      "sampling_rate_hz": 250,
+      "resampling_required": "Resample 250 Hz to 360 Hz (resample_poly)",
+      "reference_annotation": "WFDB ATR markers: sample 53546 is '[ (start of VF)', sample 127231 is '] (end of VF)'",
+      "strategic_value": "Immediate, rigorous benchmark for sustained shockable VF recall on an unseen clinical database."
+    },
+    {
+      "priority_rank": 2,
+      "record_id": "cudb_cu04",
+      "dataset_source": "cu-ventricular-tachyarrhythmia-database",
+      "independence": "100% Independent (Zero rows in training)",
+      "target_class": "VENTRICULAR (Recurrent Ventricular Tachycardia & Flutter)",
+      "clinical_description": "Multiple discrete paroxysms of sustained monomorphic VT/flutter separated by sinus rhythm (~250s total VT).",
+      "sampling_rate_hz": 250,
+      "resampling_required": "Resample 250 Hz to 360 Hz",
+      "reference_annotation": "WFDB ATR markers: multiple '[' and ']' episode intervals",
+      "strategic_value": "Tests onset latency and offset termination across multiple recurrent ventricular tachyarrhythmia events."
+    },
+    {
+      "priority_rank": 3,
+      "record_id": "mitdb_232",
+      "dataset_source": "mitdb",
+      "independence": "Training Record (121 windows in training), but NEVER evaluated offline across full 30 minutes",
+      "target_class": "BRADYCARDIA (Pure Sinus Bradycardia Benchmark)",
+      "clinical_description": "100% Sinus Bradycardia ((SBR) across entire 30-minute recording (~360 windows).",
+      "sampling_rate_hz": 360,
+      "resampling_required": "None (Native 360 Hz)",
+      "reference_annotation": "WFDB TXT marker: '(SBR' at sample 76",
+      "strategic_value": "Closes the critical Bradycardia evaluation gap by establishing continuous 30-minute recall on true (SBR."
+    },
+    {
+      "priority_rank": 4,
+      "record_id": "mitdb_209",
+      "dataset_source": "mitdb",
+      "independence": "Training Record (11 windows in training), but NEVER evaluated offline across full 30 minutes",
+      "target_class": "TACHY (Supraventricular Tachycardia & Sinus Tachycardia)",
+      "clinical_description": "Contains annotated paroxysms of supraventricular tachycardia ((SVTA).",
+      "sampling_rate_hz": 360,
+      "resampling_required": "None (Native 360 Hz)",
+      "reference_annotation": "WFDB TXT marker: '(SVTA'",
+      "strategic_value": "Closes the total evaluation absence for TACHY by benchmarking genuine supraventricular tachyarrhythmia."
+    },
+    {
+      "priority_rank": 5,
+      "record_id": "cudb_cu16",
+      "dataset_source": "cu-ventricular-tachyarrhythmia-database",
+      "independence": "100% Independent (Zero rows in training)",
+      "target_class": "NSR (Independent Negative Control)",
+      "clinical_description": "Predominant normal sinus rhythm baseline in CUDB without sustained ventricular collapse.",
+      "sampling_rate_hz": 250,
+      "resampling_required": "Resample 250 Hz to 360 Hz",
+      "reference_annotation": "WFDB ATR: '(N'",
+      "strategic_value": "Verifies that the model does not trigger false ventricular alarms on clean normal sinus rhythm in an unseen database."
+    }
+  ]
+}

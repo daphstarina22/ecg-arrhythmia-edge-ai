@@ -1,0 +1,246 @@
+{
+  "disclaimer": "The 4-class model has NO asystole class. These forced outputs demonstrate pseudo-classification behavior on flatline/agonal data and must NOT be interpreted as valid asystole detection.",
+  "total_asystole_windows_evaluated": 175,
+  "forced_prediction_distribution": {
+    "NSR": {
+      "count": 38,
+      "percentage": 21.714285714285715
+    },
+    "TACHY": {
+      "count": 0,
+      "percentage": 0.0
+    },
+    "BRADYCARDIA": {
+      "count": 33,
+      "percentage": 18.857142857142858
+    },
+    "VENTRICULAR": {
+      "count": 104,
+      "percentage": 59.42857142857143
+    }
+  },
+  "predicted_probability_statistics": {
+    "NSR": {
+      "mean": 0.23285016417503357,
+      "std": 0.2374022901058197,
+      "median": 0.11120172590017319,
+      "min": 0.011369884945452213,
+      "max": 0.7797567248344421
+    },
+    "TACHY": {
+      "mean": 0.015943903475999832,
+      "std": 0.007114863023161888,
+      "median": 0.014324753545224667,
+      "min": 0.0026631883811205626,
+      "max": 0.048205092549324036
+    },
+    "BRADYCARDIA": {
+      "mean": 0.21734802424907684,
+      "std": 0.20788443088531494,
+      "median": 0.13400305807590485,
+      "min": 0.006525991018861532,
+      "max": 0.7829435467720032
+    },
+    "VENTRICULAR": {
+      "mean": 0.5338578820228577,
+      "std": 0.2682589888572693,
+      "median": 0.5298983454704285,
+      "min": 0.09980959445238113,
+      "max": 0.9793175458908081
+    }
+  },
+  "per_record_breakdown": {
+    "c2015_a142s": {
+      "total_windows": 1,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 1
+      },
+      "mean_ptp_mv": 0.7346623000656637,
+      "mean_peak_count": 1.0
+    },
+    "c2015_a161l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 2,
+        "NSR": 1
+      },
+      "mean_ptp_mv": 0.563658885314522,
+      "mean_peak_count": 0.6666666666666666
+    },
+    "c2015_a167l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "BRADYCARDIA": 1,
+        "VENTRICULAR": 1,
+        "NSR": 1
+      },
+      "mean_ptp_mv": 0.03740792415318806,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a172s": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "NSR": 2,
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.20081943912364678,
+      "mean_peak_count": 0.6666666666666666
+    },
+    "c2015_a185l": {
+      "total_windows": 1,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 1
+      },
+      "mean_ptp_mv": 0.5586679087207941,
+      "mean_peak_count": 1.0
+    },
+    "c2015_a203l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "BRADYCARDIA": 2,
+        "NSR": 1
+      },
+      "mean_ptp_mv": 0.23566682892813462,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a345l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "BRADYCARDIA": 3
+      },
+      "mean_ptp_mv": 0.05359975429494143,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a372s": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 2,
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.31418525441988565,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a385l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 2,
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.09792801701203861,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a386s": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 2,
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.38616628815598597,
+      "mean_peak_count": 0.3333333333333333
+    },
+    "c2015_a443l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "NSR": 3
+      },
+      "mean_ptp_mv": 0.03571427698909716,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a449l": {
+      "total_windows": 3,
+      "dataset_source": "c2015",
+      "predictions": {
+        "BRADYCARDIA": 2,
+        "NSR": 1
+      },
+      "mean_ptp_mv": 0.30918405684082634,
+      "mean_peak_count": 0.3333333333333333
+    },
+    "c2015_a604s": {
+      "total_windows": 2,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 2
+      },
+      "mean_ptp_mv": 0.17842176334537851,
+      "mean_peak_count": 0.0
+    },
+    "c2015_a754s": {
+      "total_windows": 1,
+      "dataset_source": "c2015",
+      "predictions": {
+        "VENTRICULAR": 1
+      },
+      "mean_ptp_mv": 0.7036935310571942,
+      "mean_peak_count": 1.0
+    },
+    "c2015_a796s": {
+      "total_windows": 1,
+      "dataset_source": "c2015",
+      "predictions": {
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.0387214415071153,
+      "mean_peak_count": 0.0
+    },
+    "vfdb_423": {
+      "total_windows": 1,
+      "dataset_source": "vfdb",
+      "predictions": {
+        "BRADYCARDIA": 1
+      },
+      "mean_ptp_mv": 0.2157386721309545,
+      "mean_peak_count": 0.0
+    },
+    "vfdb_424": {
+      "total_windows": 5,
+      "dataset_source": "vfdb",
+      "predictions": {
+        "VENTRICULAR": 5
+      },
+      "mean_ptp_mv": 0.6864512302438648,
+      "mean_peak_count": 1.0
+    },
+    "vfdb_427": {
+      "total_windows": 112,
+      "dataset_source": "vfdb",
+      "predictions": {
+        "VENTRICULAR": 67,
+        "NSR": 29,
+        "BRADYCARDIA": 16
+      },
+      "mean_ptp_mv": 0.4251003336739228,
+      "mean_peak_count": 0.21428571428571427
+    },
+    "vfdb_430": {
+      "total_windows": 5,
+      "dataset_source": "vfdb",
+      "predictions": {
+        "BRADYCARDIA": 3,
+        "VENTRICULAR": 2
+      },
+      "mean_ptp_mv": 0.25446476427694303,
+      "mean_peak_count": 0.0
+    },
+    "vfdb_607": {
+      "total_windows": 16,
+      "dataset_source": "vfdb",
+      "predictions": {
+        "VENTRICULAR": 16
+      },
+      "mean_ptp_mv": 0.23184392060668954,
+      "mean_peak_count": 0.0
+    }
+  }
+}

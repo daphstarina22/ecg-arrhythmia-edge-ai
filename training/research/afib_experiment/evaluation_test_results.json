@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "target_system": "Raspberry Pi ARM64 + ADS1292R (360 Hz)",
+    "champion_model": "RandomForest",
+    "operating_threshold": 0.42,
+    "window_duration_sec": 10.0,
+    "stride_sec": 5.0
+  },
+  "test_cohort_summary": {
+    "total_windows": 2444,
+    "afib_windows": 321,
+    "non_afib_windows": 2123,
+    "afib_subjects_count": 1,
+    "control_subjects_count": 8
+  },
+  "champion_metrics": {
+    "confusion_matrix": {
+      "TN": 1508,
+      "FP": 615,
+      "FN": 7,
+      "TP": 314
+    },
+    "sensitivity": 0.9782,
+    "specificity": 0.7103,
+    "precision": 0.338,
+    "f1_score": 0.5024,
+    "balanced_accuracy": 0.8443,
+    "roc_auc": 0.9034,
+    "pr_auc": 0.4882,
+    "fp_per_hour": 208.57,
+    "non_afib_monitoring_hours": 2.95
+  },
+  "alternative_logistic_regression": {
+    "confusion_matrix": {
+      "TN": 1573,
+      "FP": 550,
+      "FN": 15,
+      "TP": 306
+    },
+    "sensitivity": 0.9533,
+    "specificity": 0.7409,
+    "precision": 0.3575,
+    "f1_score": 0.52,
+    "balanced_accuracy": 0.8471,
+    "roc_auc": 0.8221,
+    "pr_auc": 0.2686,
+    "fp_per_hour": 186.53,
+    "non_afib_monitoring_hours": 2.95
+  },
+  "rr_cv_heuristic_baseline": {
+    "confusion_matrix": {
+      "TN": 1485,
+      "FP": 638,
+      "FN": 3,
+      "TP": 318
+    },
+    "sensitivity": 0.9907,
+    "specificity": 0.6995,
+    "precision": 0.3326,
+    "f1_score": 0.498,
+    "balanced_accuracy": 0.8451,
+    "roc_auc": 0.9086,
+    "pr_auc": 0.5116,
+    "fp_per_hour": 216.37,
+    "non_afib_monitoring_hours": 2.95
+  },
+  "bootstrap_95_ci": {
+    "sensitivity": [
+      0.9605,
+      0.9938
+    ],
+    "specificity": [
+      0.6917,
+      0.7285
+    ],
+    "precision": [
+      0.3061,
+      0.3664
+    ],
+    "f1": [
+      0.4661,
+      0.5344
+    ],
+    "balanced_acc": [
+      0.8304,
+      0.8566
+    ]
+  },
+  "per_subject_breakdown": [
+    {
+      "subject_id": "MIT_S215",
+      "record_id": "215",
+      "primary_rhythm": "NSR",
+      "total_windows": 353,
+      "sensitivity_pct": null,
+      "specificity_pct": 62.89,
+      "fp_count": 131
+    },
+    {
+      "subject_id": "MIT_S220",
+      "record_id": "220",
+      "primary_rhythm": "NSR",
+      "total_windows": 344,
+      "sensitivity_pct": null,
+      "specificity_pct": 95.93,
+      "fp_count": 14
+    },
+    {
+      "subject_id": "MIT_S221",
+      "record_id": "221",
+      "primary_rhythm": "AFIB",
+      "total_windows": 321,
+      "sensitivity_pct": 97.82,
+      "specificity_pct": null,
+      "fp_count": 0
+    },
+    {
+      "subject_id": "MIT_S223",
+      "record_id": "223",
+      "primary_rhythm": "NSR",
+      "total_windows": 253,
+      "sensitivity_pct": null,
+      "specificity_pct": 79.45,
+      "fp_count": 52
+    },
+    {
+      "subject_id": "MIT_S228",
+      "record_id": "228",
+      "primary_rhythm": "NSR",
+      "total_windows": 240,
+      "sensitivity_pct": null,
+      "specificity_pct": 37.92,
+      "fp_count": 149
+    },
+    {
+      "subject_id": "MIT_S230",
+      "record_id": "230",
+      "primary_rhythm": "NSR",
+      "total_windows": 104,
+      "sensitivity_pct": null,
+      "specificity_pct": 100.0,
+      "fp_count": 0
+    },
+    {
+      "subject_id": "MIT_S231",
+      "record_id": "231",
+      "primary_rhythm": "NSR",
+      "total_windows": 206,
+      "sensitivity_pct": null,
+      "specificity_pct": 100.0,
+      "fp_count": 0
+    },
+    {
+      "subject_id": "MIT_S233",
+      "record_id": "233",
+      "primary_rhythm": "NSR",
+      "total_windows": 272,
+      "sensitivity_pct": null,
+      "specificity_pct": 1.1,
+      "fp_count": 269
+    },
+    {
+      "subject_id": "MIT_S234",
+      "record_id": "234",
+      "primary_rhythm": "NSR",
+      "total_windows": 351,
+      "sensitivity_pct": null,
+      "specificity_pct": 100.0,
+      "fp_count": 0
+    }
+  ],
+  "detection_latency_sec": 12.58,
+  "temporal_smoothing_2window": {
+    "sensitivity": 0.9564,
+    "specificity": 0.7715,
+    "fp_per_hour": 164.41
+  }
+}

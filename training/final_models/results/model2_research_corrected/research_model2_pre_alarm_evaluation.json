@@ -1,0 +1,13 @@
+{
+  "best_model": "hist_gradient_boosting",
+  "total_pre_alarm_windows": 16722,
+  "prediction_distribution": {
+    "TACHY": 5642,
+    "NSR": 4831,
+    "VENTRICULAR": 4398,
+    "BRADYCARDIA": 1554,
+    "ASYSTOLE": 297
+  },
+  "bradycardia_count": 1554,
+  "bradycardia_pct": 9.293146752780768
+}

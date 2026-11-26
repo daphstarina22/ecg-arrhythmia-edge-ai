@@ -1,0 +1,148 @@
+{
+  "pipeline_name": "Safety-Gated Hierarchical Edge Architecture Investigation",
+  "timestamp_utc": "2026-10-26T11:44:27Z",
+  "architecture_summary": {
+    "tier_0": "Signal Quality Guard (Flatline Vpp < 0.05 mV / Non-finite)",
+    "tier_1": "Model 1 ONNX Shockable Rhythm Detector (VT/VF Priority)",
+    "tier_2": "Model 2 ONNX 4-Class Classifier (Ventricular Ectopy Priority)",
+    "tier_3": "5-Second AFib Classifier (Gated, theta*=0.560)"
+  },
+  "overrides_prevented_count": 118,
+  "cohort_comparisons": {
+    "Confounder_AFL": {
+      "windows_count": 100,
+      "ungated_false_afib_alarms": 12,
+      "ungated_false_alarm_rate_pct": 12.0,
+      "safety_gated_false_afib_alarms": 12,
+      "safety_gated_false_alarm_rate_pct": 12.0,
+      "suppression_efficiency_pct": 0.0,
+      "tier_distribution": {
+        "TIER_2_NON_VENTRICULAR": 82,
+        "TIER_3_ATRIAL_SCREENER": 12,
+        "TIER_2_VENTRICULAR": 6
+      },
+      "final_triage_distribution": {
+        "ROUTINE_NORMAL: SINUS_RHYTHM": 56,
+        "URGENT_MONITORING: BRADYCARDIA": 24,
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 12,
+        "URGENT_MONITORING: VENTRICULAR_ECTOPY": 6,
+        "URGENT_MONITORING: SUPRAVENTRICULAR_TACHY": 2
+      }
+    },
+    "Confounder_Artifact": {
+      "windows_count": 3,
+      "ungated_false_afib_alarms": 3,
+      "ungated_false_alarm_rate_pct": 100.0,
+      "safety_gated_false_afib_alarms": 1,
+      "safety_gated_false_alarm_rate_pct": 33.33,
+      "suppression_efficiency_pct": 66.67,
+      "tier_distribution": {
+        "TIER_0_SIGNAL_GUARD": 1,
+        "TIER_1_SHOCKABLE": 1,
+        "TIER_3_ATRIAL_SCREENER": 1
+      },
+      "final_triage_distribution": {
+        "ASYSTOLE_OR_LEAD_OFF": 1,
+        "CRITICAL_EMERGENCY: SHOCKABLE_VF_VT": 1,
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 1
+      }
+    },
+    "Confounder_Bigeminy": {
+      "windows_count": 100,
+      "ungated_false_afib_alarms": 89,
+      "ungated_false_alarm_rate_pct": 89.0,
+      "safety_gated_false_afib_alarms": 79,
+      "safety_gated_false_alarm_rate_pct": 79.0,
+      "suppression_efficiency_pct": 11.24,
+      "tier_distribution": {
+        "TIER_3_ATRIAL_SCREENER": 79,
+        "TIER_2_VENTRICULAR": 11,
+        "TIER_2_NON_VENTRICULAR": 10
+      },
+      "final_triage_distribution": {
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 79,
+        "URGENT_MONITORING: VENTRICULAR_ECTOPY": 11,
+        "ROUTINE_NORMAL: SINUS_RHYTHM": 10
+      }
+    },
+    "Confounder_Bradycardia": {
+      "windows_count": 100,
+      "ungated_false_afib_alarms": 33,
+      "ungated_false_alarm_rate_pct": 33.0,
+      "safety_gated_false_afib_alarms": 33,
+      "safety_gated_false_alarm_rate_pct": 33.0,
+      "suppression_efficiency_pct": 0.0,
+      "tier_distribution": {
+        "TIER_2_NON_VENTRICULAR": 65,
+        "TIER_3_ATRIAL_SCREENER": 33,
+        "TIER_2_VENTRICULAR": 2
+      },
+      "final_triage_distribution": {
+        "URGENT_MONITORING: BRADYCARDIA": 56,
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 33,
+        "URGENT_MONITORING: SUPRAVENTRICULAR_TACHY": 5,
+        "ROUTINE_NORMAL: SINUS_RHYTHM": 4,
+        "URGENT_MONITORING: VENTRICULAR_ECTOPY": 2
+      }
+    },
+    "Confounder_VF": {
+      "windows_count": 57,
+      "ungated_false_afib_alarms": 56,
+      "ungated_false_alarm_rate_pct": 98.25,
+      "safety_gated_false_afib_alarms": 0,
+      "safety_gated_false_alarm_rate_pct": 0.0,
+      "suppression_efficiency_pct": 100.0,
+      "tier_distribution": {
+        "TIER_1_SHOCKABLE": 57
+      },
+      "final_triage_distribution": {
+        "CRITICAL_EMERGENCY: SHOCKABLE_VF_VT": 57
+      }
+    },
+    "Confounder_VT": {
+      "windows_count": 101,
+      "ungated_false_afib_alarms": 62,
+      "ungated_false_alarm_rate_pct": 61.39,
+      "safety_gated_false_afib_alarms": 12,
+      "safety_gated_false_alarm_rate_pct": 11.88,
+      "suppression_efficiency_pct": 80.65,
+      "tier_distribution": {
+        "TIER_1_SHOCKABLE": 56,
+        "TIER_2_NON_VENTRICULAR": 30,
+        "TIER_3_ATRIAL_SCREENER": 12,
+        "TIER_2_VENTRICULAR": 3
+      },
+      "final_triage_distribution": {
+        "CRITICAL_EMERGENCY: SHOCKABLE_VF_VT": 56,
+        "URGENT_MONITORING: BRADYCARDIA": 15,
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 12,
+        "ROUTINE_NORMAL: SINUS_RHYTHM": 11,
+        "URGENT_MONITORING: SUPRAVENTRICULAR_TACHY": 4,
+        "URGENT_MONITORING: VENTRICULAR_ECTOPY": 3
+      }
+    },
+    "Control_Sinus": {
+      "windows_count": 142,
+      "ungated_false_afib_alarms": 2,
+      "ungated_false_alarm_rate_pct": 1.41,
+      "safety_gated_false_afib_alarms": 1,
+      "safety_gated_false_alarm_rate_pct": 0.7,
+      "suppression_efficiency_pct": 50.0,
+      "tier_distribution": {
+        "TIER_2_NON_VENTRICULAR": 119,
+        "TIER_2_VENTRICULAR": 18,
+        "TIER_1_SHOCKABLE": 4,
+        "TIER_3_ATRIAL_SCREENER": 1
+      },
+      "final_triage_distribution": {
+        "ROUTINE_NORMAL: SINUS_RHYTHM": 111,
+        "URGENT_MONITORING: VENTRICULAR_ECTOPY": 18,
+        "URGENT_MONITORING: SUPRAVENTRICULAR_TACHY": 5,
+        "CRITICAL_EMERGENCY: SHOCKABLE_VF_VT": 4,
+        "URGENT_MONITORING: BRADYCARDIA": 3,
+        "URGENT_MONITORING: ATRIAL_FIBRILATION": 1
+      }
+    }
+  },
+  "scientific_conclusion": "The safety-gated architecture successfully prevents false AFib alarms from overriding lethal shockable Ventricular Fibrillation and rapid Ventricular Tachycardia. However, in accordance with strict clinical protocol, we DO NOT claim the gate is safe for production deployment until the complete pipeline is evaluated prospectively across diverse patient populations and hardware lead configurations."
+}
