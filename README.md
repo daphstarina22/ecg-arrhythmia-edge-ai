@@ -17,7 +17,7 @@ A Raspberry Pi 4 + ADS1292R system that runs a 3-model ONNX cascade on a single 
 - **One Start = one cycle.** Acquisition and inference run only after Start; nothing runs in the background. Another cycle starts only on the next Start.
 - **Exactly 5.000 s** captured (2500 samples @ 500 SPS), resampled to the 360 Hz / 1800-sample window the models were trained on.
 - **Training-matched preprocessing:** 0.5–40 Hz order-2 zero-phase band-pass (+ 50 Hz mains notch) and a 1:1 port of the training feature code (verified by tests against the original training functions).
-- **Three ONNX models, run once each** (M3 only when a ventricular rhythm is suspected).
+- **Two ONNX models in runtime cascade (Policy B):** Model 1 (Shockable screening) and Model 2 (4-class rhythm: NSR, TACHY, BRADY_ASY, VENTRICULAR). Model 3 is bypassed from the runtime decision path per updated clinical specification.
 - **Explicit decision table** – five valid outputs; any model disagreement is shown as `CONFLICT`, never silently resolved.
 - **Fail-loud acquisition:** chip-ID check, DRDY timeout, lost-sample detection, signal-quality gate, ADC always stopped (even on errors/cancel).
 - **Simulator mode** (`--mock`) for development without hardware, clearly bannered.
@@ -35,8 +35,7 @@ flowchart LR
     E -- ok --> F[Features]
     F --> M1[M1 shockable?]
     F --> M2[M2 rhythm]
-    M1 & M2 -- ventricular suspected --> M3[M3 VT vs VF]
-    M1 & M2 & M3 --> G[Decision table]
+    M1 & M2 --> G[Policy B Decision Table]
     G --> H[HMI: banner + 5 s waveform + voice]
     H --> I((IDLE))
 ```
