@@ -10,6 +10,12 @@ pytestmark = pytest.mark.skipif(not (os.environ.get("DISPLAY") or os.name == "nt
 from ecg_edge.acquisition import MockADS1292R
 
 
+@pytest.fixture(autouse=True)
+def _settle_tcl():
+    yield
+    time.sleep(0.25)
+
+
 def _pump(root, until, timeout=20):
     t0 = time.time()
     while time.time() - t0 < timeout and not until():
