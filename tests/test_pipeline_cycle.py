@@ -11,8 +11,8 @@ from ecg_edge.pipeline import process_window, run_cycle
 
 
 @pytest.mark.parametrize("kind,expected", [
-    ("TACHY", "TACHY — NON-SHOCKABLE"), ("BRADY", "BRADY_ASY — NON-SHOCKABLE"),
-    ("VF", "VF — SHOCKABLE"), ("VT", "VT — SHOCKABLE"),
+    ("TACHY", "TACHYCARDIA"), ("BRADY", "OTHER — NOT CLASSIFIED"),
+    ("VF", "VF/VT SHOCKABLE"), ("VT", "VF/VT SHOCKABLE"),
     ("FLAT", "NO RESULT — POOR SIGNAL"), ("LEADOFF", "NO RESULT — POOR SIGNAL")])
 def test_mock_rhythms_end_to_end(cascade, kind, expected):
     """Plumbing check on SYNTHETIC rhythms (not a model-accuracy claim)."""
@@ -27,13 +27,13 @@ def test_exactly_one_acquisition_and_one_inference_per_start(cascade):
     assert adc.samples_read == C.RAW_SAMPLES + C.SETTLE_DISCARD_SAMPLES
     assert len(r.filtered) == C.MODEL_SAMPLES
     used = {k: cascade.calls[k] - before[k] for k in before}
-    assert used["m1"] == 1 and used["m2"] == 1 and used["m3"] <= 1
+    assert used["m1"] == 1 and used["m2"] == 1 and used["m3"] == 0
 
 
-def test_m3_only_runs_when_ventricular_suspected(cascade):
+def test_m3_never_runs_in_policy_b(cascade):
     before = cascade.calls["m3"]
-    run_cycle(MockADS1292R("BRADY", realtime=False), cascade)
-    assert cascade.calls["m3"] == before
+    run_cycle(MockADS1292R("VF", realtime=False), cascade)
+    assert cascade.calls["m3"] == before == 0
 
 
 def test_nothing_runs_between_cycles(cascade):

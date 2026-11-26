@@ -27,7 +27,7 @@ def test_label_maps_match_training_constants():
 
 def test_onnx_label_equals_argmax_of_probabilities(cascade):
     rng = np.random.default_rng(0)
-    for sess, n in ((cascade.s1, 10), (cascade.s2, 12), (cascade.s3, 6)):
+    for sess, n in ((cascade.s1, 10), (cascade.s2, 12)):
         for _ in range(50):
             lab, prob = sess.run(None, {"X": rng.normal(0, 1, (1, n)).astype(np.float32)})
             p = prob[0]

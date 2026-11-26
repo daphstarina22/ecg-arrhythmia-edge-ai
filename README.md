@@ -54,20 +54,22 @@ State machine: `IDLE → ACQUIRING (≈5 s, cancellable) → PROCESSING → IDLE
 
 ## Classification logic
 
-Label maps (verified against the training code): **M1** `0 NON_SHOCKABLE · 1 SHOCKABLE` · **M2** `0 NSR · 1 TACHY · 2 BRADY_ASY · 3 VENTRICULAR` · **M3** `0 VT · 1 VF`.
+Label maps (verified against the training code): **M1** `0 NON_SHOCKABLE · 1 SHOCKABLE` · **M2** `0 NSR · 1 TACHY · 2 BRADY_ASY · 3 VENTRICULAR`.
 
-| Rhythm (M2) | Shock (M1) | Subtype (M3) | HMI shows |
-|---|---|---|---|
-| NSR | NON_SHOCKABLE | – | `NSR — NON-SHOCKABLE` |
-| TACHY | NON_SHOCKABLE | – | `TACHY — NON-SHOCKABLE` |
-| BRADY_ASY | NON_SHOCKABLE | – | `BRADY_ASY — NON-SHOCKABLE` |
-| VENTRICULAR | SHOCKABLE | VF | `VF — SHOCKABLE` |
-| VENTRICULAR | SHOCKABLE | VT | `VT — SHOCKABLE` |
-| *anything else* | | | `CONFLICT — NOT CLASSIFIED` (raw outputs shown, no shock wording) |
+Under Policy B, Model 3 is removed from the runtime decision path.
 
-Other outcomes: `NO RESULT — POOR SIGNAL` (quality gate) and `NO RESULT — ACQUISITION ERROR` (hardware/timing fault).
+| Rhythm (M2) | Shock (M1) | HMI shows |
+|---|---|---|
+| NSR | SHOCKABLE | `CONFLICT — NOT CLASSIFIED` |
+| TACHY | SHOCKABLE | `VF/VT SHOCKABLE` |
+| BRADY_ASY | SHOCKABLE | `CONFLICT — NOT CLASSIFIED` |
+| VENTRICULAR | SHOCKABLE | `VF/VT SHOCKABLE` |
+| NSR | NON_SHOCKABLE | `NORMAL SINUS RHYTHM` |
+| TACHY | NON_SHOCKABLE | `TACHYCARDIA` |
+| BRADY_ASY | NON_SHOCKABLE | `OTHER — NOT CLASSIFIED` |
+| VENTRICULAR | NON_SHOCKABLE | `VENTRICULAR (NON-SHOCKABLE)` |
 
-> **Open decision:** `VENTRICULAR + NON_SHOCKABLE` (and `SHOCKABLE` with a non-ventricular rhythm) is contradictory — M1 and M2 were trained from the same labels, so it can only be a model error. It currently shows `CONFLICT`. See [`docs/CLASSIFICATION_LOGIC.md`](docs/CLASSIFICATION_LOGIC.md) for the options.
+Other outcomes: `NO RESULT — POOR SIGNAL` (quality gate) and `NO RESULT — ACQUISITION ERROR` (hardware/timing fault). See [`docs/CLASSIFICATION_LOGIC.md`](docs/CLASSIFICATION_LOGIC.md) for full details.
 
 ## Hardware
 

@@ -1,56 +1,57 @@
-"""Full truth table of the HMI decision logic."""
+"""Full truth table of the HMI decision logic (Policy B)."""
 import itertools
 
 import pytest
 
-from ecg_edge.decision import decide
+from ecg_edge.decision import DASH, decide
 from ecg_edge.models import ModelOutput
 
 
 def mo(label, c=0.9): return ModelOutput(label, c, {label: c})
 
 
-EXPECTED = {
-    ("NSR", "NON_SHOCKABLE", None): "NSR — NON-SHOCKABLE",
-    ("TACHY", "NON_SHOCKABLE", None): "TACHY — NON-SHOCKABLE",
-    ("BRADY_ASY", "NON_SHOCKABLE", None): "BRADY_ASY — NON-SHOCKABLE",
-    ("VENTRICULAR", "SHOCKABLE", "VF"): "VF — SHOCKABLE",
-    ("VENTRICULAR", "SHOCKABLE", "VT"): "VT — SHOCKABLE",
+EXPECTED_TABLE = {
+    ("SHOCKABLE", "NSR"): ("CONFLICT", f"CONFLICT {DASH} NOT CLASSIFIED"),
+    ("SHOCKABLE", "TACHY"): ("CLASSIFIED", "VF/VT SHOCKABLE"),
+    ("SHOCKABLE", "BRADY_ASY"): ("CONFLICT", f"CONFLICT {DASH} NOT CLASSIFIED"),
+    ("SHOCKABLE", "VENTRICULAR"): ("CLASSIFIED", "VF/VT SHOCKABLE"),
+    ("NON_SHOCKABLE", "NSR"): ("CLASSIFIED", "NORMAL SINUS RHYTHM"),
+    ("NON_SHOCKABLE", "TACHY"): ("CLASSIFIED", "TACHYCARDIA"),
+    ("NON_SHOCKABLE", "BRADY_ASY"): ("CLASSIFIED", f"OTHER {DASH} NOT CLASSIFIED"),
+    ("NON_SHOCKABLE", "VENTRICULAR"): ("CLASSIFIED", "VENTRICULAR (NON-SHOCKABLE)"),
 }
 
 
-@pytest.mark.parametrize("rhythm,shock,sub", list(EXPECTED))
-def test_required_rows(rhythm, shock, sub):
-    d = decide(mo(shock), mo(rhythm), mo(sub) if sub else None)
-    assert d.status == "CLASSIFIED"
-    assert d.headline == EXPECTED[(rhythm, shock, sub)]
+@pytest.mark.parametrize("shock,rhythm", list(EXPECTED_TABLE))
+def test_exhaustive_eight_rows(shock, rhythm):
+    expected_status, expected_headline = EXPECTED_TABLE[(shock, rhythm)]
+    d = decide(mo(shock), mo(rhythm))
+    assert d.status == expected_status
+    assert d.headline == expected_headline
 
 
-@pytest.mark.parametrize("sub", ["VF", "VT"])
-def test_ventricular_non_shockable_is_never_classified(sub):
-    """The contradictory row must NOT yield a shockability statement."""
-    d = decide(mo("NON_SHOCKABLE"), mo("VENTRICULAR"), mo(sub))
+def test_exhaustive_combinations_count():
+    assert len(EXPECTED_TABLE) == 8
+    combinations = list(itertools.product(["NON_SHOCKABLE", "SHOCKABLE"],
+                                          ["NSR", "TACHY", "BRADY_ASY", "VENTRICULAR"]))
+    assert len(combinations) == 8
+    for shock, rhythm in combinations:
+        assert (shock, rhythm) in EXPECTED_TABLE
+
+
+@pytest.mark.parametrize("shock,rhythm", [("SHOCKABLE", "NSR"), ("SHOCKABLE", "BRADY_ASY")])
+def test_conflict_notes_and_voice(shock, rhythm):
+    d = decide(mo(shock), mo(rhythm))
     assert d.status == "CONFLICT"
-    assert "SHOCKABLE" not in d.headline
-    assert "shockable" not in d.speech.lower()
-    assert d.notes and "NON_SHOCKABLE" in d.notes[0] and "VENTRICULAR" in d.notes[0]
+    assert d.severity == "WARNING"
+    assert "Model disagreement" in d.speech
+    assert len(d.notes) == 1
+    assert shock in d.notes[0] and rhythm in d.notes[0]
 
 
-@pytest.mark.parametrize("rhythm", ["NSR", "TACHY", "BRADY_ASY"])
-def test_shockable_with_nonventricular_rhythm_is_conflict(rhythm):
-    d = decide(mo("SHOCKABLE"), mo(rhythm), mo("VT"))
-    assert d.status == "CONFLICT" and d.severity != "CRITICAL"
-
-
-def test_exhaustive_only_five_classified_rows():
-    classified = set()
-    for r, s, sub in itertools.product(["NSR", "TACHY", "BRADY_ASY", "VENTRICULAR"],
-                                       ["NON_SHOCKABLE", "SHOCKABLE"], [None, "VT", "VF"]):
-        d = decide(mo(s), mo(r), mo(sub) if sub else None)
-        if d.status == "CLASSIFIED":
-            classified.add(d.headline)
-    assert classified == set(EXPECTED.values())
-
-
-def test_ventricular_shockable_without_subtype_is_conflict():
-    assert decide(mo("SHOCKABLE"), mo("VENTRICULAR"), None).status == "CONFLICT"
+def test_ventricular_non_shockable_properties():
+    d = decide(mo("NON_SHOCKABLE"), mo("VENTRICULAR"))
+    assert d.status == "CLASSIFIED"
+    assert d.headline == "VENTRICULAR (NON-SHOCKABLE)"
+    assert d.severity == "WARNING"
+    assert "non shockable" in d.speech.lower()

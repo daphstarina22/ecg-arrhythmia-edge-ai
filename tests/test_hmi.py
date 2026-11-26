@@ -26,7 +26,7 @@ def test_start_cycle_idle_start_again(cascade):
     assert app.state == IDLE and adc.start_calls == 0
     app.start_btn.invoke()
     _pump(root, lambda: app.cycles == 1 and app.state == IDLE)
-    assert app.banner_var.get() == "VF — SHOCKABLE"
+    assert app.banner_var.get() == "VF/VT SHOCKABLE"
     assert len(app.line.get_xdata()) == 1800
     assert str(app.start_btn["state"]) == "normal"
     n = adc.samples_read
